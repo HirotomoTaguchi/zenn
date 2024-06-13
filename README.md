@@ -1,4 +1,3 @@
-# zenn
 <div style="overflow-x: auto;">
   <table>
     <thead>
