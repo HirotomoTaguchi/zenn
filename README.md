@@ -3,7 +3,7 @@
  <table>
    <thead>
      <tr>
-       <th><!-- ここにメモを書く -->提供形態</th>
+       <th>提供形態</th>
        <th>Service Name</th>
        <th>Plan/Model</th>
        <th>列4</th>
@@ -47,7 +47,7 @@
    </thead>
    <tbody>
      <tr>
-       <td>データ1</td>
+       <td><!--提供形態-->SaaS</td>
        <td>データ2</td>
        <td>データ3</td>
        <td>データ4</td>
