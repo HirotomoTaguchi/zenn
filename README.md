@@ -8,7 +8,7 @@
        <th>Plan/ Model</th>
        <th>Service Provider</th>
        <th>Model Procider</th>
-       <th>Training (AI学習)</th>
+       <th>Training (学習)</th>
        <th>Data Retention (情報保持)</th>
        <th>Region</th>
        <th>Japan Region</th>
