@@ -1,3 +1,15 @@
+<style>
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
+  
+  th, td {
+    width: 2.5%; /* 100% / 40列 = 2.5% */
+    word-wrap: break-word;
+  }
+</style>
+
 <div style="overflow-x: auto;">
   <table>
     <thead>
