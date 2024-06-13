@@ -10,8 +10,8 @@
        <th>Model Procider</th>
        <th>学習への利用</th>
        <th>データ保持</th>
-       <th>リージョン</th>
-       <th>日本リージョン有無</th>
+       <th>Region</th>
+       <th>Japan Region</th>
        <th>準拠法</th>
        <th>管轄裁判所</th>
        <th>ISO27001</th>
