@@ -8,7 +8,7 @@
        <th>Plan/ Model</th>
        <th>Service Provider</th>
        <th>Model Procider</th>
-       <th>Training (学習)</th>
+       <th>Model Training (学習)</th>
        <th>Data Retention (情報保持)</th>
        <th>Region</th>
        <th>Japan Region</th>
@@ -26,7 +26,7 @@
        <th><!--Plan/ Model--></th>
        <th><!--Service Provider--></th>
        <th><!--Model Procider--></th>
-       <th><!--学習への利用-->デフォルトでは利用する()</th>
+       <th><!--学習への利用-->利用する(オプトアウト可能)</th>
        <th><!--データ保持-->30日</th>
        <th><!--リージョン-->US</th>
        <th><!--日本リージョン有無-->なし</th>
