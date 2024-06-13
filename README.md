@@ -46,7 +46,7 @@
    </thead>
    <tbody>
      <tr>
-       <td style="word-wrap: break-word;">データ1</td>
+       <td style="word-wrap: break-word;">ChatGPT</td>
        <td style="word-wrap: break-word;">データ2</td>
        <td style="word-wrap: break-word;">データ3</td>
        <td style="word-wrap: break-word;">データ4</td>
