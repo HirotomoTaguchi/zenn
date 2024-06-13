@@ -2,8 +2,8 @@
  <table style="table-layout: fixed; width: 100%;">
    <thead>
      <tr>
-       <th style="width: 70%;">サービス形態</th>
-       <th style="width: 0.1%;">Service Name</th>
+       <th style="width: 70%;">提供形態</th>
+       <th style="width: 0.1%;">名称/Service Name</th>
        <th style="width: 2.5%;">Plan</th>
        <th style="width: 2.5%;">列4</th>
        <th style="width: 2.5%;">列5</th>
