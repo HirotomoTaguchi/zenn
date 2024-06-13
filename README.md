@@ -3,12 +3,12 @@
  <table>
    <thead>
      <tr>
-       <th>提供形態</th>
+       <th>Service Type</th>
        <th>Service Name</th>
-       <th>Plan/Model</th>
-       <th>列4</th>
-       <th>列5</th>
-       <th>列6</th>
+       <th>Plan/ Model</th>
+       <th>Service Provider</th>
+       <th>Model Procider</th>
+       <th>Model Training</th>
        <th>列7</th>
        <th>列8</th>
        <th>列9</th>
