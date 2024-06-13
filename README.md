@@ -8,8 +8,8 @@
        <th>Plan/ Model</th>
        <th>Service Provider</th>
        <th>Model Procider</th>
-       <th>Model Training</th>
-       <th>列7</th>
+       <th>学習への利用</th>
+       <th>データ保持</th>
        <th>列8</th>
        <th>列9</th>
        <th>列10</th>
