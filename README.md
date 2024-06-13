@@ -1,16 +1,9 @@
-<div style="overflow-x: auto;">
- <table style="table-layout: fixed; width: 100%;">
-   <thead>
-     <tr>
-       <th style="width: 70%;">提供形態</th>
-       <th style="width: 0.1%;">サービス名</th>
-       <th style="width: 2.5%;">プラン</th>
-
+## まとめ
 <div style="overflow-x: auto;">
  <table>
    <thead>
      <tr>
-       <th>提供形態</th>
+       <th><!-- ここにメモを書く -->提供形態</th>
        <th>Service Name</th>
        <th>Plan/Model</th>
        <th>列4</th>
