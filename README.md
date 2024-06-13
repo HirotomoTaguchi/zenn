@@ -2,8 +2,8 @@
  <table style="table-layout: fixed; width: 100%;">
    <thead>
      <tr>
-       <th style="width: 2.5%;">列1</th>
-       <th style="width: 2.5%;">列2</th>
+       <th style="width: 4.9%;">列1</th>
+       <th style="width: 0.1%;">列2</th>
        <th style="width: 2.5%;">列3</th>
        <th style="width: 2.5%;">列4</th>
        <th style="width: 2.5%;">列5</th>
