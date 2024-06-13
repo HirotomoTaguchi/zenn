@@ -10,39 +10,13 @@
        <th>Model Procider</th>
        <th>学習への利用</th>
        <th>データ保持</th>
-       <th>列8</th>
-       <th>列9</th>
-       <th>列10</th>
-       <th>列11</th>
-       <th>列12</th>
-       <th>列13</th>
-       <th>列14</th>
-       <th>列15</th>
-       <th>列16</th>
-       <th>列17</th>
-       <th>列18</th>
-       <th>列19</th>
-       <th>列20</th>
-       <th>列21</th>
-       <th>列22</th>
-       <th>列23</th>
-       <th>列24</th>
-       <th>列25</th>
-       <th>列26</th>
-       <th>列27</th>
-       <th>列28</th>
-       <th>列29</th>
-       <th>列30</th>
-       <th>列31</th>
-       <th>列32</th>
-       <th>列33</th>
-       <th>列34</th>
-       <th>列35</th>
-       <th>列36</th>
-       <th>列37</th>
-       <th>列38</th>
-       <th>列39</th>
-       <th>列40</th>
+       <th>リージョン</th>
+       <th>日本リージョン有無</th>
+       <th>準拠法</th>
+       <th>管轄裁判所</th>
+       <th>ISO27001</th>
+       <th>SOC2</th>
+       <th>ISMAP</th>
      </tr>
    </thead>
    <tbody>
