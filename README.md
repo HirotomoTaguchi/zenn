@@ -8,12 +8,12 @@
        <th>Plan/ Model</th>
        <th>Service Provider</th>
        <th>Model Procider</th>
-       <th>Training (学習への利用)</th>
-       <th>データ保持</th>
+       <th>Training (学習利用)</th>
+       <th>Data Retention(データ保持)</th>
        <th>Region</th>
        <th>Japan Region</th>
-       <th>準拠法</th>
-       <th>管轄裁判所</th>
+       <th>Governing Law (準拠法)</th>
+       <th>Jurisdiction (管轄裁判所)</th>
        <th>ISO27001</th>
        <th>SOC2</th>
        <th>ISMAP</th>
