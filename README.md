@@ -2,8 +2,8 @@
  <table style="table-layout: fixed; width: 100%;">
    <thead>
      <tr>
-       <th style="width: 70%;">学習への利用</th>
-       <th style="width: 0.1%;">列2</th>
+       <th style="width: 70%;">AI Model</th>
+       <th style="width: 0.1%;">サービス形態</th>
        <th style="width: 2.5%;">列3</th>
        <th style="width: 2.5%;">列4</th>
        <th style="width: 2.5%;">列5</th>
