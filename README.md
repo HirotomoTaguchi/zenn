@@ -21,88 +21,20 @@
    </thead>
    <tbody>
      <tr>
-       <td><!--提供形態-->SaaS</td>
-       <td>データ2</td>
-       <td>データ3</td>
-       <td>データ4</td>
-       <td>データ5</td>
-       <td>データ6</td>
-       <td>データ7</td>
-       <td>データ8</td>
-       <td>データ9</td>
-       <td>データ10</td>
-       <td>データ11</td>
-       <td>データ12</td>
-       <td>データ13</td>
-       <td>データ14</td>
-       <td>データ15</td>
-       <td>データ16</td>
-       <td>データ17</td>
-       <td>データ18</td>
-       <td>データ19</td>
-       <td>データ20</td>
-       <td>データ21</td>
-       <td>データ22</td>
-       <td>データ23</td>
-       <td>データ24</td>
-       <td>データ25</td>
-       <td>データ26</td>
-       <td>データ27</td>
-       <td>データ28</td>
-       <td>データ29</td>
-       <td>データ30</td>
-       <td>データ31</td>
-       <td>データ32</td>
-       <td>データ33</td>
-       <td>データ34</td>
-       <td>データ35</td>
-       <td>データ36</td>
-       <td>データ37</td>
-       <td>データ38</td>
-       <td>データ39</td>
-       <td>データ40</td>
-     </tr>
-     <tr>
-       <td>データ41</td>
-       <td>データ42</td>
-       <td>データ43</td>
-       <td>データ44</td>
-       <td>データ45</td>
-       <td>データ46</td>
-       <td>データ47</td>
-       <td>データ48</td>
-       <td>データ49</td>
-       <td>データ50</td>
-       <td>データ51</td>
-       <td>データ52</td>
-       <td>データ53</td>
-       <td>データ54</td>
-       <td>データ55</td>
-       <td>データ56</td>
-       <td>データ57</td>
-       <td>データ58</td>
-       <td>データ59</td>
-       <td>データ60</td>
-       <td>データ61</td>
-       <td>データ62</td>
-       <td>データ63</td>
-       <td>データ64</td>
-       <td>データ65</td>
-       <td>データ66</td>
-       <td>データ67</td>
-       <td>データ68</td>
-       <td>データ69</td>
-       <td>データ70</td>
-       <td>データ71</td>
-       <td>データ72</td>
-       <td>データ73</td>
-       <td>データ74</td>
-       <td>データ75</td>
-       <td>データ76</td>
-       <td>データ77</td>
-       <td>データ78</td>
-       <td>データ79</td>
-       <td>データ80</td>
+       <th><!--Service Type--></th>
+       <th>Service Name</th>
+       <th>Plan/ Model</th>
+       <th>Service Provider</th>
+       <th>Model Procider</th>
+       <th>学習への利用</th>
+       <th>データ保持</th>
+       <th>リージョン</th>
+       <th>日本リージョン有無</th>
+       <th>準拠法</th>
+       <th>管轄裁判所</th>
+       <th>ISO27001</th>
+       <th>SOC2</th>
+       <th>ISMAP</th>
      </tr>
    </tbody>
  </table>
