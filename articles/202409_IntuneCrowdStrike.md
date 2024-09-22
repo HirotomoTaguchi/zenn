@@ -95,9 +95,4 @@ sudo /Applications/Falcon.app/Contents/Resources/falconctl stats
 今回は、**Intune** を使用して **CrowdStrike Falcon Sensor** をmacOSに配布する方法を解説しました。公式の手順に従って適切なMDMプロファイルを使用することで、手動での承認を省略し、効率的にセンサーをデプロイできます。今後もCrowdStrikeの新機能や手順について検証していく予定ですので、ブログでの続報をお楽しみに。
 
 ## 参考資料
-
 - [Falcon Sensor for Mac ドキュメント](https://falcon.us-2.crowdstrike.com/documentation/22/falcon-sensor-for-mac)
-
----
-
-このブログ記事では、公式のガイドラインに基づいて **Intune** を使用したFalcon Sensorの配布方法を詳細に解説しています。特に、システム拡張やフルディスクアクセスの承認をMDMで管理する手順を重点的に説明しています。
