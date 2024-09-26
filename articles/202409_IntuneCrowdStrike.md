@@ -20,11 +20,11 @@ CrowdStrike Falcon sensorは、次世代のアンチウイルス（NGAV）、エ
 
 ### 1. Falcon Sensorパッケージのダウンロード
 
-[Falcon Console](https://falcon.us-2.crowdstrike.com/hosts/sensor-downloads) からmacOS用の最新のFalcon Sensorパッケージをダウンロードします。
+[Falcon Console](https://falcon.us-2.crowdstrike.com/host-management/sensor-downloads/all) からmacOS用の最新のFalcon Sensorパッケージをダウンロードします。
 
 ### 2. Customer IDの取得
 
-Falcon Sensorのインストールにはチェックサム付きのCustomer ID（CID）が必要です。CIDは[Falcon Console](https://falcon.us-2.crowdstrike.com/support/sensor-downloads)の上部に「<32文字の英数字>-<2文字の英数字>」の形式で記載されています。
+Falcon Sensorのインストールにはチェックサム付きのCustomer ID（CID）が必要です。CIDは[Falcon Console](https://falcon.us-2.crowdstrike.com/host-management/sensor-downloads/all)に「<32文字の英数字>-<2文字の英数字>」の形式で記載されています。
 
 ### 3. Intuneへのパッケージのアップロード
 
@@ -43,7 +43,7 @@ Falcon Sensorを正常に動作させるため、以下の構成プロファイ�
 
 1. 「デバイス」>「構成プロファイル」>「プロファイルの作成」の順に選択します。
 2. 「プラットフォーム」で「macOS」、「プロファイルの種類」で「テンプレート」を選択します。
-3. 「テンプレート名」で「システム拡張」を選択し、「作成」をクリックします。
+3. 「テンプレート名」で「拡張」を選択し、「作成」をクリックします。
 4. 任意のプロファイル名（例：CrowdStrike - システム拡張の承認）を入力します。
 5. 「構成設定」で以下を設定し、「OK」をクリックします。
    - ユーザーがシステム拡張機能を承認できるようにする：オン
@@ -59,24 +59,22 @@ Falcon Sensorを正常に動作させるため、以下の構成プロファイ�
 #### 4-2. ネットワークコンテンツフィルタの構成
 
 1. 「デバイス」>「構成プロファイル」>「プロファイルの作成」の順に選択します。 
-2. 「プラットフォーム」で「macOS」、「プロファイルの種類」で「テンプレート」を選択します。
+2. 「プラットフォーム」で「macOS」、「プロファイルの種類」で「設定カタログ」を選択します。
 3. 「テンプレート名」で「ネットワークコンテンツフィルタ」を選択し、「作成」をクリックします。
 4. 任意のプロファイル名（例：CrowdStrike - ネットワークフィルタ）を入力します。
 5. 「構成設定」で以下を設定し、「OK」をクリックします。
-   - フィルタ名：任意の名前  
-   - 識別子：com.crowdstrike.falcon.App
+   - ソケットのフィルター処理：はい
    - 組織：CrowdStrike Inc.
-   - フィルターソケット：はい
-   - ソケットフィルターのバンドルID：com.crowdstrike.falcon.Agent
-   - ソケットフィルターの指定要件：identifier "com.crowdstrike.falcon.Agent" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] and certificate leaf[field.1.2.840.113635.100.6.1.13] and certificate leaf[subject.OU] = "X9E956P446"
+   - プラグイン バンドル ID：com.crowdstrike.falcon.Agent
+   - パケット プロバイダー バンドル識別子をフィルター：identifier "com.crowdstrike.falcon.Agent" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] and certificate leaf[field.1.2.840.113635.100.6.1.13] and certificate leaf[subject.OU] = "X9E956P446"
 6. 「割り当て」タブでプロファイルを割り当てるグループを選択し、「次へ」をクリックします。
 7. 「確認と作成」をクリックし、構成内容を確認して「作成」をクリックします。
 
 #### 4-3. Full Disk Access（完全ディスクアクセス）の承認
 
 1. 「デバイス」>「構成プロファイル」>「プロファイルの作成」の順に選択します。
-2. 「プラットフォーム」で「macOS」、「プロファイルの種類」で「テンプレート」を選択します。
-3. 「テンプレート名」で「プライバシー設定」を選択し、「作成」をクリックします。
+2. 「プラットフォーム」で「macOS」、「プロファイルの種類」で「カスタム」を選択します。
+3. 「テンプレート名」で「カスタム構成プロファイル」を選択し、「作成」をクリックします。
 4. 任意のプロファイル名（例：CrowdStrike - Full Disk Access）を入力します。
 5. 「構成設定」で以下のXMLを入力し、「OK」をクリックします。
 
@@ -131,10 +129,12 @@ Falcon Sensorを正常に動作させるため、以下の構成プロファイ�
 
 ### 2. ライセンス認証
 
-Intuneから展開後、各デバイスで以下のコマンドを実行しライセンス認証を行います。`<CID>`は事前準備で取得したCustomer IDに置き換えてください。
+アプリ展開後、Intuneで以下のコマンドを実行しライセンス認証を行います。`<CID>`は事前準備で取得したCustomer IDに置き換えてください。
 
 ```bash
-sudo /Applications/Falcon.app/Contents/Resources/falconctl license <CID>
+#!/bin/bash
+CID="your_actual_customer_id_here"
+/Applications/Falcon.app/Contents/Resources/falconctl license $CID
 ```
 
 ## 動作確認
