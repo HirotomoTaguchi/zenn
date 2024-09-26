@@ -8,8 +8,11 @@ published: false
 
 ## アプリの配信
 - [Zoom のサポートページ](https://support.zoom.com/hc/ja/article?id=zm_kb&sysparm_article=KB0060418#collapseMac)から ZoomInstallerIT.pkg ファイルをダウンロードする。
+- Intune でpkgファイルを指定して配布する。
 
 ## 【任意】　アプリの制限
+- 以下のような plist を作成する。
+- 名前は任意であるが us.zoom.config.plist としておくとわかりやすい。
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
