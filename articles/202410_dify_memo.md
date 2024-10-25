@@ -30,13 +30,14 @@ Dify 周りで個人的に気になったことをメモしていきます。
 - Delian Capitalは、2011年に設立された中国北京市に本社を置くベンチャーキャピタル会社です。主に技術主導型産業に特化しており、ハイエンド製造、最先端技術、ヘルスケアなどの分野に投資しています。^[[https://dify.ai/terms](http://www.bjdeliancap.com/en)] ^[https://www.crunchbase.com/organization/delian-capital]
 
 ## セキュリティ（クラウド版）
-### 準拠法及び管轄裁判所
-- Difyの米国デラウェア州の法律に準拠しています。^[https://dify.ai/terms]
-- 管轄裁判所はカリフォルニア州サンフランシスコにある裁判所としています。^[https://dify.ai/terms]
+### 準拠法及び管轄裁判所 ^[[Dify Terms](https://dify.ai/terms)]
+- Difyの米国デラウェア州の法律に準拠しています。
+- 管轄裁判所はカリフォルニア州サンフランシスコにある裁判所としています。
 
 ### ホスト先
-- アメリカのAWS上でホストされています。^[https://docs.dify.ai/ja-jp/policies/agreement]
-- ただし、プライバシーポリシーを確認すると以下のように記載されており、中国を含む他の国にもデータが流通する可能性があります。^[https://docs.dify.ai/ja-jp/policies/agreement]
+- アメリカのAWS上でホストされています。^[[Dify Terms](https://dify.ai/terms)]
+- ただし、プライバシーポリシーを確認すると以下のように記載されており、中国を含む他の国にもデータが流通する可能性があります。^[[Dify Privacy Policies](https://docs.dify.ai/ja-jp/policies/agreement)]
+
 '''
 The information collected through our website and our products may be stored and processed in any country/region where LangGenius or its affiliated companies or service providers maintain facilities, including your region, the United States, Australia, Canada, China, and the European Economic Area (including the United Kingdom).（筆者意訳：当社のウェブサイトおよび製品を通じて収集された情報は、お客様の地域、米国、オーストラリア、カナダ、中国、欧州経済地域（英国を含む）など、LangGenius またはその関連会社またはサービス プロバイダーが施設を維持している国/地域で保存および処理される場合があります。）
 '''
