@@ -11,7 +11,7 @@ Dify 周りで個人的に気になったことをメモしていきます。
 - 情報については公開日時点の情報です。
 - 個人的なメモなので悪しからず。
 
-## Dify　の概要
+## Difyの概要
 - Difyは利用して大規模言語モデル（LLM）を活用したアプリケーションを構築、管理、最適化するためのソフトウェアです。^[[Dify](https://dify.ai/)]
 - Difyはオープンソースプロジェクトとして提供されており、ユーザーは自分のインフラ上でプラットフォームをセルフホストすることができます。
 - また、Dify Cloudというオプションも提供されており、クラウド上での利用が可能です。
@@ -27,7 +27,7 @@ Dify 周りで個人的に気になったことをメモしていきます。
 
 ### 資本関係
 - Difyは Delian Capital からシードラウンドで資金を調達しています。^[[https://dify.ai/terms](https://www.crunchbase.com/organization/langgenius-inc/company_financials)]
-- Delian Capitalは、2011年に設立された中国北京市に本社を置くベンチャーキャピタル会社です。主に技術主導型産業に特化しており、ハイエンド製造、最先端技術、ヘルスケアなどの分野に投資しています。^[[https://dify.ai/terms](http://www.bjdeliancap.com/en)] ^[https://www.crunchbase.com/organization/delian-capital]
+- Delian Capitalは、2011年に設立された中国北京市に本社を置くベンチャーキャピタル会社です。主に技術主導型産業に特化しており、ハイエンド製造、最先端技術、ヘルスケアなどの分野に投資しています。^[[https://dify.ai/terms](http://www.bjdeliancap.com/en)] ^[[delian-capital](https://www.crunchbase.com/organization/delian-capital)]
 
 ## セキュリティ（クラウド版）
 ### 準拠法及び管轄裁判所 ^[[Dify Terms](https://dify.ai/terms)]
