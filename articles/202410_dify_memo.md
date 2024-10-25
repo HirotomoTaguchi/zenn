@@ -42,5 +42,5 @@ Dify 周りで個人的に気になったことをメモしていきます。
 
 ### 認証
 - Difyは、AICPAが定める SOC II を Type 1 の報告書を受領しています。(チェックしたい)^[[Dify SOC 2](https://x.com/dify_ai/status/1845852984330334512)]
-- ISO 27001 及び GDRP への準拠はまだです。^[[Difyユーザー規約(https://docs.dify.ai/ja-jp/policies/agreement)]
+- ISO 27001 及び GDRP への準拠はまだです。^[[Difyユーザー規約](https://docs.dify.ai/ja-jp/policies/agreement)]
 - その他の情報については [Trust Center](https://security.dify.ai/) などで確認できます。
