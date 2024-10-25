@@ -26,7 +26,7 @@ Dify 周りで個人的に気になったことをメモしていきます。
 - 彼は元 Tencent Cloud で働いた後、LangGenius, Inc.を創業しました。^[[Luyu Zhang](https://www.linkedin.com/in/luyu-zhang)]
 
 ### 資本関係
-- Difyは Delian Capital からシードラウンドで資金を調達しています。^[[https://dify.ai/terms](https://www.crunchbase.com/organization/langgenius-inc/company_financials)]
+- Difyは Delian Capital からシードラウンドで資金を調達しています。^[[terms](https://www.crunchbase.com/organization/langgenius-inc/company_financials)]
 - Delian Capitalは、2011年に設立された中国北京市に本社を置くベンチャーキャピタル会社です。主に技術主導型産業に特化しており、ハイエンド製造、最先端技術、ヘルスケアなどの分野に投資しています。^[[https://dify.ai/terms](http://www.bjdeliancap.com/en)] ^[[delian-capital](https://www.crunchbase.com/organization/delian-capital)]
 
 ## セキュリティ（クラウド版）
@@ -41,6 +41,6 @@ Dify 周りで個人的に気になったことをメモしていきます。
 > （筆者意訳：当社のウェブサイトおよび製品を通じて収集された情報は、お客様の地域、米国、オーストラリア、カナダ、中国、欧州経済地域（英国を含む）など、LangGenius またはその関連会社またはサービス プロバイダーが施設を維持している国/地域で保存および処理される場合があります。）
 
 ### 認証
-- Difyは、AICPAが定める SOC II を Type 1 の報告書を受領しています。(チェックしたい)^[[https://docs.dify.ai/ja-jp/policies/agreement](https://x.com/dify_ai/status/1845852984330334512)]
-- ISO 27001 及び GDRP への準拠はまだです。^[https://docs.dify.ai/ja-jp/policies/agreement]
+- Difyは、AICPAが定める SOC II を Type 1 の報告書を受領しています。(チェックしたい)^[[Dify SOC 2](https://x.com/dify_ai/status/1845852984330334512)]
+- ISO 27001 及び GDRP への準拠はまだです。^[[Difyユーザー規約(https://docs.dify.ai/ja-jp/policies/agreement)]
 - その他の情報については [Trust Center](https://security.dify.ai/) などで確認できます。
