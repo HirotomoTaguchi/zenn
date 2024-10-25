@@ -37,10 +37,8 @@ Dify 周りで個人的に気になったことをメモしていきます。
 ### ホスト先
 - アメリカのAWS上でホストされています。^[[Dify Terms](https://dify.ai/terms)]
 - ただし、プライバシーポリシーを確認すると以下のように記載されており、中国を含む他の国にもデータが流通する可能性があります。^[[Dify Privacy Policies](https://docs.dify.ai/ja-jp/policies/agreement)]
-
-'''
-The information collected through our website and our products may be stored and processed in any country/region where LangGenius or its affiliated companies or service providers maintain facilities, including your region, the United States, Australia, Canada, China, and the European Economic Area (including the United Kingdom).（筆者意訳：当社のウェブサイトおよび製品を通じて収集された情報は、お客様の地域、米国、オーストラリア、カナダ、中国、欧州経済地域（英国を含む）など、LangGenius またはその関連会社またはサービス プロバイダーが施設を維持している国/地域で保存および処理される場合があります。）
-'''
+> The information collected through our website and our products may be stored and processed in any country/region where LangGenius or its affiliated companies or service providers maintain facilities, including your region, the United States, Australia, Canada, China, and the European Economic Area (including the United Kingdom).
+> （筆者意訳：当社のウェブサイトおよび製品を通じて収集された情報は、お客様の地域、米国、オーストラリア、カナダ、中国、欧州経済地域（英国を含む）など、LangGenius またはその関連会社またはサービス プロバイダーが施設を維持している国/地域で保存および処理される場合があります。）
 
 ### 認証
 - Difyは、AICPAが定める SOC II を Type 1 の報告書を受領しています。(チェックしたい)^[[https://docs.dify.ai/ja-jp/policies/agreement](https://x.com/dify_ai/status/1845852984330334512)]
