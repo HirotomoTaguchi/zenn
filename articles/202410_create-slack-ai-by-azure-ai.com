@@ -7,3 +7,4 @@ published: false
 ---
 
 ## 免責事項
+https://api.slack.com/methods/search.messages
