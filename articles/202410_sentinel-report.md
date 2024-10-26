@@ -2,26 +2,28 @@
 title: "Sentinel Report"
 emoji: "💻" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
-topics: [XXX, XXX] 
+topics: [Sentinel] 
 published: false
 ---
 
 ```kql
-// Step 1: 前月1日から本日までのデータを取得しIncidentNumberでサマライズ
-let FirstOfLastMonth = startofmonth(now(), -1);
-let StartOfThisMonth = startofmonth(now());
+// 変数定義
+let FirstOfLastMonth = startofmonth(ago(1d), -1);
+let StartOfThisMonth = startofmonth(ago(1d));
+// メインクエリ
 SecurityIncident
-| where FirstActivityTime >= FirstOfLastMonth and FirstActivityTime <= now()
-| summarize
-    EarliestFirstActivityTime = min(FirstActivityTime),
-    WasEverClosed = countif(Status == "Closed") > 0
-by IncidentNumber
-// Step 2: FirstActivityTimeが今月のものを除外
-| where EarliestFirstActivityTime < StartOfThisMonth
-// Step 3: 前月のインシデント数をカウントし、メッセージを生成
-| summarize IncidentCount = count()
-| extend Message = strcat("前月は", tostring(IncidentCount), "件のアラートが発生しました。")
-| project Message
+| where TimeGenerated >= FirstOfLastMonth
+| where CreatedTime >= FirstOfLastMonth and CreatedTime < StartOfThisMonth
+| summarize arg_max(TimeGenerated, *) by IncidentNumber
+| summarize 
+    TotalIncidents = count(),
+    OpenIncidents = countif(Status != "Closed")
+| extend 
+    Message = strcat(
+        "前月は合計", tostring(TotalIncidents), "件のアラートが発生し、",
+        "そのうち", tostring(OpenIncidents), "件が未クローズです。"
+    )
+| project Message, TotalIncidents, OpenIncidents
 ```
 
 ```kql
@@ -29,30 +31,11 @@ by IncidentNumber
 let FirstOfLastMonth = startofmonth(now(), -1);
 let StartOfThisMonth = startofmonth(now());
 SecurityIncident
-| where FirstActivityTime >= FirstOfLastMonth and FirstActivityTime <= now()
+| where CreatedTime >= FirstOfLastMonth and CreatedTime <= now()
 | summarize
-    EarliestFirstActivityTime = min(FirstActivityTime),
+    EarliestCreatedTime = min(CreatedTime),
     WasEverClosed = countif(Status == "Closed") > 0
 by IncidentNumber
-// Step 2: FirstActivityTimeが今月のものを除外
-| where EarliestFirstActivityTime < StartOfThisMonth
-// Step 3: "Closed" でないレコードをカウントし、数字を出力
-| where WasEverClosed == 0
-| summarize OpenIncidentCount = count()
-// 数字のみを出力
-| project OpenIncidentCount
-```
-
-```kql
-// Step 1: 前月1日から本日までのデータを取得し、IncidentNumberとTitleでサマライズ
-let FirstOfLastMonth = startofmonth(now(), -1);
-let StartOfThisMonth = startofmonth(now());
-SecurityIncident
-| where FirstActivityTime >= FirstOfLastMonth and FirstActivityTime <= now()
-| summarize
-    EarliestFirstActivityTime = min(FirstActivityTime),
-    WasEverClosed = countif(Status == "Closed") > 0
-by IncidentNumber
-// Step 2: FirstActivityTimeが今月のものを除外
-| where EarliestFirstActivityTime < StartOfThisMonth
+// Step 2: CreatedTimeが今月のものを除外
+| where EarliestCreatedTime < StartOfThisMonth
 ```
