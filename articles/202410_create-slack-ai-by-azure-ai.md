@@ -3,7 +3,7 @@ title: "Slack AI のようなものを自作する - 検索機能編"
 emoji: "💻" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [Slack, Azure AI, Azure OpenAI, Azure AI Search] 
-published: false
+published: true
 ---
 
 ## はじめに
