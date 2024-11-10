@@ -2,13 +2,13 @@
 title: "Slack AI のようなものを自作する - 検索機能編"
 emoji: "💻" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
-topics: [Slack, Azure AI, Azure OpenAI, AI Search] 
+topics: [Slack, Azure AI, Azure OpenAI, Azure AI Search] 
 published: false
 ---
 
 ## はじめに
 
-本日はSlack AIのようなものを自作するというテーマでブログを書きます。Slack AI が出てから時間が立っているので旬なネタではないかもしれませんが、ここで供養したいと思います。Slack AI には多くの機能がありますが、今回はその中でも検索機能を模倣した自作プロジェクトについてお話しします。
+本日はSlack AI^[[Slack AI のはじめ方](https://slack.com/intl/ja-jp/help/articles/25076892548883-Slack-AI-%E3%81%AE%E3%81%AF%E3%81%98%E3%82%81%E6%96%B9)]のようなものを自作するというテーマでブログを書きます。Slack AI が出てから時間が立っているので旬なネタではないかもしれませんが、ここで供養したいと思います。Slack AI には多くの機能がありますが、今回はその中でも検索機能を模倣した自作プロジェクトについてお話しします。
 
 ## 免責事項
 - 本ブログの情報は公開日時点のものです。
@@ -70,7 +70,7 @@ Notion AI を利用して Slack のデータをインデックスし、回答を
 | 3. SlackのSearch APIを使用 | インデックス構築が不要。常に最新のデータをリアルタイム検索可能 | 検索精度が他の手段に比べて低くなる傾向がある |
 | 4. Notion AIを使用 | Slack以外のデータも統合して検索可能。広範な情報を対象にできる | Notion AIの契約が必要。インデックス対象が広がりすぎる可能性 |
 
-以上の実装方法のメリット・デメリットを比較した結果、今回採用したのは「実装方法2」です。理由としては、全メッセージをインデックスする方法ではコストが高くなる割には検索の精度が上がらない点、また既に「helpme-helpyou」チャンネルなど特定のチャンネルにナレッジが集中していたので、ひたすらスタンプを押すことで効率的に必要な情報だけをインデックスできる点が魅力的だったからです。
+以上の実装方法のメリット・デメリットを比較した結果、今回採用したのは「実装方法2」です。理由としては、全メッセージをインデックスする方法ではコストが高くなる割には検索の精度が上がらない点、また既に「helpme-helpyou」チャンネルなど特定のチャンネルにナレッジが集中していたので、ひたすらスタンプを押すことで効率的に必要な情報だけをインデックスできる点が魅力的だったからです。例えば、Amazon Kendora を立てて、Slack のデータをインデックスすると、Developer Edition で$810（約10万円ちょっと）、Enterprise Edition だと$1008（約15万円）です。^[[Amazon Kendra の料金 - Amazon Web Services](https://www.notion.so/ja/help/notion-ai-connectors-for-slack](https://aws.amazon.com/jp/kendra/pricing/)]
 
 ![image](https://github.com/user-attachments/assets/c9022675-ebca-4c44-b17c-11a517ae1260)
 
