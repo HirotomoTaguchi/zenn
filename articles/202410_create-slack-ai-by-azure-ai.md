@@ -36,13 +36,13 @@ Amazon Kendra、Azure AI Search、Google Vertex AI Search などの検索サー�
 
 全てのデータを対象とできるメリットもありながら、デメリットとしてはコスト的な部分があります。当然、データ量が増えればインフラのコストが上がっていくので、あまりコストメリットがでない可能性があります。また、Slackでtimesなどをやっている会社は、timesに大量の雑談が流れてくる可能性があります。これは、業務に関する情報を探したい場合のノイズになる懸念があります。場合によっては、高度な検索手法を使っても検索精度があがらないなどの懸念があります。
 
-![image](https://github.com/user-attachments/assets/7329153c-8fb2-45c1-9c52-d5c5cc1f1209)
+![image](https://github.com/user-attachments/assets/9ad17fc2-a1be-4d6b-94df-8050bf211d04)
 
 ### 実装方法2. 検索サービスにSlackのメッセージを一部インデックスする
 
 全てのメッセージをインデックスするのではなく、一部のデータのみをインデックスする方法です。Slackのデータは多くの無関係な情報も含んでいるため、すべてをインデックスすると精度が低下したり、コストが高くなる可能性があります。そのため、「ナレッジ」と見なされるメッセージにスタンプを押すことで、そのメッセージだけをインデックスするアプローチを検討しました。
-![image](https://github.com/user-attachments/assets/3735c7a7-f6b0-4678-ab8e-79bb5b0db7eb)
 
+![image](https://github.com/user-attachments/assets/ac7a4123-e1fb-4c6b-83a3-7d951df6b4a0)
 
 ### 実装方法3. Slack の Search API を使う
 
@@ -51,8 +51,8 @@ Slack には Search API ^[[search.messages](https://api.slack.com/methods/search
 ![image](https://github.com/user-attachments/assets/cef35837-dece-41b9-b462-dab86d0ea71e)
 
 一方でデメリットとしては、SlackのSearch APIはリッチな検索手法ではありません。検索仕様についての情報はみつかりませんでしたが、おそらくただのキーワード検索を利用している（注意：筆者推測）ため「こんばんわ」と「こんばんは」や「Defender for Endpoint」と「MDE」といった表記揺れには弱いという傾向があります。もちろん、OpenAI の Function Coding（Structured Output）を使っての検索クエリ生成で複数検索キーワードを生成するということも考えられますが、実装方法1で言及したように検索対象のデータが汚いと限界があります。
-![image](https://github.com/user-attachments/assets/aee7e6e6-f087-476e-9aa4-60c302c6978a)
 
+![image](https://github.com/user-attachments/assets/2394e012-5b1c-49a5-a596-dc0e45ec1957)
 
 ### 実装方法4. Notion AIを使う
 
@@ -70,6 +70,9 @@ Notion AI を利用して Slack のデータをインデックスし、回答を
 | 4. Notion AIを使用 | Slack以外のデータも統合して検索可能。広範な情報を対象にできる | Notion AIの契約が必要。インデックス対象が広がりすぎる可能性 |
 
 以上の実装方法のメリット・デメリットを比較した結果、今回採用したのは「実装方法2」です。理由としては、全メッセージをインデックスする方法ではコストが高くなる割には検索の精度が上がらない点、また既に「helpme-helpyou」チャンネルなど特定のチャンネルにナレッジが集中していたので、ひたすらスタンプを押すことで効率的に必要な情報だけをインデックスできる点が魅力的だったからです。
+
+![image](https://github.com/user-attachments/assets/c9022675-ebca-4c44-b17c-11a517ae1260)
+
 
 ## 実装のポイント
 
