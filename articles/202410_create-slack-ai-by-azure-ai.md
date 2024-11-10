@@ -70,7 +70,7 @@ Notion AI を利用して Slack のデータをインデックスし、回答を
 | 3. SlackのSearch APIを使用 | インデックス構築が不要。常に最新のデータをリアルタイム検索可能 | 検索精度が他の手段に比べて低くなる傾向がある |
 | 4. Notion AIを使用 | Slack以外のデータも統合して検索可能。広範な情報を対象にできる | Notion AIの契約が必要。インデックス対象が広がりすぎる可能性 |
 
-以上の実装方法のメリット・デメリットを比較した結果、今回採用したのは「実装方法2」です。理由としては、全メッセージをインデックスする方法ではコストが高くなる割には検索の精度が上がらない点です。例えば、実装方法1のようにAmazon Kendora を立てて、Slack のデータをインデックスすると、Developer Edition で$810／月（約10万円ちょっと）、Enterprise Edition だと$1008／月（約15万円）です。^[[Amazon Kendra の料金 - Amazon Web Services](https://www.notion.so/ja/help/notion-ai-connectors-for-slack](https://aws.amazon.com/jp/kendra/pricing/)] もちろん、他の用途で使うことも考えられるものの、Slack単体ではペイしなさそうな印象をうけます。
+以上の実装方法のメリット・デメリットを比較した結果、今回採用したのは「実装方法2」です。理由としては、全メッセージをインデックスする方法ではコストが高くなる割には検索の精度が上がらない点です。例えば、実装方法1のようにAmazon Kendora を立てて、Slack のデータをインデックスすると、Developer Edition で$810／月（約10万円ちょっと）、Enterprise Edition だと$1008／月（約15万円）です。^[[Amazon Kendra の料金 - Amazon Web Services](https://aws.amazon.com/jp/kendra/pricing/)] もちろん、他の用途で使うことも考えられるものの、Slack単体ではペイしなさそうな印象をうけます。
 
 また既に「helpme-helpyou」チャンネルなど特定のチャンネルにナレッジが集中していたので、ひたすらスタンプを押すことで効率的に必要な情報だけをインデックスできる状況でした。今後の運用としても、ナレッジとして残したい「神投稿」を厳選してインデックスすることで、綺麗なインデックスを維持できる期待を込めてこれを選定しています。
 
