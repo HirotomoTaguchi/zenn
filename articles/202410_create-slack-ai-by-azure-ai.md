@@ -36,7 +36,8 @@ Amazon Kendra、Azure AI Search、Google Vertex AI Search などの検索サー�
 
 全てのデータを対象とできるメリットもありながら、デメリットとしてはコスト的な部分があります。当然、データ量が増えればインフラのコストが上がっていくので、あまりコストメリットがでない可能性があります。また、Slackでtimesなどをやっている会社は、timesに大量の雑談が流れてくる可能性があります。これは、業務に関する情報を探したい場合のノイズになる懸念があります。場合によっては、高度な検索手法を使っても検索精度があがらないなどの懸念があります。
 
-![image](https://github.com/user-attachments/assets/9ad17fc2-a1be-4d6b-94df-8050bf211d04)
+![image](https://github.com/user-attachments/assets/404c7ae7-0a44-43e7-85ff-63543cb67e4f)
+*よくあるtimesの投稿*
 
 ### 実装方法2. 検索サービスにSlackのメッセージを一部インデックスする
 
@@ -79,7 +80,8 @@ Notion AI を利用して Slack のデータをインデックスし、回答を
 ### データ蓄積部分
 
 データ蓄積部分では、Function Coding（Structured Output）を使ってデータを構造化し、蓄積しています。「ナレッジ追加」というスタンプを用意し、それが押されたメッセージをトリガーにしてスレッド全体を取得します。そのスレッドを「タイトル」「質問」「回答」「URL」などの形式でデータ保存します。このデータはAzure AI Searchに保存し、カスタムスキルを使ってベクトルデータに変換する仕組みです。
-![image](https://github.com/user-attachments/assets/3735c7a7-f6b0-4678-ab8e-79bb5b0db7eb)
+
+![image](https://github.com/user-attachments/assets/ac7a4123-e1fb-4c6b-83a3-7d951df6b4a0)
 
 ### AIによる回答生成部分
 
