@@ -11,7 +11,7 @@ Copilot in PowerPoint のスターター テンプレートで企業パワポテ
 M365 Copilot には様々な機能がありますが、一番ユーザーが期待しているのはパワポ生成なのではと思っています。（私調べ。ソースなし。）一方で、一番ニーズに答えるのが難しいのもパワポ生成かと思っており、特に企業固有のフォーマットやユーザーの意図にアジャストした「いい感じ」の資料作成が難しかったのが実情です。
 もちろん、以前から企業テンプレートを使って、Copilotによるスライド生成は可能でしたが、「違う・・・そうじゃない！」というのが多かったのが実情です。
 https://blog.cloudnative.co.jp/wp-content/uploads/2024/01/16b644d51d9196c8d6912f1cd86d32f3.mp4
-(出所：https://blog.cloudnative.co.jp/22728/)
+*出所：https://blog.cloudnative.co.jp/22728/*
 
 ## 推奨レイアウトでCopilotの精度を上げる
 そんな中、推奨されるレイアウトを元に、Copilot が企業ブランドとコンテンツのニーズに合わせてスライドを生成するための、Copilot in PowerPoint のスターター テンプレートと機能が発表されました。もちろん、完璧なものではないとは思いますが、これを活用することで以前よりは高品質なスライド生成が可能になるのではと思います。
@@ -20,8 +20,6 @@ https://blog.cloudnative.co.jp/wp-content/uploads/2024/01/16b644d51d9196c8d6912f
 今回、企業専用のテンプレートを作る上で必要なものは以下です。
 - 既存の企業で利用しているテンプレート
 - マイクロソフトが[ブログ](https://techcommunity.microsoft.com/blog/microsoft365insiderblog/keep-your-presentations-on-brand-with-copilot-in-powerpoint/4295913)で公開しているスターターキット
-
-
 
 ## テンプレート作成手順
 - **File タブ**から新規プレゼンテーションを作成
@@ -60,8 +58,3 @@ https://blog.cloudnative.co.jp/wp-content/uploads/2024/01/16b644d51d9196c8d6912f
 - [Copilotでプレゼンテーションをブランド化 - Microsoft サポート](https://support.microsoft.com)
 - [PowerPoint Designerのカスタムテンプレート作成](https://support.microsoft.com)
 - [Copilot in PowerPoint ラーニングリソース](https://support.microsoft.com)
-
-
-### **追加リソース**
-- [PowerPointテンプレートの作成と保存 – Microsoftサポート](https://support.microsoft.com)
-- [ブランドに即したCopilotの活用方法 – Microsoftサポート](https://support.microsoft.com)
