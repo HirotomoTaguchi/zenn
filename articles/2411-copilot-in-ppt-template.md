@@ -40,7 +40,7 @@ M365 Copilot のCopilot in PowerPointにおいて特に企業固有のフォー�
 
 ## テンプレート作成方法（パターン②）
 既に、かっちりとしたテンプレートがある場合は、スライドマスターを開き、右クリックで、レイアウト名を変更する形でも大丈夫です。
-![image](https://github.com/user-attachments/assets/fb14ddbb-514b-4e5e-8d13-02e96e91961e)
+![image](https://github.com/user-attachments/assets/72037640-ff9f-4c27-ae9b-b4a4769e2ffa)
 
 ## Copilotでテンプレートを検証
 PowerPointでテンプレートを開き、左上のCopilotアイコンをクリックします。そこで「XXXに関するプレゼンテーションを作成してください」などというプロンプトを用いて、スライド作成を指示します。
