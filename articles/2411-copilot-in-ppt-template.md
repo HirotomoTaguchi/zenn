@@ -1,5 +1,5 @@
 ---
-title: "企業パワポテンプレを Microsoft 365 Copilot in PowerPoint に最適化させる"
+title: "企業パワポテンプレを M365 Copilot in PowerPoint に最適化させる"
 emoji: "💻" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [M365 Copilot] 
