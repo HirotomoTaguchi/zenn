@@ -14,20 +14,30 @@ M365 Copilot のCopilot in PowerPointにおいて特に企業固有のフォー�
 *引用：[Copilot for Microsoft 365 ぶっちゃけどうなん？ - CloudNative Inc. BLOGs](https://blog.cloudnative.co.jp/22728/#co-index-5)*
 
 ## 推奨「レイアウト名」でCopilotの精度を上げる
-そんな中、推奨されるレイアウト名を元に、Copilot が企業ブランドとコンテンツのニーズに合わせてスライドを生成するための新機能が出てきました。また、それに付随して推奨のレイアウト名が記載されたCopilot in PowerPoint のスターター テンプレートが発表されました。もちろん、完璧なものではありませんが、これを活用すると以前よりは高品質なスライド生成を狙ったものです。
+そんな中、推奨されるレイアウト名を元に、Copilot が企業ブランドとコンテンツのニーズに合わせてスライドを生成するように機能強化がなされました。もちろん、完璧なものではありませんが、これを活用すると以前よりは高品質なスライド生成を狙ったものです。仕組みとしては、Copilotによるスライド作成時に、スライドマスターの「レイアウト名」をCopilotが読み取り、その情報を元にコンテンツを当てはめてスライドを生成してくれるとのことです。
 
-仕組みとしては、Copilotによるスライド作成時に、スライドマスターの「レイアウト名」をCopilotが読み取り、その情報を元にコンテンツを当てはめてスライドを生成してくれるとのことです。
-
-![image](https://github.com/user-attachments/assets/fbac8b85-eeee-4aab-9c0b-f20bb3dcc176)
-
-## 事前準備
-今回、企業専用のテンプレートを作る上で必要なものは以下です。
-- 企業で利用している既存のパワポテンプレート
-- マイクロソフトが[ブログ](https://techcommunity.microsoft.com/blog/microsoft365insiderblog/keep-your-presentations-on-brand-with-copilot-in-powerpoint/4295913)で公開しているスターターキット（なくてもできるがあった方が作りやすい。）
+![image](https://github.com/user-attachments/assets/db5fd77f-1bbe-46d3-9ca6-b5d4e46bee90)
 
 ## テンプレート作成方法
-### パターン1. テンプレを移植
-事前準備で用意した「企業で利用している既存のパワポテンプレート」と「スターターキット」の両方を開きます。まず、「スターターキット」の方で**表示タブ**から**スライドマスター**ビューを開きます。すると、マイクロソフトが定義した推奨の「レイアウト名」が使われているスライドマスターの一覧を見れます。
+### パターン1. レイアウト名を人力で変更
+企業で利用している、パワポのテンプレートにて、**表示タブ**から**スライドマスター**ビューを開きます。その後、スライドマスターのそれぞれのレイアウトにて、右クリックでレイアウト名を変更します。
+![image](https://github.com/user-attachments/assets/72037640-ff9f-4c27-ae9b-b4a4769e2ffa)
+
+変更するレイアウト名は以下を参考にしてください。
+![image](https://github.com/user-attachments/assets/fbac8b85-eeee-4aab-9c0b-f20bb3dcc176)
+*参考：[Keep your presentation on-brand with Copilot](https://support.microsoft.com/en-us/topic/keep-your-presentation-on-brand-with-copilot-046c23d5-012e-49e0-8579-fe49302959fc?preview=true)*
+
+この名前に変更することで、Copilotでスライド作成を指示する際に、レイアウトの名前を考慮してくれるようになります。ちなみに、後述の通り、名前だけではなくて、様々なバリエーションのレイアウトを作っておくことも大事です。
+
+### パターン2. テンプレを利用（移植）
+実は今回、Coplotの推奨のレイアウト名が記載されたCopilot in PowerPoint のスターター テンプレートもが[ブログ](https://techcommunity.microsoft.com/blog/microsoft365insiderblog/keep-your-presentations-on-brand-with-copilot-in-powerpoint/4295913)で公開してくれています。
+
+![image](https://github.com/user-attachments/assets/0ee5bf2c-7c89-4713-8d11-3dec93b4eb0e)
+*[URL](https://techcommunity.microsoft.com/blog/microsoft365insiderblog/keep-your-presentations-on-brand-with-copilot-in-powerpoint/4295913)*
+
+そのテンプレートを改造するか、レイアウトを「企業で利用している既存のパワポテンプレート」に移植するという手段があります。
+
+移植の方法としては、「企業で利用している既存のパワポテンプレート」と「スターターキット」の両方を開きます。その後、「スターターキット」の方で**表示タブ**から**スライドマスター**ビューを開きます。すると、マイクロソフトが定義した推奨の「レイアウト名」が使われているスライドマスターの一覧を見れます。
 
 ![image](https://github.com/user-attachments/assets/5fb496b3-6baf-4995-b542-3ec0aa16499d)
 
@@ -39,11 +49,7 @@ M365 Copilot のCopilot in PowerPointにおいて特に企業固有のフォー�
 
 ![image](https://github.com/user-attachments/assets/4e91ea1f-565b-4898-bb90-cf56dad90695)
 
-### パターン2. レイアウト名を人力で変更
-既に、かっちりとしたテンプレートがある場合は、スライドマスターを開き、右クリックで、レイアウト名を変更する形でも大丈夫です。
-![image](https://github.com/user-attachments/assets/72037640-ff9f-4c27-ae9b-b4a4769e2ffa)
-
-## Copilotでテンプレートを検証
+## Copilotでスライド作成
 PowerPointでテンプレートを開き、左上のCopilotアイコンをクリックします。そこで「XXXに関するプレゼンテーションを作成してください」などというプロンプトを用いて、スライド作成を指示します。
 ![image](https://github.com/user-attachments/assets/c7396a03-fb0b-4e61-9f9b-55d4c08c8d8a)
 
@@ -51,13 +57,20 @@ PowerPointでテンプレートを開き、左上のCopilotアイコンをクリ
 
 ![image](https://github.com/user-attachments/assets/7818232b-1a4d-492d-935c-b2b2d3157b8f)
 
-## おまけ（日本語対応）
+## Tips
+### レイアウトの多様性（バリエーション）
+マイクロソフトの[ブログ](https://techcommunity.microsoft.com/blog/microsoft365insiderblog/keep-your-presentations-on-brand-with-copilot-in-powerpoint/4295913)によると、レイアウト（プレースホルダ）の多様性を増やしてあげることが、より良い精度への鍵になるとのことです。個人的には特に「コンテンツ」の部分は複数のレイアウトを用意しておくことが大事だなと思っています。そういった意味では、スターターキットを使うのも良いかもしれません。（画像を入れるレイアウトが多く、そのままビジネスでは使いたくないですが、、）
+
+![image](https://github.com/user-attachments/assets/c35003f6-b66d-4b35-9a81-5dcf792124ba)
+*[出所](https://techcommunity.microsoft.com/blog/microsoft365insiderblog/keep-your-presentations-on-brand-with-copilot-in-powerpoint/4295913)*
+
+### 日本語対応
 ちなみに、レイアウト名は日本語に対応しているようです。早々に対応してくれて、ありがたい限りですね。
 ![image](https://github.com/user-attachments/assets/4a1dc2f0-e42e-48b3-90aa-379db1d38730)
 *[参考](https://support.microsoft.com/en-us/topic/keep-your-presentation-on-brand-with-copilot-046c23d5-012e-49e0-8579-fe49302959fc?preview=true)*
 
 ## 終わりに
-Copilot in PowerPointは登場当初、多くのユーザーの期待に届かずがっかりされた印象もありましたが、日々改善されています。まだ完璧ではありませんが、日本のビジネスマンが多くの時間を費やしているスライド作成が、さらに効率的になることを期待したいです。
+Copilot in PowerPointは登場当初、多くのユーザーの期待に届かずがっかりされた印象もありましたが、日々改善されています。まだ完璧ではありませんが、日本のビジネスマンが多くの時間を費やしているスライド作成が、さらに効率的になることを期待したいです。また、個人的な観測範囲では綺麗なスライドを作る人の特徴として、スライドマスタを意識しているという要素があるような気がしています。そういった意味ではこれを機にスライドマスタを見直してみるとよいかもしれません。
 
 ## 参考
 - [Copilotでプレゼンテーションをブランドイメージに忠実に保ちましょう](https://support.microsoft.com/en-us/topic/keep-your-presentation-on-brand-with-copilot-046c23d5-012e-49e0-8579-fe49302959fc?preview=true)
