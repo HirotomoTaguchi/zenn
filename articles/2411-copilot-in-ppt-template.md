@@ -68,7 +68,7 @@ PowerPointでテンプレートを開き、左上のCopilotアイコンをクリ
 
 ### 日本語対応
 ちなみに、レイアウト名は日本語に対応しているようです。早々に対応してくれて、ありがたい限りですね。
-![image](https://github.com/user-attachments/assets/4a1dc2f0-e42e-48b3-90aa-379db1d38730)
+![image](https://github.com/user-attachments/assets/4d925195-9e88-477c-89ca-2a34679729c7)
 *[参考](https://support.microsoft.com/en-us/topic/keep-your-presentation-on-brand-with-copilot-046c23d5-012e-49e0-8579-fe49302959fc?preview=true)*
 
 ## 終わりに
