@@ -2,7 +2,7 @@
 title: "企業パワポテンプレを M365 Copilot in PowerPoint に最適化させる"
 emoji: "💻" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
-topics: [M365 Copilot] 
+topics: [M365 Copilot, PowerPoint] 
 published: true
 ---
 Copilot in PowerPoint でスライド生成精度を向上させるため、企業パワポテンプレ（スライドマスター）をCopilotに最適化させる方法が登場しました。本ブログでは軽く試してみた記録を記載しています。
