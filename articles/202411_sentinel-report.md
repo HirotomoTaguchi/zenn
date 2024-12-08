@@ -1,12 +1,12 @@
 ---
-title: "Sentinelのセキュリティ運用状況を月次で集計しSlackで通知する"
+title: "【小ネタ】Sentinelのセキュリティ運用状況を月次で集計しSlackで通知する"
 emoji: "💻" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [Sentinel] 
 published: false
 ---
 
-本記事では、Logic AppとKQLクエリを組み合わせて、前月のインシデント集計結果をSlackに自動通知するまでの流れと、その実装上のポイントを紹介します。
+Microsoft Security Advent Calendar 2024 の9日目の記事です。本記事では、Logic AppとKQLクエリを組み合わせて、前月のインシデント集計結果をSlackに自動通知するまでの流れと、その実装上のポイントを紹介します。小ネタで恐縮ですが、よろしくお願いします。
 
 ## 背景
 
