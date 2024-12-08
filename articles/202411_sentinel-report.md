@@ -4,7 +4,7 @@ emoji: "💻"
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [Sentinel] 
 published: true
-published_at: 2024-12-09 07:00
+published_at: 2024-12-09 06:30
 ---
 
 Microsoft Security Advent Calendar 2024 の9日目の記事です。本記事では、Logic AppとKQLクエリを組み合わせて、前月のインシデント集計結果をSlackに自動通知するまでの流れと、その実装上のポイントを紹介します。小ネタで恐縮ですが、よろしくお願いします。
