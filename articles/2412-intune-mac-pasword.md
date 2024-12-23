@@ -1,5 +1,5 @@
 ---
-title: "IntuneでMacにパスワードの設定を強制したら、パスワード変更が無限ループする件"
+title: "IntuneでMACにパスワードの設定を強制したら、パスワード変更が無限ループする件"
 emoji: "💻" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [Intune, MAC] 
