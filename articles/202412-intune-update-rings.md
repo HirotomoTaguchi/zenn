@@ -28,3 +28,5 @@ Microsoft Intuneの更新リング設定で、「延長期間」「期限」「�
 
 ## 参考文献
 https://learn.microsoft.com/ja-jp/mem/intune/protect/windows-10-update-rings
+
+https://learn.microsoft.com/ja-jp/windows/deployment/update/waas-manage-updates-wufb
