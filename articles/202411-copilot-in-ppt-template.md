@@ -4,6 +4,7 @@ emoji: "💻"
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [M365 Copilot, PowerPoint] 
 published: true
+published_at: 2024-11-20 08:00
 ---
 Copilot in PowerPoint でスライド生成精度を向上させるため、企業パワポテンプレ（スライドマスター）をCopilotに最適化させる方法が登場しました。本ブログでは軽く試してみた記録を記載しています。
 
