@@ -22,14 +22,14 @@ ImportError: cannot import name 'AgentStepErrorTelemetryEvent' from 'browser_use
 
 ## 暫定対処
 
-下記の通り、`browser-use` パッケージの指定したバージョンを再インストールすることで問題が解決しました。
+下記の通り、`browser-use` パッケージの指定したバージョンを再インストールすることで暫定的に対処しました。
 
    実施したコマンド:
    ```bash
    uv pip install browser-use==0.1.18
    ```
 
-## 環境のセットアップ
+## 暫定対処の手順
 
 ### 必要な前提条件
 
