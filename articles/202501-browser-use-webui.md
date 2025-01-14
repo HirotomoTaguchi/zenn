@@ -1,5 +1,5 @@
 ---
-title: "Browser-Use が ImportError になる件"
+title: "Browser-Use WebUI が ImportError になる件"
 emoji: "💻" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [Browser-Use WebUI, Browser-Use] 
@@ -8,7 +8,7 @@ published: true
 
 ## 概要
 
-Browser-Use WebUI を Windows 環境で実行しようとした際に、次のエラーが発生する件に関する解決策を記します。
+Browser-Use WebUI を Windows 環境で実行しようとした際に、次のエラーが発生する件についてのメモです。
 
 エラー文:
 
