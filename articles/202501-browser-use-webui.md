@@ -55,8 +55,6 @@ ImportError: cannot import name 'AgentStepErrorTelemetryEvent' from 'browser_use
    .venv\Scripts\activate 
    ```
 
-   LinuxやMacでは `source .venv/bin/activate` を使用します。
-
 3. **必要なパッケージのインストール**
 
    ```bash
@@ -82,10 +80,6 @@ ImportError: cannot import name 'AgentStepErrorTelemetryEvent' from 'browser_use
    ```
 
    ブラウザから `http://127.0.0.1:7788` へアクセスし、ツールが起動することを確認します。
-
-## 再実行で正常動作を確認
-
-上記の階段を完了後に、WebUI が正常に動作することを確認しました。
 
 ## おわりに
 
