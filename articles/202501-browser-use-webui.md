@@ -1,5 +1,5 @@
 ---
-title: "Browser-UseがImportError:cannot import name AgentStepErrorTelemetryEventで失敗"
+title: "Browser-UseのImportError:cannot import name AgentStepErrorTelemetryEvent"
 emoji: "💻" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [Browser-Use WebUI, Browser-Use] 
