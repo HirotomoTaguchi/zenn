@@ -16,6 +16,9 @@ published: true
 
 ## セッション
 ### スポンサーセッション（西田さん）
+
+
+
 スポンサーセッションでは、西田さんより Azure AI 等を使ったOCRの改善等のお話をいただきました。また、今回の会場となった町コザをはじめとする沖縄の紹介など、AzureTravelersならではのトピックスも盛り込んだセッションだと感じました。
 
 ### AI エージェント開発を支える Model-as-a-Service (MaaS) としての Azure AI Foundry
@@ -47,8 +50,7 @@ https://jpazureid.github.io/blog/azure-active-directory/top-50-features-of-2024/
 休憩時間には、おやつ紹介や LT セッションでは、参加者それぞれが持ち寄った地元のお土産を楽しみながら、和やかな雰囲気で情報交換ができました。この勉強会の楽しみの１つです。
 
 ![image](https://github.com/user-attachments/assets/65904069-3e95-460d-b25e-22dac82c0f8e)
-
-*Phote by @ag0u3*
+*Phote by [@ag0u3](https://x.com/ag0u3)*
 
 @[docswell](https://www.docswell.com/s/yuma/KQRLV3-2025-02-15-jat)
 
