@@ -17,10 +17,18 @@ published: true
 ![image](https://github.com/user-attachments/assets/622c99e0-507c-467b-a6f9-81abdb2430ba)
 *https://jat.connpass.com/event/334925/*
 
-## セッション）
+## セッション
 
-スポンサーセッションでは、西
-### スポンサーセッション（西田さん田さんより Azure AI 等を使ったOCRの改善等のお話をいただきました。また、今回の会場となった町コザをはじめとする沖縄の紹介など、AzureTravelersならではのトピックスも盛り込んだセッションだと感じました。
+### パネルディスカッション
+
+![image](https://github.com/user-attachments/assets/419506fc-a556-4409-a89a-0f5272f9efba)
+*Phote by [@ag0u3](https://x.com/ag0u3)*
+
+午前中はパネルディスカッションということで、[@ussvgr](https://x.com/ussvgr) さん司会の元、好きなAzureサービスの話や沖縄の観光の話などのテーマでお話しました。
+
+### スポンサーセッション
+
+スポンサーセッションでは、西田さんより Azure AI 等を使ったOCRの改善等のお話をいただきました。また、今回の会場となった町コザをはじめとする沖縄の紹介など、AzureTravelersならではのトピックスも盛り込んだセッションだと感じました。
 
 ### AI エージェント開発を支える Model-as-a-Service (MaaS) としての Azure AI Foundry
 
