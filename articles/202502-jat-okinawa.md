@@ -20,9 +20,7 @@ https://jat.connpass.com/event/334925/
 
 Ryosuke Otaka さんによる「AI エージェント開発を支える Model-as-a-Service (MaaS) としての Azure AI Foundry」というセッションでした。
 
-<div class="deck-embed js-deck-embed" style="aspect-ratio:1024/576;" data-ratio="1.7777777777777777" data-state="processed">
-    <div class="speakerdeck-embed" data-title="false" data-skip-resize="true" data-id="3ac02649e9a448189a06b93a5e3a9b1b" data-name="AI エージェント開発を支える MaaS としての Azure AI Foundry" data-ratio="1.7777777777777777" data-host="speakerdeck.com"></div>
-</div>
+@[speakerdeck](3ac02649e9a448189a06b93a5e3a9b1b)
 
 ### DXと 内製化と 企業文化の醸成と
 
