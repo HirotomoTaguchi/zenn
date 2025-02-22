@@ -14,15 +14,38 @@ published: false
 https://jat.connpass.com/event/334925/
 
 ## セッション
-### パネルディスカッション
+### スポンサーセッション（西田さん）
 
 ### AI エージェント開発を支える Model-as-a-Service (MaaS) としての Azure AI Foundry
 
-特に印象に残ったのは、Ryosuke Otaka さんによる「AI エージェント開発を支える Model-as-a-Service (MaaS) としての Azure AI Foundry」というセッションでした。
+Ryosuke Otaka さんによる「AI エージェント開発を支える Model-as-a-Service (MaaS) としての Azure AI Foundry」というセッションでした。
 
-## おやつタイム
+<div class="deck-embed js-deck-embed" style="aspect-ratio:1024/576;" data-ratio="1.7777777777777777" data-state="processed">
+    <div class="speakerdeck-embed" data-title="false" data-skip-resize="true" data-id="3ac02649e9a448189a06b93a5e3a9b1b" data-name="AI エージェント開発を支える MaaS としての Azure AI Foundry" data-ratio="1.7777777777777777" data-host="speakerdeck.com"></div>
+</div>
+
+### DXと 内製化と 企業文化の醸成と
+
+特に印象に残ったのは、
+
+### Microsoft Entra: 2024 年の注目機能トップ 50 の解説
+
+
+
+https://jpazureid.github.io/blog/azure-active-directory/top-50-features-of-2024/
+
+### 最近のMSのセキュリティ機能を見ていく
+
+僕も1つセッションを持たせていただきました。MS関連のセキュリティ機能をいくつかご紹介しました。
+
+https://speakerdeck.com/hirotomotaguchi/guan-li-zhe-sikazhi-ranaioutlooknoli-ce-noainohua
+
+## おやつタイム&LT
 
 休憩時間には、おやつ紹介や LT セッションでは、参加者それぞれが持ち寄った地元のお土産を楽しみながら、和やかな雰囲気で情報交換ができました。
+
+![image](https://github.com/user-attachments/assets/65904069-3e95-460d-b25e-22dac82c0f8e)
+*Phote by @ag0u3*
 
 ## Azure クイズ
 
