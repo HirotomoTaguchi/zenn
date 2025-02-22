@@ -7,6 +7,9 @@ published: true
 ---
 先日、沖縄で開催された第5回 Azure Travelers 勉強会に参加してきました。2025年2月15日に [Lagoon KOZA](https://lagoon-koza.org/about) で行われたこのイベントは、Azure の様々な機能をテーマにした充実した内容でした。
 
+![image](https://github.com/user-attachments/assets/6273aeb6-8bf1-4493-91e1-0b99dae0f4b6)
+*会場となった沖縄市コザ*
+
 ## イベント概要
 
 勉強会は朝10時30分から夕方18時30分まで行われ、Azure に関する多彩なセッションが用意されていました。パネルディスカッションから技術セッション、 Azure クイズまで、盛りだくさんの内容でした。
@@ -14,12 +17,10 @@ published: true
 ![image](https://github.com/user-attachments/assets/622c99e0-507c-467b-a6f9-81abdb2430ba)
 *https://jat.connpass.com/event/334925/*
 
-## セッション
-### スポンサーセッション（西田さん）
+## セッション）
 
-
-
-スポンサーセッションでは、西田さんより Azure AI 等を使ったOCRの改善等のお話をいただきました。また、今回の会場となった町コザをはじめとする沖縄の紹介など、AzureTravelersならではのトピックスも盛り込んだセッションだと感じました。
+スポンサーセッションでは、西
+### スポンサーセッション（西田さん田さんより Azure AI 等を使ったOCRの改善等のお話をいただきました。また、今回の会場となった町コザをはじめとする沖縄の紹介など、AzureTravelersならではのトピックスも盛り込んだセッションだと感じました。
 
 ### AI エージェント開発を支える Model-as-a-Service (MaaS) としての Azure AI Foundry
 
@@ -63,11 +64,9 @@ JP（Junpei Tsuchida）さんによる（今回からスタートした）Azure 
 イベント後には、地元の方々おすすめの沖縄グルメを堪能しました。Azure の最新情報を学びつつ、沖縄の文化や食を楽しむことができ、まさに「旅」を感じられる素晴らしい経験となりました。
 
 ![image](https://github.com/user-attachments/assets/2bcd66be-849a-47ec-ae0c-e804a4d5135e)
-
 *Phote by me*
 
 ![IMG_9769](https://github.com/user-attachments/assets/a14d8d7b-f594-4bd1-af83-ed4d9a89f7fc)
-
 *Phote by me*
 
 ## まとめ
