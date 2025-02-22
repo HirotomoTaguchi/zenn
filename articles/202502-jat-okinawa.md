@@ -24,11 +24,11 @@ Ryosuke Otaka さんによる「AI エージェント開発を支える Model-as
 
 ### DXと 内製化と 企業文化の醸成と
 
-特に印象に残ったのは、
+特に印象に残ったのは「DXと 内製化と 企業文化の醸成と」というセッションです。
 
 ### Microsoft Entra: 2024 年の注目機能トップ 50 の解説
 
-
+Sakemi先輩はマイクロソフトが公開している「Microsoft Entra: 2024 年の注目機能トップ 50」 の解説セッションをされていました。自分も最近注目している Entra Suite の話なども聞けたので非常に俺得なセッションでした。
 
 https://jpazureid.github.io/blog/azure-active-directory/top-50-features-of-2024/
 
@@ -36,11 +36,13 @@ https://jpazureid.github.io/blog/azure-active-directory/top-50-features-of-2024/
 
 僕も1つセッションを持たせていただきました。MS関連のセキュリティ機能をいくつかご紹介しました。
 
+![image](https://github.com/user-attachments/assets/156f041c-ff68-499f-b5f9-ad3405e39c98)
+
 https://speakerdeck.com/hirotomotaguchi/guan-li-zhe-sikazhi-ranaioutlooknoli-ce-noainohua
 
 ## おやつタイム&LT
 
-休憩時間には、おやつ紹介や LT セッションでは、参加者それぞれが持ち寄った地元のお土産を楽しみながら、和やかな雰囲気で情報交換ができました。
+休憩時間には、おやつ紹介や LT セッションでは、参加者それぞれが持ち寄った地元のお土産を楽しみながら、和やかな雰囲気で情報交換ができました。この勉強会の楽しみの１つです。
 
 ![image](https://github.com/user-attachments/assets/65904069-3e95-460d-b25e-22dac82c0f8e)
 *Phote by @ag0u3*
@@ -52,6 +54,12 @@ JP（Junpei Tsuchida）さんによる Azure クイズは、（今回からス�
 ## 沖縄の魅力
 
 イベント後には、地元の方々おすすめの沖縄グルメを堪能しました。Azure の最新情報を学びつつ、沖縄の文化や食を楽しむことができ、まさに「旅」を感じられる素晴らしい経験となりました。
+
+![image](https://github.com/user-attachments/assets/2bcd66be-849a-47ec-ae0c-e804a4d5135e)
+*Phote by me*
+
+![IMG_9769](https://github.com/user-attachments/assets/a14d8d7b-f594-4bd1-af83-ed4d9a89f7fc)
+*Phote by me*
 
 ## まとめ
 
