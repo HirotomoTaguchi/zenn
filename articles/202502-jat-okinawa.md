@@ -5,7 +5,7 @@ type: "idea" # tech: 技術記事 / idea: アイデア記事
 topics: [イベント参加レポート, Azure] 
 published: true
 ---
-先日、沖縄で開催された第5回 Azure Travelers 勉強会に参加してきました。2025年2月15日に [Lagoon KOZA](https://lagoon-koza.org/about) で行われたこのイベントは、Azure の様々な機能をテーマにした充実した内容でした。
+2025年2月15日に沖縄で開催された第5回 Azure Travelers 勉強会に参加してきました。 [Lagoon KOZA](https://lagoon-koza.org/about) で行われたこのイベントは、Azure の様々な機能をテーマにした充実した内容でした。ブログを書くまでが勉強会ということで、簡単ですがブログに残しておこうと思います。
 
 ![image](https://github.com/user-attachments/assets/6273aeb6-8bf1-4493-91e1-0b99dae0f4b6)
 *会場となった沖縄市コザ*
