@@ -65,7 +65,7 @@ https://jpazureid.github.io/blog/azure-active-directory/top-50-features-of-2024/
 
 ## Azure クイズ
 
-JP（Junpei Tsuchida）さんによる（今回からスタートした）Azure クイズは、毎回の恒例イベントとして大盛り上がりでした。参加者全員で楽しみながら、Azure の知識を深められる良い機会だなと思いました。
+[@07jp27](https://x.com/07jp27) さんによる（今回からスタートした）Azure クイズは、毎回の恒例イベントとして大盛り上がりでした。参加者全員で楽しみながら、Azure の知識を深められる良い機会だなと思いました。
 
 ## 沖縄の魅力
 
