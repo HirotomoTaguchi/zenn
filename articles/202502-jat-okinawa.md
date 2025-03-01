@@ -1,7 +1,7 @@
 ---
 title: "第5回 Azure Travelers 勉強会 沖縄の旅に参加してきたよ"
 emoji: "🛫" 
-type: "idea" # tech: 技術記事 / idea: アイデア記事
+type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [イベント参加レポート, Azure] 
 published: true
 ---
