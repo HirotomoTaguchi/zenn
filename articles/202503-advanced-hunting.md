@@ -12,658 +12,662 @@ published_at: 2024-12-31 08:00
 ### AlertEvidence
 `AlertEvidence` スキーマは、アラートをトリガーしたイベントに関する追加情報を提供します。 これには、アラートに関連するファイル名、プロセス名、レジストリキー、IPアドレス、URLなどのエンティティ情報が含まれます。
 
-**Use Cases:**
+**ユースケース:**
 
-- **Security Investigation:** Investigators can use AlertEvidence to drill into *all indicators involved in a specific alert*. For example, given an alert ID or title, you might retrieve the list of malicious files, URLs, or affected devices for that alert to understand its scope. This helps incident responders see what the alert touched.  
-  - *Basic Query:* Retrieve evidence entities for a particular alert (by AlertId or Title). This lists all files, IPs, etc. involved in that alert for further analysis. For example:  
+- **セキュリティ調査:** 調査担当者は、AlertEvidenceを使用して、*特定の警告に関与するすべてのインジケーター*を掘り下げることができます。たとえば、警告IDまたはタイトルが与えられた場合、その警告の悪意のあるファイル、URL、または影響を受けたデバイスのリストを取得して、その範囲を理解することができます。これは、インシデントレスポンダーが警告によって何が影響を受けたかを確認するのに役立ちます。
+  - *基本的なクエリ:* 特定の警告（AlertIdまたはTitle別）のエビデンスエンティティを取得します。これにより、さらなる分析のために、その警告に関与するすべてのファイル、IPなどがリスト表示されます。例：
     ```kql
-    // Get all evidence entities for a specific alert by title
+    // 特定のタイトルを持つ警告のすべてのエビデンスエンティティを取得
     AlertEvidence
-    | where Title == "Suspicious PowerShell Behavior" 
+    | where Title == "Suspicious PowerShell Behavior"
     | project Timestamp, EntityType, EvidenceRole, FileName, SHA1, AccountName, DeviceName
-    ```  
-  - *Advanced Query:* Identify if an indicator from one alert appears in others (linking related incidents). For instance, find file hashes that have been evidence in **multiple** distinct alerts, which may indicate a widespread threat:  
+    ```
+  - *高度なクエリ:* ある警告のインジケーターが別の警告に現れるかどうかを特定します（関連するインシデントをリンクします）。たとえば、**複数の**異なる警告でエビデンスとなっているファイルハッシュを見つけます。これは、広範囲にわたる脅威を示している可能性があります。
     ```kql
-    // Find file hashes that appear in more than one alert (potentially spreading)
+    // 複数の警告に現れるファイルハッシュを見つける（潜在的な拡散）
     AlertEvidence
     | where EntityType == "File" and isnotempty(SHA1)
     | summarize AlertCount=dcount(AlertId), Alerts=make_set(Title) by SHA1, FileName
     | where AlertCount > 1
     | project FileName, SHA1, AlertCount, Alerts
-    ```  
-    This query hunts for files that triggered multiple alerts, helping investigators connect related alerts or see if a known malicious file is recurring across incidents.
+    ```
+    このクエリは、複数の警告をトリガーしたファイルを検索し、調査担当者が関連する警告を接続したり、既知の悪意のあるファイルがインシデント全体で再発しているかどうかを確認したりするのに役立ちます。
 
-- **Threat Hunting:** Threat hunters can query AlertEvidence for patterns across alerts to proactively identify threats. For example, one might search for all alert evidences related to a particular **MITRE ATT&CK technique** or a known malware family, indicating that technique or malware was detected. Another hunting approach is to find alerts involving certain entities (like unusual external IP ranges or domains).  
-  - *Basic Query:* Hunt for alerts that involved a specific threat family or ATT&CK technique. For instance, find all alerts where the evidence indicates **phishing** activity (MITRE technique T1566) or a known malware family:  
+- **脅威ハンティング:** 脅威ハンターは、警告全体のパターンについてAlertEvidenceをクエリして、脅威をプロアクティブに特定できます。たとえば、特定の**MITRE ATT&CKテクニック**または既知のマルウェアファミリーに関連するすべての警告エビデンスを検索して、そのテクニックまたはマルウェアが検出されたことを示すことができます。別のハンティングアプローチは、特定のエンティティ（異常な外部IP範囲やドメインなど）を含む警告を見つけることです。
+  - *基本的なクエリ:* 特定の脅威ファミリーまたはATT&CKテクニックに関与した警告を検索します。たとえば、エビデンスが**フィッシング**活動（MITREテクニックT1566）または既知のマルウェアファミリーを示しているすべての警告を見つけます。
     ```kql
-    // Hunt for alert evidences indicating phishing attempts (ATT&CK T1566)
+    // フィッシング試行を示す警告エビデンスを検索（ATT&CK T1566）
     AlertEvidence
-    | where AttackTechniques has "T1566"  // phishing technique
+    | where AttackTechniques has "T1566"  // フィッシングテクニック
       or ThreatFamily == "Phishing"
     | project Timestamp, AlertId, Title, EvidenceRole, RemoteUrl, AccountUpn
-    ```  
-    This returns alerts (with their evidences) related to phishing.  
-  - *Advanced Query:* Identify *common targets or sources* in alerts, such as an IP address that appears as evidence in multiple alerts (possibly a command-and-control server). For example, find any **IP address** that was the remote IP in alert evidences for more than one device:  
+    ```
+    これは、フィッシングに関連する警告（およびそのエビデンス）を返します。
+  - *高度なクエリ:* 警告における*共通のターゲットまたはソース*（複数の警告でエビデンスとして現れるIPアドレス（おそらくコマンドアンドコントロールサーバー））を特定します。たとえば、複数のデバイスで警告エビデンスのリモートIPであった**IPアドレス**を見つけます。
     ```kql
-    // Find suspicious IPs that appear in alerts on multiple devices
+    // 複数のデバイスの警告に現れる疑わしいIPを見つける
     AlertEvidence
     | where isnotempty(RemoteIP)
     | summarize DevicesAffected=dcount(DeviceId), AlertCount=dcount(AlertId) by RemoteIP
     | where DevicesAffected > 1
     | sort by AlertCount desc
-    ```  
-    This surfaces IPs that have triggered alerts on multiple machines, a possible sign of a widespread attacker infrastructure.
+    ```
+    これは、複数のマシンで警告をトリガーしたIPを表面化させます。これは、広範囲にわたる攻撃者のインフラストラクチャの可能性のある兆候です。
 
-- **Compliance Check:** In a security operations context, you can use AlertEvidence to verify that threats are being remediated in compliance with policy (e.g. high-severity alerts addressed within an SLA, or malicious artifacts removed). For example, you might check for any high-severity alert evidences older than a certain date (indicating potential overdue incidents), or ensure that malicious files identified by alerts are no longer present in the environment.  
-  - *Basic Query:* List all **High severity** alerts (via their evidence entries) that are older than 7 days, which could indicate incidents that potentially haven’t been fully resolved within the expected timeframe:  
+- **コンプライアンスチェック:** セキュリティ運用において、AlertEvidenceを使用して、脅威がポリシーに準拠して修復されていることを確認できます（例：SLA内で対応された重大度の高い警告、または悪意のある成果物が削除されたこと）。たとえば、特定の日付より古い重大度の高い警告エビデンス（潜在的な期限切れのインシデントを示す）を確認したり、警告によって特定された悪意のあるファイルが環境内に存在しないことを確認したりできます。
+  - *基本的なクエリ:* 7日以上前のすべての**重大度の高い**警告（そのエビデンスエントリを介して）をリスト表示します。これは、予想される期間内に完全に解決されていない可能性のあるインシデントを示している可能性があります。
     ```kql
-    // Identify high-severity alerts (via evidence) older than 7 days
+    // 7日以上前の重大度の高い警告（エビデンス経由）を特定
     AlertEvidence
     | where Severity == "High" and Timestamp < ago(7d)
     | summarize Alerts=dcount(AlertId) by Title, max(Timestamp)
-    ```  
-    This yields high-severity alert titles and the last time they were seen, for compliance tracking of incident response SLAs.  
-  - *Advanced Query:* Ensure malicious files from alerts have been remediated. For example, take file hashes from recent malware alerts and check if those files ran on any device **after** the alert time (which would mean the threat persisted, a compliance gap in remediation):  
+    ```
+    これは、インシデント対応SLAのコンプライアンス追跡のために、重大度の高い警告のタイトルと最後に確認された日時を示します。
+  - *高度なクエリ:* 警告からの悪意のあるファイルが修復されたことを確認します。たとえば、最近のマルウェア警告からのファイルハッシュを取得し、これらのファイルが警告時刻**後**に任意のデバイスで実行されたかどうかを確認します（これは、脅威が持続しており、修復におけるコンプライアンスギャップがあることを意味します）。
     ```kql
-    // Check if files from malware alerts executed again after the alert (remediation check)
+    // マルウェア警告のファイルが警告後に再度実行されたかどうかを確認（修復チェック）
     let recentMalware = AlertEvidence
       | where EntityType == "File" and ThreatFamily != "" and Timestamp > ago(14d)
       | project AlertId, SHA1, AlertTime=Timestamp;
     recentMalware
     | join kind=inner (
-        DeviceProcessEvents 
+        DeviceProcessEvents
         | project SHA1, ProcessCreationTime
       ) on SHA1
-    | where ProcessCreationTime > AlertTime  // execution after alert was raised
+    | where ProcessCreationTime > AlertTime  // 警告発生後の実行
     | project SHA1, AlertId, AlertTime, ProcessCreationTime, DeviceName
-    ```  
-    This cross-table query finds any file (by SHA1 hash) that was identified in a recent malware alert and then was executed on a device *after* that alert. Security teams can use this to verify that malware files were quarantined or removed as required by policy, flagging any that reappeared.
+    ```
+    このクロス表クエリは、最近のマルウェア警告で特定され、その後その警告後にデバイスで実行されたファイル（SHA1ハッシュ別）を見つけます。セキュリティチームはこれを使用して、マルウェアファイルがポリシーで義務付けられているとおりに隔離または削除されたことを確認し、再発したものをフラグ付けできます。
 
 ### AlertInfo
-**Schema Description:** The `AlertInfo` table contains a record for each security alert in Microsoft 365 Defender, including alerts from Defender for Endpoint, Defender for Office 365, Defender for Cloud Apps, and Defender for Identity ([AlertInfo table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-alertinfo-table#:~:text=AlertInfo)). Each alert record includes high-level info such as the alert **Title**, **Category** (type of threat or breach activity), **Severity** (Low, Medium, High), **ServiceSource** (which product or service generated the alert), and any mapped **MITRE ATT&CK techniques** ([AlertInfo table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-alertinfo-table#:~:text=Column%20name%20Data%20type%20Description,that%20provided%20the%20alert%20information)) ([AlertInfo table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-alertinfo-table#:~:text=,activity%20that%20triggered%20the%20alert)). This table is used to **view and filter alerts**, often as a starting point for investigations or to gauge your threat landscape (e.g., count of alerts by severity or category).
+**スキーマの説明:** `AlertInfo`テーブルには、Defender for Endpoint、Defender for Office 365、Defender for Cloud Apps、Defender for Identityからの警告を含む、Microsoft 365 Defenderの各セキュリティ警告のレコードが含まれています（[高度な検索スキーマのAlertInfoテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-alertinfo-table#:~:text=AlertInfo)）。各警告レコードには、警告の**タイトル**、**カテゴリ**（脅威または侵害活動の種類）、**重大度**（低、中、高）、**ServiceSource**（警告を生成した製品またはサービス）、およびマッピングされた**MITRE ATT&CKテクニック**（[高度な検索スキーマのAlertInfoテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-alertinfo-table#:~:text=Column%20name%20Data%20type%20Description,that%20provided%20the%20alert%20information)）（[高度な検索スキーマのAlertInfoテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-alertinfo-table#:~:text=,activity%20that%20triggered%20the%20alert)）などの高レベルの情報が含まれています。このテーブルは、**警告の表示とフィルタリング**に使用され、多くの場合、調査の出発点として、または脅威の状況を把握するために使用されます（たとえば、重大度またはカテゴリ別の警告の数）。
 
-**Use Cases:**
+**ユースケース:**
 
-- **Security Investigation:** Analysts use AlertInfo to retrieve details about a specific alert or to find related alerts by category or severity. For example, when investigating an incident, you might pull all alerts for the affected device or all alerts in the same timeframe to see the bigger picture.  
-  - *Basic Query:* Get all details of a particular alert by its ID (or title). This helps an investigator quickly gather the context of that alert (severity, category, etc.):  
+- **セキュリティ調査:** アナリストはAlertInfoを使用して、特定の警告の詳細を取得したり、カテゴリまたは重大度別に類似の警告を見つけたりします。たとえば、インシデントを調査する際に、影響を受けたデバイスのすべての警告、または同じ時間枠内のすべての警告を取得して、全体像を把握できます。
+  - *基本的なクエリ:* ID（またはタイトル）で特定の警告のすべての詳細を取得します。これにより、調査担当者はその警告のコンテキスト（重大度、カテゴリなど）を迅速に把握できます。
     ```kql
-    // Fetch a specific alert by AlertId
+    // AlertIdで特定の警告を取得
     AlertInfo
     | where AlertId == "<ALERT-ID-123>"
-    ```  
-    *(Replace `<ALERT-ID-123>` with the actual AlertId of interest.)* This returns the full alert record, including Title, Category, Severity, etc., which is useful as a summary for incident reporting.  
-  - *Advanced Query:* Investigate all alerts related to a specific device or user during an incident. For example, if a device is suspected to be compromised, list all alerts on that device in the last 24 hours:  
+    ```
+    *(`<ALERT-ID-123>`を目的の実際のAlertIdに置き換えてください。)* これは、タイトル、カテゴリ、重大度などを含む完全な警告レコードを返します。これは、インシデントレポートの概要として役立ちます。
+  - *高度なクエリ:* インシデント中に特定のデバイスまたはユーザーに関連するすべての警告を調査します。たとえば、デバイスが侵害された疑いがある場合、過去24時間以内にそのデバイス上のすべての警告をリスト表示します。
     ```kql
-    // Alerts on a specific device in the last day (by device name)
+    // 過去1日以内の特定のデバイス上の警告（デバイス名別）
     AlertInfo
     | where DeviceName == "HR-WKSTN-001.contoso.com"
       and Timestamp > ago(1d)
     | project Timestamp, Title, Severity, Category, ServiceSource
-    | sort by Timestamp asc 
-    ```  
-    This query compiles a timeline of alerts on *HR-WKSTN-001* over the last day, aiding investigators in understanding the sequence of malicious activities and their types.
+    | sort by Timestamp asc
+    ```
+    このクエリは、過去1日間の*HR-WKSTN-001*上の警告のタイムラインをまとめたもので、調査担当者が悪意のある活動のシーケンスとその種類を理解するのに役立ちます。
 
-- **Threat Hunting:** The AlertInfo table can be queried to find patterns or clusters of alerts that might indicate undetected issues or widespread campaigns. Hunters often look at alert trends by category or ATT&CK technique to hypothesize where to dig deeper.  
-  - *Basic Query:* Hunt for **multiple low-severity alerts that could collectively indicate a bigger issue**. For instance, a spike in multiple “failed logon” or “password spray” low-severity alerts might warrant attention. A simple query could count alerts by category or title:  
+- **脅威ハンティング:** AlertInfoテーブルをクエリして、検出されていない問題や広範囲にわたるキャンペーンを示す可能性のある警告のパターンやクラスターを見つけることができます。ハンターは、カテゴリ別またはATT&CKテクニック別の警告の傾向を見て、さらに深く掘り下げる場所を仮説立てることがよくあります。
+  - *基本的なクエリ:* **複数の重大度の低い警告が全体としてより大きな問題を示している可能性**を探します。たとえば、「ログイン失敗」または「パスワードスプレー」の重大度の低い警告が複数急増した場合、注意が必要になる可能性があります。簡単なクエリで、カテゴリまたはタイトル別に警告をカウントできます。
     ```kql
-    // Count of alerts by title in the last 7 days (identify unusual alert spikes)
+    // 過去7日間のタイトル別の警告数（異常な警告の急増を特定）
     AlertInfo
     | where Timestamp > ago(7d)
     | summarize AlertCount = count() by Title, Severity
     | sort by AlertCount desc
-    ```  
-    Reviewing the most frequent alerts may highlight an ongoing issue (e.g., many password spray alerts indicating a possible brute-force attack attempt).  
-  - *Advanced Query:* Proactively identify **gaps in coverage or emerging attack techniques**. For example, list any ATT&CK techniques that have *no* alerts in the past month (perhaps indicating potential blind spots):  
+    ```
+    最も頻繁な警告を確認することで、継続的な問題（たとえば、ブルートフォース攻撃の可能性のある試みを多数示すパスワードスプレー警告など）が明らかになる可能性があります。
+  - *高度なクエリ:* **カバレッジのギャップまたは新たな攻撃テクニック**をプロアクティブに特定します。たとえば、過去1か月間に警告が発生していないATT&CKテクニックをリスト表示します（潜在的な盲点を示している可能性があります）。
     ```kql
-    // Find MITRE techniques not seen in alerts in the past 30 days
+    // 過去30日間に警告で確認されなかったMITREテクニックを見つける
     let techniquesSeen = AlertInfo
       | where Timestamp > startofday(ago(30d))
       | mv-expand technique = split(AttackTechniques, ",")
       | summarize by technique;
-    AttckTechniqueReferences  // hypothetical reference of all techniques
+    AttckTechniqueReferences  // すべてのテクニックの仮説的な参照
     | where TechniqueID !in (techniquesSeen.technique)
-    ```  
-    *(Note: This assumes you have a reference list `AttckTechniqueReferences` of all technique IDs.)* The idea is to reveal which techniques haven’t been detected in alerts, which might be areas to validate for coverage or test via red team exercises.
+    ```
+    *(注：これは、すべてのテクニックIDの参照リスト`AttckTechniqueReferences`があることを前提としています。)* 目的は、警告で検出されていないテクニックを明らかにし、カバレッジを検証したり、レッドチーム演習を通じてテストしたりする領域を示すことです。
 
-- **Compliance Check:** In terms of security operations, compliance could mean ensuring that alerts are handled according to policy or that detection coverage meets certain standards. With AlertInfo, one can check if all high-severity alerts have been resolved within a timeframe, or ensure categories like data leak alerts are not occurring (policy compliance).  
-  - *Basic Query:* Identify any **high severity alerts older than X days that are still active**, which may violate incident response SLAs. (AlertInfo doesn’t directly store “resolved” status, but analysts often assume if an alert is still listed and old, it might be unresolved.) For example:  
+- **コンプライアンスチェック:** セキュリティ運用に関して、コンプライアンスとは、警告がポリシーに従って処理されていること、または検出範囲が特定の基準を満たしていることを保証することを意味する可能性があります。AlertInfoを使用すると、すべての重大度の高い警告が一定期間内に解決されたかどうかを確認したり、データ漏洩警告などのカテゴリが発生していないことを確認したりできます（ポリシーコンプライアンス）。
+  - *基本的なクエリ:* **X日以上前の重大度の高い警告で、まだアクティブなもの**を特定します。これは、インシデント対応SLAに違反している可能性があります。（AlertInfoは「解決済み」ステータスを直接保存しませんが、アナリストは、警告がまだリストにあり、古い場合は未解決であると想定することがよくあります。）例：
     ```kql
-    // High severity alerts older than 14 days (potentially overdue)
+    // 14日以上前の重大度の高い警告（潜在的に期限切れ）
     AlertInfo
     | where Severity == "High" and Timestamp < ago(14d)
     | project AlertId, Title, Category, Timestamp
-    ```  
-    Security managers can review such a list to ensure no critical alert has been ignored or open beyond the allowed period.  
-  - *Advanced Query:* **Policy violation alerts** – ensure that none (or few) are occurring. For instance, if your organization has a policy against using unsanctioned cloud apps, you might have alerts in the *Cloud App* category when that policy is broken. You can check how many such alerts fired in a period:  
+    ```
+    セキュリティ管理者はこのようなリストを確認して、重大な警告が見落とされたり、許可された期間を超えてオープンになったりしていないことを確認できます。
+  - *高度なクエリ:* **ポリシー違反の警告** - 発生していない（またはほとんど発生していない）ことを確認します。たとえば、組織が未承認のクラウドアプリの使用を禁止するポリシーを持っている場合、そのポリシーが破られたときに*Cloud App*カテゴリに警告が表示される可能性があります。一定期間にそのような警告が何回発生したかを確認できます。
     ```kql
-    // Count of policy-related alerts (e.g., data leak or DLP) in last 30 days
+    // 過去30日間のポリシー関連の警告数（例：データ漏洩またはDLP）
     AlertInfo
     | where Category in ("Data Loss Prevention", "DataLeak", "ShadowIT")
       and Timestamp > ago(30d)
     | summarize AlertsCount = count()
-    ```  
-    If this count is above zero (or above a threshold), it indicates compliance issues (e.g., users emailing sensitive data, using unsanctioned apps, etc.). The security team might treat any occurrence as a compliance failure to be addressed via training or controls. This use of AlertInfo helps monitor adherence to security policies through the lens of alerts.
+    ```
+    この数がゼロより大きい（または閾値より大きい）場合、コンプライアンスの問題（たとえば、ユーザーが機密データをメールで送信したり、未承認のアプリを使用したりするなど）を示しています。セキュリティチームは、発生したものをトレーニングまたは制御を通じて対処すべきコンプライアンス違反として扱う可能性があります。AlertInfoのこの使用法は、警告の観点からセキュリティポリシーの遵守を監視するのに役立ちます。
 
-### BehaviorEntities (Preview)
-**Schema Description:** The `BehaviorEntities` table (preview) contains information about **behaviors** detected by Microsoft Defender for Cloud Apps (formerly MCAS) ([BehaviorEntities table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-behaviorentities-table#:~:text=The%20,return%20information%20from%20this%20table)). A *behavior* in Defender XDR is a higher-level abstraction derived from one or more raw events, providing contextual insight into user or entity actions ([BehaviorEntities table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-behaviorentities-table#:~:text=Behaviors%20are%20a%20type%20of,Read%20more%20about%20behaviors)). This table lists the **entities involved in those behaviors**. For each behavior, it can enumerate associated entities (users, files, devices, etc.) along with their roles. Key fields include **BehaviorId** (unique ID of the behavior), **ActionType** (type of behavior/activity detected), **EntityType** and **EntityRole** (what type of entity and whether it’s the actor or target) ([BehaviorEntities table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-behaviorentities-table#:~:text=,that%20provided%20information%20for%20the)) ([BehaviorEntities table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-behaviorentities-table#:~:text=,is%20impacted%20or%20merely%20related)), plus context like filenames, IPs, account info, etc. Essentially, BehaviorEntities is similar in concept to AlertEvidence, but for *Cloud App behavioral alerts*, providing the who/what involved in a cloud app alert or anomaly.
+### BehaviorEntities (プレビュー)
+**スキーマの説明:** `BehaviorEntities`テーブル（プレビュー）には、Microsoft Defender for Cloud Apps（旧MCAS）によって検出された**動作**に関する情報が含まれています（[高度な検索スキーマのBehaviorEntitiesテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-behaviorentities-table#:~:text=The%20,)）。Defender XDRにおける*動作*は、1つ以上の生イベントから派生したより高レベルの抽象化であり、ユーザーまたはエンティティのアクションに関するコンテキスト上の洞察を提供します（[高度な検索スキーマのBehaviorEntitiesテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-behaviorentities-table#:~:text=Behaviors%20are%20a%20type%20of,)）。このテーブルには、**これらの動作に関与するエンティティ**がリスト表示されます。各動作について、関連するエンティティ（ユーザー、ファイル、デバイスなど）をその役割とともに列挙できます。主要なフィールドには、**BehaviorId**（動作の一意のID）、**ActionType**（検出された動作/アクティビティの種類）、**EntityType**および**EntityRole**（エンティティの種類と、それがアクターかターゲットか）が含まれます（[高度な検索スキーマのBehaviorEntitiesテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-behaviorentities-table#:~:text=,)）（[高度な検索スキーマのBehaviorEntitiesテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-behaviorentities-table#:~:text=,)）、さらにファイル名、IP、アカウント情報などのコンテキストが含まれます。基本的に、BehaviorEntitiesはAlertEvidenceと概念的に似ていますが、*Cloud Appの行動アラート*に関するものであり、クラウドアプリのアラートや異常に関与した人物/物を特定します。
 
-**Use Cases:**
+**ユースケース:**
 
-- **Security Investigation:** When a Defender for Cloud Apps alert (behavior) triggers – for example, “Impossible Travel” or “Mass download by user” – investigators can use BehaviorEntities to see *which users, files, or other objects* are involved. This helps clarify what the behavior alert is about.  
-  - *Basic Query:* Fetch entities for a specific Cloud App behavior alert by its BehaviorId. For instance, if investigating an “Impossible Travel” alert, list the user and IP entities that were part of that behavior:  
+- **セキュリティ調査:** Defender for Cloud Appsのアラート（動作）がトリガーされた場合（たとえば、「不可能旅行」や「ユーザーによる大量ダウンロード」）、調査担当者はBehaviorEntitiesを使用して、*どのユーザー、ファイル、またはその他のオブジェクト*が関与しているかを確認できます。これにより、動作アラートの内容が明確になります。
+  - *基本的なクエリ:* BehaviorIdで特定のCloud Appの動作アラートのエンティティを取得します。たとえば、「不可能旅行」アラートを調査する場合、その動作の一部であったユーザーとIPエンティティをリスト表示します。
     ```kql
-    // Retrieve entities involved in a specific behavior alert
+    // 特定の動作アラートに関与するエンティティを取得
     BehaviorEntities
     | where BehaviorId == "<Behavior-ID>"
-    ```  
-    This gives all entities (e.g., the user account, the source and destination locations as IP entities) tied to that alert. Analysts can quickly identify the user who triggered the anomaly and any related entity (maybe a file or device).  
-  - *Advanced Query:* Correlate behavior alerts with device or identity info for richer context. For example, join BehaviorEntities with IdentityInfo to get department or job role of the user involved (useful to assess impact or intent):  
+    ```
+    これにより、そのアラートに関連するすべてのエンティティ（たとえば、ユーザーアカウント、IPエンティティとしての送信元と宛先の場所）が得られます。アナリストは、異常をトリガーしたユーザーと、関連するエンティティ（ファイルやデバイスなど）を迅速に特定できます。
+  - *高度なクエリ:* より豊富なコンテキストを得るために、動作アラートをデバイスまたはID情報と関連付けます。たとえば、BehaviorEntitiesをIdentityInfoと結合して、関与したユーザーの部署または職務を取得します（影響または意図を評価するのに役立ちます）。
     ```kql
-    // Enrich a cloud app behavior's user entity with identity details
+    // クラウドアプリの動作のユーザーエンティティをIDの詳細で強化
     BehaviorEntities
     | where BehaviorId == "<Behavior-ID>" and EntityType == "User"
     | join kind=leftouter IdentityInfo on $left.AccountObjectId == $right.AccountObjectId
     | project BehaviorId, ActionType, AccountDisplayName, Department, Country = AccountCountry
-    ```  
-    This might show, for instance, that a user from Finance performed an unusual cloud activity from a foreign country – valuable context for the investigator.
+    ```
+    たとえば、これは、財務部門のユーザーが海外から異常なクラウド活動を実行したことを示す可能性があります。これは、調査担当者にとって貴重なコンテキストです。
 
-- **Threat Hunting:** BehaviorEntities can be queried to uncover suspicious patterns in cloud usage across the tenant – even if they haven’t triggered formal alerts, the behavior records are there to hunt through (since behaviors can be benign or precursors to alerts). Hunters might look for multiple behaviors by the same user or unusual combinations of entities.  
-  - *Basic Query:* Find **multiple different behaviors involving the same user**, which could indicate that user account is behaving abnormally. For example:  
+- **脅威ハンティング:** BehaviorEntitiesをクエリして、テナント全体のクラウド使用における疑わしいパターンを明らかにすることができます。正式なアラートをトリガーしていなくても、動作レコードは検索可能です（動作は良性のものもあれば、アラートの前兆となるものもあるため）。ハンターは、同じユーザーによる複数の動作や、エンティティの異常な組み合わせを探すことがあります。
+  - *基本的なクエリ:* **同じユーザーに関与する複数の異なる動作**を見つけます。これは、そのユーザーアカウントが異常な動作をしていることを示している可能性があります。たとえば：
     ```kql
-    // Users associated with multiple distinct behavior alerts in last 7 days
+    // 過去7日間に複数の異なる動作アラートに関連付けられたユーザー
     BehaviorEntities
     | where Timestamp > ago(7d) and EntityType == "User"
     | summarize BehaviorCount=dcount(BehaviorId), Actions=make_set(ActionType) by AccountUpn
     | where BehaviorCount > 1
-    ```  
-    This identifies users who had more than one behavior alert (perhaps an impossible travel *and* a mass download), suggesting that account may warrant investigation for compromise.  
-  - *Advanced Query:* Hunt for **cloud app behaviors indicating risky file activities**. For instance, find any behavior where a *sensitive file* (if tagged or named a certain way) was accessed in unusual ways:  
+    ```
+    これにより、複数の動作アラート（おそらく不可能旅行*と*大量ダウンロード）が発生したユーザーが特定されます。これは、そのアカウントが侵害されているかどうかを調査する必要があることを示唆しています。
+  - *高度なクエリ:* **危険なファイル活動を示すクラウドアプリの動作**を探します。たとえば、*機密ファイル*（特定のタグが付いているか、特定の方法で名前が付けられている場合）が異常な方法でアクセスされた動作を見つけます。
     ```kql
-    // Potential data exfiltration via cloud – e.g., multiple file downloads by one user
+    // クラウド経由での潜在的なデータ漏洩 - 例：1人のユーザーによる複数のファイルダウンロード
     BehaviorEntities
     | where EntityType == "File" and FileName has "Confidential"
     | join kind=inner (BehaviorEntities | where EntityType == "User") on BehaviorId
     | project Timestamp, BehaviorId, User=AccountUpn, FileName, ActionType
-    ```  
-    Here we filter behaviors that involve files named “Confidential” and pair them with the user involved in the same BehaviorId. This could reveal if a user downloaded many confidential files (the ActionType might be something like *MassFileDownload* in Cloud App events).
+    ```
+    ここでは、「Confidential」という名前のファイルに関与する動作をフィルタリングし、同じBehaviorIdに関与するユーザーとそれらをペアにします。これは、ユーザーが多くの機密ファイルをダウンロードした場合（ActionTypeはCloud Appイベントで*MassFileDownload*のようなものになる可能性があります）を明らかにする可能性があります。
 
-- **Compliance Check:** In cloud app monitoring, compliance might involve ensuring that certain activities (like accessing sensitive data from unsanctioned locations or violating data residency) are flagged. BehaviorEntities can help verify if such policy-violation behaviors occurred and who was involved, supporting internal compliance audits.  
-  - *Basic Query:* Check if any **sensitive SharePoint content access** behaviors were recorded (indicative of possible policy violations). For example, if your organization has a policy against mass deletion of files, and Defender for Cloud Apps monitors that:  
+- **コンプライアンスチェック:** クラウドアプリの監視において、コンプライアンスには、特定の活動（未承認の場所からの機密データへのアクセスやデータ所在地違反など）にフラグが立てられることを保証することが含まれる可能性があります。BehaviorEntitiesは、そのようなポリシー違反の動作が発生したかどうか、および誰が関与したかを確認するのに役立ち、内部コンプライアンス監査をサポートします。
+  - *基本的なクエリ:* **機密性の高いSharePointコンテンツへのアクセス**動作が記録されたかどうかを確認します（ポリシー違反の可能性を示す）。たとえば、組織がファイルの大量削除を禁止するポリシーを持ち、Defender for Cloud Appsがそれを監視している場合：
     ```kql
-    // Find any behavior alerts related to mass file deletion (compliance)
+    // 大量ファイル削除に関連する動作アラートを見つける（コンプライアンス）
     BehaviorEntities
-    | where ActionType == "MassDeletionActivity" 
+    | where ActionType == "MassDeletionActivity"
     | summarize Count=count() by BehaviorId
-    ```  
-    If any such behaviors exist, it indicates compliance issues (someone deleting large numbers of files, potentially in violation of data retention policies).  
-  - *Advanced Query:* Ensure **cloud access policies** (like impossible travel) are being enforced. For instance, detect any user that circumvented MFA or other controls – one proxy is to look at *Behaviors that got downgraded in severity or not turned into full alerts*. While BehaviorEntities alone may not have “policy passed/failed” info, you can use it with BehaviorInfo (which contains alert info for behaviors). For example, to list all *Behavior alerts of type “ImpossibleTravel” and check if the user is an admin (a bigger compliance concern)*:  
+    ```
+    そのような動作が存在する場合、それはコンプライアンスの問題を示しています（誰かが大量のファイルを削除しており、データ保持ポリシーに違反している可能性があります）。
+  - *高度なクエリ:* **クラウドアクセスポリシー**（不可能旅行など）が実施されていることを確認します。たとえば、MFAまたはその他の制御を回避したユーザーを検出します。1つのプロキシは、*重大度が低下した、または完全なアラートにならなかった動作*を見ることです。BehaviorEntitiesだけでは「ポリシー合格/不合格」の情報がないかもしれませんが、BehaviorInfo（動作のアラート情報を含む）と一緒に使用できます。たとえば、「ImpossibleTravel」タイプのすべての*動作アラートをリスト表示し、ユーザーが管理者であるかどうか（より大きなコンプライアンス上の懸念事項）を確認*します。
     ```kql
-    // List impossible travel behaviors and flag if user is an admin
+    // 不可能旅行の動作をリスト表示し、ユーザーが管理者である場合にフラグを立てる
     let adminUsers = IdentityInfo | where JobTitle contains "Admin" or Roles has "Global Administrator" | distinct AccountObjectId;
     BehaviorInfo
     | where Description startswith "Impossible travel"
     | join kind=inner (BehaviorEntities | where EntityType == "User") on BehaviorId
     | extend IsAdmin = iff(AccountObjectId in (adminUsers), "Yes", "No")
     | project Timestamp, AccountUpn, IsAdmin, Description
-    ```  
-    This identifies “Impossible travel” incidents and whether the user involved is an admin. A compliance officer might specifically review cases where privileged accounts logged in from impossible locations (since that violates not just policy but could be critical). This cross-table query helps highlight compliance-relevant anomalies (like admins breaching location policy).
+    ```
+    これは、「不可能旅行」のインシデントと、関与したユーザーが管理者であるかどうかを特定します。コンプライアンス担当者は、特権アカウントが不可能と思われる場所からログインしたケース（ポリシー違反だけでなく、重大な問題である可能性があるため）を特にレビューする可能性があります。このクロス表クエリは、コンプライアンスに関連する異常（管理者が場所ポリシーに違反するなど）を強調表示するのに役立ちます。
 
-### BehaviorInfo (Preview)
-**Schema Description:** The `BehaviorInfo` table (preview) contains information about **behavior-based alerts** from Microsoft Defender for Cloud Apps ([BehaviorInfo table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-behaviorinfo-table#:~:text=The%20,return%20information%20from%20this%20table)). Each entry in BehaviorInfo is essentially an *alert record for a cloud app behavior*, similar to how AlertInfo is for traditional alerts. It includes details like **Description** of the behavior, **Category** (threat types or policy names), associated **MITRE techniques**, and time bounds of the behavior (StartTime/EndTime) ([BehaviorInfo table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-behaviorinfo-table#:~:text=,the%20notable%20component%20or%20activity)) ([BehaviorInfo table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-behaviorinfo-table#:~:text=,activity%20related%20to%20the%20behavior)). Since behaviors provide context for potentially suspicious activities in cloud services, this table is valuable for understanding *what the alert is and its scope* (duration, techniques, etc.). In short, BehaviorInfo is the Cloud Apps counterpart to AlertInfo, summarizing each behavior alert.
+### BehaviorInfo (プレビュー)
+**スキーマの説明:** `BehaviorInfo`テーブル（プレビュー）には、Microsoft Defender for Cloud Appsからの**動作ベースのアラート**に関する情報が含まれています（[高度な検索スキーマのBehaviorInfoテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-behaviorinfo-table#:~:text=The%20,)）。BehaviorInfoの各エントリは、基本的に*クラウドアプリの動作に関するアラートレコード*であり、AlertInfoが従来のアラートに関するものであるのと同様です。これには、動作の**説明**、**カテゴリ**（脅威の種類またはポリシー名）、関連する**MITREテクニック**、および動作の時間範囲（StartTime/EndTime）などの詳細が含まれます（[高度な検索スキーマのBehaviorInfoテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-behaviorinfo-table#:~:text=,)）（[高度な検索スキーマのBehaviorInfoテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-behaviorinfo-table#:~:text=,)）。動作はクラウドサービスにおける潜在的に疑わしい活動のコンテキストを提供するため、このテーブルは*アラートの内容とその範囲*（期間、テクニックなど）を理解するのに役立ちます。つまり、BehaviorInfoはAlertInfoのクラウドアプリ版であり、各動作アラートを要約します。
 
-**Use Cases:**
+**ユースケース:**
 
-- **Security Investigation:** When a Cloud App Security alert is raised (for example, “Multiple file deletion” or “Impossible travel”), an analyst can look at BehaviorInfo to get the details of that alert: what happened, when it started/ended, and what techniques or categories it falls under. This helps in triaging the alert’s severity and impact quickly.  
-  - *Basic Query:* Retrieve the details of a specific behavior alert by ID or description. For instance, if investigating an alert about mass downloads, find that alert’s info:  
+- **セキュリティ調査:** クラウドアプリセキュリティのアラート（たとえば、「複数ファイルの削除」や「不可能旅行」）が発生した場合、アナリストはBehaviorInfoを見て、そのアラートの詳細（何が起こったか、いつ開始/終了したか、どのテクニックまたはカテゴリに該当するか）を取得できます。これは、アラートの重大度と影響を迅速にトリアージするのに役立ちます。
+  - *基本的なクエリ:* IDまたは説明で特定の動作アラートの詳細を取得します。たとえば、大量ダウンロードに関するアラートを調査する場合、そのアラートの情報を検索します。
     ```kql
-    // Get a cloud app behavior alert by ID
+    // IDでクラウドアプリの動作アラートを取得
     BehaviorInfo
     | where BehaviorId == "<Behavior-ID>"
-    ```  
-    This will return fields like Description (e.g. *“Mass download of files from SharePoint”*), Severity (if available), Category, etc., giving a summary of the alert.  
-  - *Advanced Query:* List all cloud app behavior alerts related to a particular **user or app** in a timeframe. For example, if a particular user is under investigation, list their cloud app alerts in last 30 days to see if there's a pattern:  
+    ```
+    これにより、説明（例：*「SharePointからのファイルの大量ダウンロード」*）、重大度（利用可能な場合）、カテゴリなどのフィールドが返され、アラートの概要が示されます。
+  - *高度なクエリ:* 一定期間内に特定の**ユーザーまたはアプリ**に関連するすべてのクラウドアプリの動作アラートをリスト表示します。たとえば、特定のユーザーが調査対象である場合、過去30日間のそのユーザーのクラウドアプリのアラートをリスト表示して、パターンがあるかどうかを確認します。
     ```kql
-    // Cloud app alerts for a specific user in last 30 days
+    // 過去30日間の特定のユーザーのクラウドアプリのアラート
     BehaviorInfo
     | where Timestamp > ago(30d) and AccountUpn == "alice@contoso.com"
     | project Timestamp, Description, Categories, AttackTechniques
     | order by Timestamp desc
-    ```  
-    This provides a timeline of behavior alerts involving Alice (e.g., suspicious OAuth app usage, impossible travel, etc.), helping an investigator piece together if Alice’s account is compromised or violating policies.
+    ```
+    これにより、アリスに関連する動作アラートのタイムライン（たとえば、疑わしいOAuthアプリの使用、不可能旅行など）が提供され、調査担当者はアリスのアカウントが侵害されているか、ポリシーに違反しているかを把握するのに役立ちます。
 
-- **Threat Hunting:** Threat hunters can use BehaviorInfo to find anomalies that might not have been escalated or to correlate cloud behaviors with other incidents. Because behaviors can indicate things like unusual login patterns or data access, hunters might search for specific descriptions or categories across the environment.  
-  - *Basic Query:* Look for **multiple behavior alerts of the same type across different users**, which might indicate a broader issue. For instance, if several users trigger “Impossible travel” alerts, that could suggest a campaign of account compromise attempts.  
+- **脅威ハンティング:** 脅威ハンターはBehaviorInfoを使用して、エスカレーションされていない可能性のある異常を見つけたり、クラウドの動作を他のインシデントと関連付けたりできます。動作は、異常なログインパターンやデータアクセスなどの兆候を示す可能性があるため、ハンターは環境全体で特定の説明やカテゴリを検索することがあります。
+  - *基本的なクエリ:* **同じユーザーに関与する同じタイプの複数の動作アラート**を探します。これは、より広範な問題を示している可能性があります。たとえば、複数のユーザーが「不可能旅行」アラートをトリガーした場合、それはアカウント侵害の試みのキャンペーンを示唆している可能性があります。
     ```kql
-    // Count of cloud app behavior alerts by description (last 7 days)
+    // 過去7日間の説明別のクラウドアプリの動作アラート数
     BehaviorInfo
     | where Timestamp > ago(7d)
     | summarize AlertCount = count() by Description
     | sort by AlertCount desc
-    ```  
-    If “Impossible travel” or “OAuth consent grant” behaviors appear frequently, the hunter might investigate further, as this could be an ongoing attack pattern (like multiple users being targeted).  
-  - *Advanced Query:* Identify **long-running or repeated behaviors** that could indicate stealthy malicious activity. For example, find behavior alerts that have a long duration between StartTime and EndTime (which might mean prolonged data access):  
+    ```
+    「不可能旅行」または「OAuth同意の付与」の動作が頻繁に表示される場合、ハンターはさらに調査する可能性があります。これは、継続的な攻撃パターン（複数のユーザーがターゲットにされているなど）である可能性があるためです。
+  - *高度なクエリ:* **長期にわたるまたは繰り返される動作**を特定します。これは、ステルス性の高い悪意のある活動を示している可能性があります。たとえば、StartTimeとEndTimeの間に長い期間がある動作アラートを見つけます（これは、長期にわたるデータアクセスを意味する可能性があります）。
     ```kql
-    // Find behavior alerts with duration over 1 hour
+    // 1時間以上の期間を持つ動作アラートを見つける
     BehaviorInfo
     | where datetime_diff("minute", EndTime, StartTime) > 60
     | project Description, StartTime, EndTime, AccountUpn
-    ```  
-    This could catch anomalies like an OAuth app maintaining a connection or a session for an unusually long time (perhaps siphoning data), even if it didn’t trigger an immediate block.
+    ```
+    これにより、OAuthアプリが通常よりも長い時間接続またはセッションを維持している（おそらくデータを吸い上げている）などの異常を捉えることができます。たとえ即座にブロックされなくてもです。
 
-- **Compliance Check:** From a compliance perspective, cloud app behaviors often tie into policies (like data leak prevention, unusual administrative actions, etc.). BehaviorInfo can be used to verify that compliance-related policies are firing and being addressed. For example, alerts about downloading sensitive files or logging in from restricted locations can be monitored.  
-  - *Basic Query:* Check for **compliance-related cloud app alerts**, such as those indicating violations of data handling policies. For instance, list any alerts with descriptions containing “Confidential” or categories related to data leaks:  
+- **コンプライアンスチェック:** コンプライアンスの観点から見ると、クラウドアプリの動作は多くの場合、ポリシー（データ漏洩防止、異常な管理アクションなど）に関連しています。BehaviorInfoを使用すると、そのようなポリシー違反の動作が発生したかどうか、および誰が関与したかを確認し、内部コンプライアンス監査をサポートできます。
+  - *基本的なクエリ:* **機密性の高いSharePointコンテンツへのアクセス**動作が記録されたかどうかを確認します（ポリシー違反の可能性を示す）。たとえば、組織がファイルの大量削除を禁止するポリシーを持ち、Defender for Cloud Appsがそれを監視している場合：
     ```kql
-    // Find any cloud app alerts related to confidential data
-    BehaviorInfo
-    | where Description contains "Confidential" or Categories has "Data Leak"
-    | project Timestamp, Description, AccountUpn
-    ```  
-    If this returns results, it means users have triggered cloud app policies around confidential data (like downloading or sharing confidential files) – a direct compliance issue that needs follow-up (e.g., ensuring that data was not leaked).  
-  - *Advanced Query:* Verify that **critical cloud app alerts receive attention**. For example, if company policy says any “Impossible Travel” alert (which could indicate a stolen credential) must result in a password reset, you could cross-check BehaviorInfo with subsequent login events. A simpler proxy is to ensure no high-severity behavior alerts remain unresolved. While BehaviorInfo doesn’t show resolution, you could assume that older ones should be closed. So, for instance:  
+    // 大量ファイル削除に関連する動作アラートを見つける（コンプライアンス）
+    BehaviorEntities
+    | where ActionType == "MassDeletionActivity"
+    | summarize Count=count() by BehaviorId
+    ```
+    そのような動作が存在する場合、それはコンプライアンスの問題を示しています（誰かが大量のファイルを削除しており、データ保持ポリシーに違反している可能性があります）。
+  - *高度なクエリ:* **クラウドアクセスポリシー**（不可能旅行など）が実施されていることを確認します。たとえば、MFAまたはその他の制御を回避したユーザーを検出します。1つのプロキシは、*重大度が低下した、または完全なアラートにならなかった動作*を見ることです。BehaviorEntitiesだけでは「ポリシー合格/不合格」の情報がないかもしれませんが、BehaviorInfo（動作のアラート情報を含む）と一緒に使用できます。たとえば、「ImpossibleTravel」タイプのすべての*動作アラートをリスト表示し、ユーザーが管理者であるかどうか（より大きなコンプライアンス上の懸念事項）を確認*します。
     ```kql
-    // High-severity behavior alerts older than 7 days (potentially not addressed)
+    // 不可能旅行の動作をリスト表示し、ユーザーが管理者である場合にフラグを立てる
+    let adminUsers = IdentityInfo | where JobTitle contains "Admin" or Roles has "Global Administrator" | distinct AccountObjectId;
     BehaviorInfo
-    | where Severity == "High" and Timestamp < ago(7d)
-    ```  
-    *(If `Severity` field exists for behaviors – as this is preview, it may or may not.)* The idea is that any high severity cloud app alert older than a week suggests a gap in response. Compliance teams might use this to audit whether security followed up on those alerts (password resets, user contacted, etc.). They can then reconcile this list with incident tickets.
+    | where Description startswith "Impossible travel"
+    | join kind=inner (BehaviorEntities | where EntityType == "User") on BehaviorId
+    | extend IsAdmin = iff(AccountObjectId in (adminUsers), "Yes", "No")
+    | project Timestamp, AccountUpn, IsAdmin, Description
+    ```
+    これは、「不可能旅行」のインシデントと、関与したユーザーが管理者であるかどうかを特定します。コンプライアンス担当者は、特権アカウントが不可能と思われる場所からログインしたケース（ポリシー違反だけでなく、重大な問題である可能性があるため）を特にレビューする可能性があります。このクロス表クエリは、コンプライアンスに関連する異常（管理者が場所ポリシーに違反するなど）を強調表示するのに役立ちます。
 
 ---
 
-# Apps and Identities
+# アプリとID
 
 ### AADSignInEventsBeta
-**Schema Description:** `AADSignInEventsBeta` is a **beta** table that provides raw sign-in event data from Microsoft Entra ID (Azure AD) interactive and non-interactive sign-ins ([AADSignInEventsBeta table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-aadsignineventsbeta-table#:~:text=The%20,table)). It was introduced to allow hunting through Azure AD sign-in logs in Defender until the data is fully merged into `IdentityLogonEvents` ([AADSignInEventsBeta table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-aadsignineventsbeta-table#:~:text=The%20,table)). This table includes fields you’d find in Azure AD sign-in logs, such as **Application** used, **LogonType** (interactive, RDP, etc.), **CorrelationId/SessionId** for the sign-in, user details (DisplayName, UPN, ObjectId), and status/error information like **ErrorCode** for failed logins ([AADSignInEventsBeta table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-aadsignineventsbeta-table#:~:text=,in%20event)) ([AADSignInEventsBeta table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-aadsignineventsbeta-table#:~:text=the%20duration%20of%20the%20visit,external)). Essentially, it surfaces cloud authentication events (user logons to Azure AD-connected apps and services) for hunting.
+**スキーマの説明:** `AADSignInEventsBeta`は、Microsoft Entra ID（Azure AD）のインタラクティブおよび非インタラクティブなサインインからの生のサインインイベントデータを提供する**ベータ**テーブルです（[高度な検索スキーマのAADSignInEventsBetaテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-aadsignineventsbeta-table#:~:text=The%20,)）。データが完全に`IdentityLogonEvents`にマージされるまで、DefenderでAzure ADサインインログを検索できるように導入されました（[高度な検索スキーマのAADSignInEventsBetaテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-aadsignineventsbeta-table#:~:text=The%20,)）。このテーブルには、使用された**アプリケーション**、**LogonType**（インタラクティブ、RDPなど）、サインインの**CorrelationId/SessionId**、ユーザーの詳細（DisplayName、UPN、ObjectId）、および失敗したログインの**ErrorCode**などのステータス/エラー情報など、Azure ADサインインログにあるフィールドが含まれています（[高度な検索スキーマのAADSignInEventsBetaテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-aadsignineventsbeta-table#:~:text=,)）（[高度な検索スキーマのAADSignInEventsBetaテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-aadsignineventsbeta-table#:~:text=the%20duration%20of%20the%20visit,external)）。基本的に、ハンティングのためにクラウド認証イベント（Azure ADに接続されたアプリやサービスへのユーザーログイン）を表面化させます。
 
-**Use Cases:**
+**ユースケース:**
 
-- **Security Investigation:** Investigators can query this table to gather details on a user’s Azure AD login activity when investigating account compromise or suspicious logon attempts. For example, if a user's account is suspected of being compromised, reviewing their recent sign-in events (times, locations, device info, success/failure) is critical.  
-  - *Basic Query:* Retrieve the last few Azure AD sign-in events for a specific user to see if there were unusual login attempts (e.g., odd hours or error codes indicating MFA failures):  
+- **セキュリティ調査:** 調査担当者は、アカウントの侵害または疑わしいログイン試行を調査する際に、このテーブルをクエリしてユーザーのAzure ADログインアクティビティに関する詳細を収集できます。たとえば、ユーザーのアカウントが侵害された疑いがある場合、最近のサインインイベント（時間、場所、デバイス情報、成功/失敗）を確認することが重要です。
+  - *基本的なクエリ:* 特定のユーザーの最新のAzure ADサインインイベントをいくつか取得して、異常なログイン試行（たとえば、奇妙な時間やMFAの失敗を示すエラーコード）があったかどうかを確認します。
     ```kql
-    // Last 5 sign-in events for a specific user
+    // 特定のユーザーの最新のサインインイベント5件
     AADSignInEventsBeta
     | where AccountUpn == "jdoe@contoso.com"
     | sort by Timestamp desc
     | take 5
     | project Timestamp, Application, LogonType, IsExternalUser, IsGuestUser, ErrorCode
-    ```  
-    This shows when and how John Doe logged in, whether he was flagged as external/guest, and any error codes (like sign-in failures). An investigator can spot if John had a series of failed logins or logins from unusual apps.  
-  - *Advanced Query:* Investigate a suspicious sign-in by correlating it with device information. For instance, if you see an unusual sign-in, you might want to know what device (if any) was associated via Azure AD device ID. One could join with `DeviceInfo` on the AadDeviceId:  
+    ```
+    これは、ジョン・ドウがいつ、どのようにログインしたか、外部/ゲストとしてフラグが立てられたかどうか、およびエラーコード（サインインの失敗など）を示しています。調査担当者は、ジョンが連続してログインに失敗したり、異常なアプリからログインしたりした場合に気づくことができます。
+  - *高度なクエリ:* 疑わしいサインインをデバイス情報と関連付けて調査します。たとえば、異常なサインインが見られた場合、Azure ADデバイスIDを介して関連付けられたデバイス（ある場合）を知りたい場合があります。`DeviceInfo`とAadDeviceIdで結合できます。
     ```kql
-    // Enrich a sign-in event with device info (if device is Azure AD joined)
+    // デバイス情報でサインインイベントを強化（デバイスがAzure ADに参加している場合）
     AADSignInEventsBeta
     | where AccountUpn == "jdoe@contoso.com" and Timestamp between (datetime(2025-03-01) .. datetime(2025-03-05))
     | join kind=leftouter (DeviceInfo | project AadDeviceId, DeviceName, OSPlatform) on $left.DeviceId == $right.AadDeviceId
     | project Timestamp, AccountDisplayName, Application, DeviceName, OSPlatform, IPAddress, IsExternalUser, ErrorCode
-    ```  
-    This provides context like which device John used during those logins and whether the device is corporate. If a login came from an unknown device or IP, it stands out in the investigation.
+    ```
+    これにより、ジョンがこれらのログイン中にどのデバイスを使用したか、およびそのデバイスが企業のものであるかなどのコンテキストが提供されます。不明なデバイスまたはIPからのログインがあった場合、調査で目立ちます。
 
-- **Threat Hunting:** Hunters can use AADSignInEventsBeta to find patterns of malicious logon attempts. For example, brute force attacks or token replay attacks might show up as numerous failed logins or unusual user agents. Since this table logs interactive and non-interactive sign-ins, one can search for anomalies in login behavior.  
-  - *Basic Query:* Hunt for **failed sign-in patterns** that might indicate password spraying or brute force. For instance, look for multiple failed sign-ins (ErrorCode != 0 indicates failure) across many accounts from the same IP or with the same UserAgent:  
+- **脅威ハンティング:** ハンターはAADSignInEventsBetaを使用して、悪意のあるログイン試行のパターンを見つけることができます。たとえば、ブルートフォース攻撃やトークンリプレイ攻撃は、多数の失敗したログインまたは異常なユーザーエージェントとして現れる可能性があります。このテーブルはインタラクティブおよび非インタラクティブなサインインをログに記録するため、ログインの動作における異常を検索できます。
+  - *基本的なクエリ:* パスワードスプレーまたはブルートフォースを示す可能性のある**失敗したサインインパターン**を探します。たとえば、同じIPまたは同じUserAgentからの多数のアカウント全体での複数の失敗したサインイン（ErrorCode != 0は失敗を示します）を探します。
     ```kql
-    // Potential password spray: many failed logins from same IP
+    // 潜在的なパスワードスプレー：同じIPからの多数のログイン失敗
     AADSignInEventsBeta
     | where ErrorCode != 0 and Timestamp > ago(1d)
     | summarize Attempts=count(), Users=make_set(AccountUpn) by IPAddress, UserAgent
     | where Attempts > 10
-    ```  
-    This surfaces IPs with lots of failures in a day. If *Users* set contains many different accounts, that’s a typical password spray attack pattern.  
-  - *Advanced Query:* Identify suspicious sign-in characteristics, e.g., a rare **UserAgent** that could be an attacker tool. For instance, filter for a specific unusual user agent string known for malicious usage (like `"fasthttp"` library used by some brute force tools ([Detecting 'fasthttp' bruteforce attacks on Entra ID - Rogier Dijkman](https://rogierdijkman.medium.com/detecting-fasthttp-bruteforce-attacks-on-entra-users-42ceb13bf856#:~:text=Detecting%20%27fasthttp%27%20bruteforce%20attacks%20on,indicates%20a%20failed%20login))):  
+    ```
+    これにより、1日に多くの失敗があったIPが表面化します。*Users*セットに多数の異なるアカウントが含まれている場合、それは典型的なパスワードスプレー攻撃パターンです。
+  - *高度なクエリ:* 疑わしいサインインの特性（たとえば、攻撃者ツールである可能性のあるまれな**UserAgent**）を特定します。たとえば、悪意のある使用で知られる特定の異常なユーザーエージェント文字列（一部のブルートフォースツールで使用される`"fasthttp"`ライブラリなど（[Entra IDでの'fasthttp'ブルートフォース攻撃の検出 - Rogier Dijkman](https://rogierdijkman.medium.com/detecting-fasthttp-bruteforce-attacks-on-entra-users-42ceb13bf856#:~:text=Detecting%20%27fasthttp%27%20bruteforce%20attacks%20on,indicates%20a%20failed%20login)））でフィルタリングします。
     ```kql
-    // Hunt for sign-ins using a known malicious user agent
+    // 既知の悪意のあるユーザーエージェントを使用したサインインを検索
     AADSignInEventsBeta
     | where UserAgent contains "fasthttp" or UserAgent contains "python-requests"
     | project Timestamp, AccountUpn, IPAddress, Application, UserAgent, ErrorCode
-    ```  
-    If such entries appear (especially with many failures), it likely indicates automated attacks or token theft attempts using custom clients. A hunter could also extend this by checking if any of those attempts eventually succeeded (ErrorCode == 0 after many failures).
+    ```
+    このようなエントリ（特に多くの失敗を伴う場合）が表示された場合、カスタムクライアントを使用した自動攻撃またはトークン盗難の試みを示している可能性があります。ハンターは、これらの試みのいずれかが最終的に成功したかどうか（多くの失敗の後のErrorCode == 0）を確認することで、これを拡張することもできます。
 
-- **Compliance Check:** In an identity context, compliance might involve ensuring only authorized login methods are used or that all external logins are appropriately restricted. AADSignInEventsBeta can help verify such policies. For example, you can check that legacy authentication isn’t being used (if that’s banned by policy) or that guest/external user access is monitored.  
-  - *Basic Query:* Identify any **legacy authentication** attempts (e.g., using older protocols that don’t support modern auth/MFA, if LogonType or Application indicates such). Suppose your org policy disallows legacy protocols; you could search for sign-ins with suspicious LogonType values:  
+- **コンプライアンスチェック:** IDのコンテキストでは、コンプライアンスには、承認されたログイン方法のみが使用されていること、またはすべての外部ログインが適切に制限されていることを保証することが含まれる場合があります。AADSignInEventsBetaは、そのようなポリシーの検証に役立ちます。たとえば、ポリシーで禁止されている場合、レガシー認証が使用されていないことを確認したり、ゲスト/外部ユーザーアクセスが監視されていることを確認したりできます。
+  - *基本的なクエリ:* **レガシー認証**の試行（たとえば、LogonTypeまたはApplicationが示す場合、最新の認証/MFAをサポートしない古いプロトコルを使用）を特定します。組織のポリシーでレガシープロトコルが禁止されていると仮定すると、疑わしいLogonType値を持つサインインを検索できます。
     ```kql
-    // Detect any non-interactive legacy logons (e.g., using Basic Auth)
+    // 非インタラクティブなレガシーログイン（例：基本認証を使用）を検出
     AADSignInEventsBeta
     | where LogonType == "Legacy" or Application startswith "Office365/ActiveSync"
     | summarize Count = count() by Application, AccountUpn, LogonType
-    ```  
-    If this returns results, it means someone is using or attempting legacy auth (like ActiveSync basic authentication), violating policy. This could prompt enforcement of Conditional Access or further investigation of those accounts.  
-  - *Advanced Query:* Ensure all **external user logins** follow policy. For instance, if external users (guests) should only access certain applications, you can verify that. Using `IsExternalUser` or `IsGuestUser` flags, list what apps external users are logging into:  
+    ```
+    これが結果を返す場合、誰かがレガシー認証（ActiveSync基本認証など）を使用または試行しており、ポリシーに違反しています。これにより、条件付きアクセスを強制したり、それらのアカウントのさらなる調査を促したりする可能性があります。
+  - *高度なクエリ:* すべての**外部ユーザーログイン**がポリシーに従っていることを確認します。たとえば、外部ユーザー（ゲスト）は特定のアプリケーションのみにアクセスできる必要がある場合、それを検証できます。`IsExternalUser`または`IsGuestUser`フラグを使用して、外部ユーザーがどのアプリにログインしているかをリスト表示します。
     ```kql
-    // External user sign-in overview (last 30 days)
+    // 外部ユーザーのサインイン概要（過去30日間）
     AADSignInEventsBeta
     | where Timestamp > ago(30d) and IsExternalUser == 1
     | summarize count() by Application, IsGuestUser
-    ```  
-    This gives a breakdown of which applications are accessed by external identities and whether those were guest accounts. If you see external users accessing an app that policy says only internal employees should use, that’s non-compliant. For example, an external user logging into an internal HR system would be flagged. Security or IAM teams can then adjust access policies accordingly.
+    ```
+    これにより、どのアプリケーションが外部IDによってアクセスされているか、およびそれらがゲストアカウントであったかどうかの内訳が示されます。ポリシーで内部従業員のみが使用すべきアプリに外部ユーザーがログインしている場合、それは非準拠です。たとえば、外部ユーザーが内部人事システムにログインした場合、フラグが立てられます。セキュリティチームまたはIAMチームは、それに応じてアクセスポリシーを調整できます。
 
 ### AADSpnSignInEventsBeta
-**Schema Description:** `AADSpnSignInEventsBeta` is a beta table for **service principal and managed identity sign-in events** in Microsoft Entra ID ([defender-docs/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md at public · MicrosoftDocs/defender-docs · GitHub](https://github.com/MicrosoftDocs/defender-docs/blob/public/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md#:~:text=The%20,table)). While AADSignInEventsBeta logs user sign-ins, this table logs sign-ins by applications (service principals) or managed identities (often used for automation and services). It includes fields like **ServicePrincipalName/Id**, whether it was a managed identity (`IsManagedIdentity` flag), the **Resource** being accessed (ResourceId, ResourceDisplayName), along with common fields like CorrelationId, IP, error codes, etc. ([defender-docs/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md at public · MicrosoftDocs/defender-docs · GitHub](https://github.com/MicrosoftDocs/defender-docs/blob/public/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md#:~:text=Column%20name%20Data%20type%20Description,in%20event)) ([defender-docs/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md at public · MicrosoftDocs/defender-docs · GitHub](https://github.com/MicrosoftDocs/defender-docs/blob/public/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md#:~:text=,tenant%20of%20the%20resource%20accessed)). It’s useful for hunting through app logins and detecting potential abuse of app credentials or malicious OAuth activities. (Note: Eventually these events will also migrate into IdentityLogonEvents ([defender-docs/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md at public · MicrosoftDocs/defender-docs · GitHub](https://github.com/MicrosoftDocs/defender-docs/blob/public/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md#:~:text=The%20,table)).)
+**スキーマの説明:** `AADSpnSignInEventsBeta`は、Microsoft Entra IDにおける**サービスプリンシパルおよびマネージドIDのサインインイベント**のベータ版テーブルです（[defender-docs/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md at public · MicrosoftDocs/defender-docs · GitHub](https://github.com/MicrosoftDocs/defender-docs/blob/public/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md#:~:text=The%20,)）。AADSignInEventsBetaがユーザーのサインインをログに記録するのに対し、このテーブルはアプリケーション（サービスプリンシパル）またはマネージドID（多くの場合、自動化およびサービスに使用）によるサインインをログに記録します。これには、**ServicePrincipalName/Id**、マネージドIDであったかどうかを示す`IsManagedIdentity`フラグ、アクセスされた**リソース**（ResourceId、ResourceDisplayName）、およびCorrelationId、IP、エラーコードなどの共通フィールドが含まれます（[defender-docs/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md at public · MicrosoftDocs/defender-docs · GitHub](https://github.com/MicrosoftDocs/defender-docs/blob/public/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md#:~:text=Column%20name%20Data%20type%20Description,in%20event)）（[defender-docs/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md at public · MicrosoftDocs/defender-docs · GitHub](https://github.com/MicrosoftDocs/defender-docs/blob/public/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md#:~:text=,)）。これは、アプリのログインを検索し、アプリの資格情報の潜在的な悪用や悪意のあるOAuthアクティビティを検出するのに役立ちます。（注：最終的にこれらのイベントもIdentityLogonEventsに移行します（[defender-docs/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md at public · MicrosoftDocs/defender-docs · GitHub](https://github.com/MicrosoftDocs/defender-docs/blob/public/defender-xdr/advanced-hunting-aadspnsignineventsbeta-table.md#:~:text=The%20,)）。）
 
-**Use Cases:**
+**ユースケース:**
 
-- **Security Investigation:** If there’s suspicion that a malicious app or a compromised service principal token was used, investigators turn to this table. For example, if an OAuth application was granted unwarranted permissions, its usage would appear here. Investigators might query by ServicePrincipalId or Resource to see what an app did.  
-  - *Basic Query:* Retrieve recent sign-in events for a particular **application** (service principal). Suppose an app with SPN ID `abcd-1234` is suspected; you can list its logins:  
+- **セキュリティ調査:** 悪意のあるアプリまたは侵害されたサービスプリンシパルトークンが使用された疑いがある場合、調査担当者はこのテーブルを参照します。たとえば、OAuthアプリケーションに不当な権限が付与された場合、その使用状況がここに表示されます。調査担当者は、ServicePrincipalIdまたはResourceでクエリを実行して、アプリが何をしたかを確認する場合があります。
+  - *基本的なクエリ:* 特定の**アプリケーション**（サービスプリンシパル）の最近のサインインイベントを取得します。SPN IDが`abcd-1234`のアプリが疑わしい場合、そのログインをリスト表示できます。
     ```kql
-    // Sign-in events for a specific service principal
+    // 特定のサービスプリンシパルのサインインイベント
     AADSpnSignInEventsBeta
     | where ServicePrincipalId == "abcd-1234-efgh-5678"
     | sort by Timestamp desc
     | project Timestamp, ServicePrincipalName, ResourceDisplayName, IPAddress, ErrorCode
-    ```  
-    This shows when that app/service logged in, to which resource, and if it was successful (ErrorCode 0 means success). An investigator can see if the app accessed resources at odd times or from unusual IPs, indicating possible misuse.  
-  - *Advanced Query:* Investigate **failed app logins** which might hint at attempted abuse. For instance, list any failed sign-in attempts for managed identities (maybe someone trying to use a managed identity token improperly):  
+    ```
+    これは、そのアプリ/サービスがいつ、どのリソースにログインしたか、そして成功したかどうか（ErrorCode 0は成功を意味します）を示しています。調査担当者は、アプリが異常な時間に、または異常なIPからリソースにアクセスした場合、それが悪用の可能性を示していることに気づくかもしれません。
+  - *高度なクエリ:* 試みられた悪用を示唆する可能性のある**失敗したアプリのログイン**を調査します。たとえば、マネージドIDの失敗したサインイン試行（おそらく誰かがマネージドIDトークンを不適切に使用しようとした）をリスト表示します。
     ```kql
-    // Failed sign-ins by managed identities
+    // マネージドIDによる失敗したサインイン
     AADSpnSignInEventsBeta
     | where IsManagedIdentity == true and ErrorCode != 0
     | project Timestamp, ServicePrincipalName, ErrorCode, IPAddress, ResourceDisplayName
-    ```  
-    If a managed identity had repeated failed attempts, it could indicate misconfiguration or malicious attempts to use that identity. Investigators would then check why those failures happened – perhaps someone tried to use that identity outside its intended context.
+    ```
+    マネージドIDに繰り返し失敗した試行があった場合、それは構成ミスまたはそのIDを悪用しようとする悪意のある試行を示している可能性があります。調査担当者は、それらの失敗がなぜ起こったのか（おそらく誰かがそのIDを意図されたコンテキスト外で使用しようとした）を確認します。
 
-- **Threat Hunting:** Hunters may query this table to find suspicious behavior among applications. For example, an attacker who compromised an Azure AD app might use it to access data illicitly. Patterns such as an app accessing resources it normally wouldn’t, or from unusual locations, can be revealed through KQL.  
-  - *Basic Query:* Hunt for **new or rarely seen service principals** logging in, which might indicate an attacker-registered app. For example, find any service principal sign-ins in the last week for apps that haven’t appeared in the prior month:  
+- **脅威ハンティング:** ハンターはこのテーブルをクエリして、アプリケーション間の疑わしい動作を見つけることができます。たとえば、侵害されたAzure ADアプリを攻撃者が不正にデータにアクセスするために使用する可能性があります。通常アクセスしないリソースへのアプリのアクセスや、異常な場所からのアクセスなどのパターンは、KQLを通じて明らかにできます。
+  - *基本的なクエリ:* 最近ログインした、またはめったに見られない**新しいサービスプリンシパル**を探します。これは、攻撃者が登録したアプリを示している可能性があります。たとえば、過去1か月間に現れなかったアプリの過去1週間のサービスプリンシパルのサインインを見つけます。
     ```kql
-    // Service principals active this week but not last month (possible new apps)
+    // 今週アクティブだが先月はアクティブでなかったサービスプリンシパル（可能性のある新しいアプリ）
     let lastMonthSPNs = AADSpnSignInEventsBeta
         | where Timestamp between (ago(37d) .. ago(7d))
         | distinct ServicePrincipalId;
     AADSpnSignInEventsBeta
     | where Timestamp > ago(7d) and ServicePrincipalId !in (lastMonthSPNs)
     | summarize NewLogins=count() by ServicePrincipalName, ServicePrincipalId
-    ```  
-    This finds service principals that only started showing sign-in activity recently. A hunter would review these — especially if any correspond to generic names or unknown apps — as they might be rogue.  
-  - *Advanced Query:* Look for **broad consent or multi-tenant app abuse**. For instance, if a malicious multi-tenant app has been granted access in your tenant, it might show sign-ins from unusual foreign IPs or odd resources. A complex query could flag any service principal whose login IPs span very different geographies in short time (implying token misuse). For brevity, a simpler approach: identify any app sign-ins from IPs in countries your org normally doesn’t operate in:  
+    ```
+    これは、最近になってサインインアクティビティを示し始めたサービスプリンシパルを見つけます。ハンターはこれらを確認します。特に、一般的な名前または不明なアプリに対応するものがあれば、それらは不正である可能性があります。
+  - *高度なクエリ:* **広範な同意またはマルチテナントアプリの悪用**を探します。たとえば、悪意のあるマルチテナントアプリがテナントでアクセスを許可されている場合、異常な海外IPまたは奇妙なリソースからのサインインが表示される可能性があります。複雑なクエリは、ログインIPが短時間で非常に異なる地域にまたがるサービスプリンシパルにフラグを立てる可能性があります（トークンの不正使用を意味します）。簡潔にするために、より簡単なアプローチ：組織が通常運用していない国のIPからのアプリのサインインを特定します。
     ```kql
-    // App sign-ins from unusual country (e.g., not US or EU where company operates)
+    // 通常の国（たとえば、会社が事業を行っている米国またはEUではない）からのアプリのサインイン
     AADSpnSignInEventsBeta
-    | extend Country = extractcountry(IPAddress)  // assuming a function or way to map IP to country
-    | where Country notin ("US","UK","DE","JP","CA")  // outside usual countries
+    | extend Country = extractcountry(IPAddress)  // IPを国にマッピングする関数または方法を想定
+    | where Country notin ("US","UK","DE","JP","CA")  // 通常の国以外
     | summarize Events=count() by ServicePrincipalName, Country
-    ```  
-    If an internal app shows logins from, say, Russia or North Korea (when your business has no presence there), that’s a red flag to investigate possible key theft or malicious usage of that app.
+    ```
+    内部アプリが、たとえば、ロシアや北朝鮮（あなたのビジネスがそこに存在しない場合）からのログインを示している場合、それはそのアプリのキーの盗難または悪意のある使用の可能性を示す危険信号です。
 
-- **Compliance Check:** Compliance here might relate to ensuring that applications authenticate in expected ways and only to approved resources. It could also mean verifying that no unauthorized third-party apps are being used. AADSpnSignInEventsBeta can be used to audit which apps are accessing what.  
-  - *Basic Query:* **Audit of app usage:** list all distinct applications (service principals) that signed in over the last month, to ensure they are known/approved.  
+- **コンプライアンスチェック:** ここでのコンプライアンスは、アプリケーションが予期された方法で認証し、承認されたリソースのみにアクセスすることを保証することに関連する可能性があります。また、承認されていないサードパーティ製アプリが使用されていないことを確認することも意味する可能性があります。AADSpnSignInEventsBetaを使用して、どのアプリが何にアクセスしているかを監査できます。
+  - *基本的なクエリ:* **アプリの使用状況の監査:** 過去1か月にサインインしたすべての異なるアプリケーション（サービスプリンシパル）をリスト表示して、それらが既知/承認済みであることを確認します。
     ```kql
-    // List of service principals with sign-in activity in last 30 days
+    // 過去30日間にサインインアクティビティがあったサービスプリンシパルのリスト
     AADSpnSignInEventsBeta
     | where Timestamp > ago(30d)
     | summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by ServicePrincipalId, ServicePrincipalName, IsManagedIdentity
-    ```  
-    The security/IT team can review this list against an inventory of expected apps. Any unexpected service principals (especially if not managed identities and not familiar third-party apps) can indicate shadow IT or unauthorized access, which is a compliance issue (violating change management or approval processes).  
-  - *Advanced Query:* Ensure **no deprecated authentication flows** are being used by apps, aligning with security compliance (like all apps should use certificate-based auth rather than client secrets, etc.). While this table might not directly show the auth method, you might infer from certain patterns. Another compliance angle: verify that *managed identities* are used where expected instead of service principals with secrets. For example, list any sign-ins by regular service principals for Azure resources where a managed identity should be used:  
+    ```
+    セキュリティ/ITチームは、このリストを予想されるアプリのインベントリと照らし合わせて確認できます。予期しないサービスプリンシパル（特にマネージドIDではなく、見慣れないサードパーティ製アプリでもない場合）は、シャドーITまたは不正アクセスを示している可能性があり、これはコンプライアンスの問題です（変更管理または承認プロセスに違反しています）。
+  - *高度なクエリ:* セキュリティコンプライアンスに沿って、アプリが**推奨されない認証フロー**を使用していないことを確認します（たとえば、すべてのアプリはクライアントシークレットではなく証明書ベースの認証を使用する必要がありますなど）。このテーブルは認証方法を直接示さないかもしれませんが、特定のパターンから推測できるかもしれません。別のコンプライアンスの観点：シークレットを持つサービスプリンシパルの代わりに、期待される場所で*マネージドID*が使用されていることを確認します。たとえば、マネージドIDを使用すべきAzureリソースへの通常のサービスプリンシパルによるサインインをリスト表示します。
     ```kql
-    // Sign-ins by non-managed service principals to Azure resource endpoints (hinting at secret-based auth)
+    // マネージドでないサービスプリンシパルによるAzureリソースエンドポイントへのサインイン（シークレットベースの認証を示唆）
     AADSpnSignInEventsBeta
     | where IsManagedIdentity == false and ResourceDisplayName contains "Azure"
     | summarize count() by ServicePrincipalName, ResourceDisplayName
-    ```  
-    If your policy says to use managed identities for Azure resources, any hit here indicates an app using client credentials (less preferred from a compliance standpoint). This can drive remediation to align with cloud security best practices.
+    ```
+    ポリシーでAzureリソースにマネージドIDを使用するように定められている場合、ここでヒットしたものは、クライアント資格情報を使用しているアプリ（コンプライアンスの観点からは好ましくありません）を示しています。これは、クラウドセキュリティのベストプラクティスに沿った改善を促す可能性があります。
 
 ### CloudAppEvents
-**Schema Description:** The `CloudAppEvents` table contains information about **events in cloud applications and services** – specifically activities involving user accounts and objects in Office 365 and other apps integrated with Defender for Cloud Apps ([CloudAppEvents table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-cloudappevents-table#:~:text=The%20,return%20information%20from%20this%20table)). These events can include things like file downloads from SharePoint, user sign-ins to SaaS apps, permission changes in Teams, etc. Fields cover the **action details** (ActionType, ActivityType), the **application** (Application and ApplicationId for the app, e.g. SharePoint, Exchange), **user/account info** (AccountDisplayName, AccountObjectId/UPN, plus whether the user is an admin or an external user), and context like device type, IP address with geo-info (City, CountryCode, IPAddress, etc.), as well as the objects affected (ActivityObjects might list file names or items) ([CloudAppEvents table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-cloudappevents-table#:~:text=Column%20name%20Data%20type%20Description,order%20by%20ApplicationId%2CAppInstanceId)) ([CloudAppEvents table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-cloudappevents-table#:~:text=and%20surname%20of%20the%20user,to%20the%20device%20during%20communication)). In short, it is a unified log of user activities across cloud apps, very useful for both security monitoring and compliance auditing of cloud resource access.
+**スキーマの説明:** `CloudAppEvents`テーブルには、**クラウドアプリケーションおよびサービスにおけるイベント**に関する情報が含まれています。具体的には、Office 365およびDefender for Cloud Appsと統合されたその他のアプリにおけるユーザーアカウントとオブジェクトに関連するアクティビティです（[高度な検索スキーマのCloudAppEventsテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-cloudappevents-table#:~:text=The%20,)）。これらのイベントには、SharePointからのファイルのダウンロード、SaaSアプリへのユーザーサインイン、Teamsでのアクセス許可の変更などが含まれます。フィールドには、**アクションの詳細**（ActionType、ActivityType）、**アプリケーション**（ApplicationおよびApplicationId（アプリ用）、例：SharePoint、Exchange）、**ユーザー/アカウント情報**（AccountDisplayName、AccountObjectId/UPN、およびユーザーが管理者であるか外部ユーザーであるか）、デバイスの種類、IPアドレス（地理情報付き）（City、CountryCode、IPAddressなど）、および影響を受けたオブジェクト（ActivityObjectsにはファイル名やアイテムがリスト表示される場合があります）などのコンテキストが含まれます（[高度な検索スキーマのCloudAppEventsテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-cloudappevents-table#:~:text=Column%20name%20Data%20type%20Description,order%20by%20ApplicationId%2CAppInstanceId)）（[高度な検索スキーマのCloudAppEventsテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-cloudappevents-table#:~:text=and%20surname%20of%20the%20user,to%20the%20device%20during%20communication)）。つまり、これはクラウドアプリ全体のユーザーアクティビティの統一ログであり、クラウドリソースアクセスに関するセキュリティ監視とコンプライアンス監査の両方に非常に役立ちます。
 
-**Use Cases:**
+**ユースケース:**
 
-- **Security Investigation:** If there’s suspicion of a user misusing cloud services or if an alert was triggered by some cloud activity, CloudAppEvents lets investigators see the raw events. For example, in a potential data theft incident, an investigator would look at a user’s file download or sharing events.  
-  - *Basic Query:* Fetch recent activities for a specific user across Office 365 apps (like SharePoint, OneDrive, etc.) to investigate abnormal behavior. For instance:  
+- **セキュリティ調査:** ユーザーがクラウドサービスを不正に使用している疑いがある場合、または何らかのクラウドアクティビティによってアラートがトリガーされた場合、CloudAppEventsを使用すると、調査担当者は生イベントを確認できます。たとえば、潜在的なデータ窃盗インシデントでは、調査担当者はユーザーのファイルのダウンロードまたは共有イベントを確認します。
+  - *基本的なクエリ:* 異常な動作を調査するために、特定のユーザーのOffice 365アプリ（SharePoint、OneDriveなど）全体の最近のアクティビティを取得します。例：
     ```kql
-    // Last 10 cloud app events for a specific user
+    // 特定のユーザーの最新のクラウドアプリイベント10件
     CloudAppEvents
     | where AccountUpn == "bob@contoso.com"
     | sort by Timestamp desc
     | take 10
     | project Timestamp, Application, ActionType, ActivityType, ActivityObjects, IPAddress, CountryCode
-    ```  
-    This gives the investigator a quick view: Bob’s actions (logged in, viewed files, downloaded something, etc.), which app, what IP/location. If Bob downloaded many files from an unusual location, it will stand out here even if no alert directly flagged it.  
-  - *Advanced Query:* Investigate a specific incident, e.g., a reported **mass download** from SharePoint. You could filter CloudAppEvents for a particular site or file name patterns and a user. For example, if an alert said “User X downloaded 100 files from SharePoint site Y,” verify that with:  
+    ```
+    これにより、調査担当者はすぐに概要を把握できます。ボブのアクション（ログイン、ファイルの表示、何かのダウンロードなど）、どのアプリ、どのIP/場所。ボブが異常な場所から多くのファイルをダウンロードした場合、アラートが直接フラグを立てなくても、ここに表示されます。
+  - *高度なクエリ:* 特定のインシデント（たとえば、SharePointからの**大量ダウンロード**の報告）を調査します。特定のサイトまたはファイル名パターンとユーザーでCloudAppEventsをフィルタリングできます。たとえば、アラートで「ユーザーXがSharePointサイトYから100個のファイルをダウンロードしました」と表示された場合、次のように確認します。
     ```kql
-    // Filter file download events by a user from a specific SharePoint site
+    // 特定のSharePointサイトからユーザーによるファイルダウンロードイベントをフィルタリング
     CloudAppEvents
     | where Application == "SharePoint" and ActionType == "FileDownloaded"
       and AccountUpn == "userX@contoso.com"
       and ActivityObjects has "Site Y Name"
     | project Timestamp, AccountDisplayName, ActivityObjects, FileSize, IPAddress, IsAdminOperation
-    ```  
-    This provides evidence of the files downloaded, their size, and whether the action was done with admin privileges. Investigators can use this to confirm the scope of data accessed in the incident.
+    ```
+    これにより、ダウンロードされたファイル、そのサイズ、およびアクションが管理者権限で行われたかどうかの証拠が提供されます。調査担当者はこれを使用して、インシデントでアクセスされたデータの範囲を確認できます。
 
-- **Threat Hunting:** CloudAppEvents is a rich source for hunting anomalous cloud usage. Hunters might search for unusual combinations of actions (e.g., a single account performing admin-like operations it never did before, or multiple file deletion events which might indicate ransomware activity on OneDrive).  
-  - *Basic Query:* Hunt for **impossible travel in cloud usage** (distinct from sign-ins). For example, find cases where the same user ID has events from widely separated geolocations within a short period:  
+- **脅威ハンティング:** CloudAppEventsは、異常なクラウド使用状況をハンティングするための豊富なソースです。ハンターは、以前には実行されなかった管理者権限のような操作を単一のアカウントが実行するなどの異常なアクションの組み合わせ、またはOneDriveでのランサムウェア活動を示す可能性のある複数のファイル削除イベントなどを検索することがあります。
+  - *基本的なクエリ:* **クラウド使用における不可能旅行**（サインインとは異なる）を検索します。たとえば、同じユーザーIDが短期間に地理的に大きく離れた場所からのイベントを持っている場合を見つけます。
     ```kql
-    // Simple approach to find users with events in two countries on the same day
+    // 同じ日に2つの国でイベントが発生したユーザーを見つける簡単なアプローチ
     CloudAppEvents
     | summarize Countries = makeset(CountryCode) by AccountUpn, Date = bin(Timestamp, 1d)
     | where array_length(Countries) > 1
-    ```  
-    If a user’s `Countries` set has, say, {"US","CN"} on the same day, that’s suspicious and similar to impossible travel (the user’s cloud activity originates from different countries on the same day). A hunter would then dive deeper into those events.  
-  - *Advanced Query:* Look for potential **mass exfiltration** or data destruction. For example, identify any user who deleted or downloaded an unusually large number of files in a short period (which might not trigger a built-in alert if thresholds aren’t met):  
+    ```
+    ユーザーの`Countries`セットに、たとえば、同じ日に{"US","CN"}が含まれている場合、それは疑わしく、不可能旅行に似ています（ユーザーのクラウドアクティビティが同じ日に異なる国から発生しています）。ハンターはその後、これらのイベントをより深く掘り下げます。
+  - *高度なクエリ:* 潜在的な**大量データ漏洩**またはデータ破壊を探します。たとえば、短期間に異常に多数のファイルを削除またはダウンロードしたユーザーを特定します（閾値が満たされていない場合、組み込みのアラートをトリガーしない可能性があります）。
     ```kql
-    // Users with more than 50 file deletion events in the last hour (possible mass deletion)
+    // 過去1時間に50件以上のファイル削除イベントが発生したユーザー（大量削除の可能性）
     CloudAppEvents
     | where ActionType == "FileDeleted" and Timestamp > ago(1h)
     | summarize Deletions=count() by AccountUpn
     | where Deletions > 50
-    ```  
-    Similarly, one could check for FileDownloaded > X. Such a query could catch an insider slowly exfiltrating data or a compromised account mass-deleting files (ransomware or sabotage) even if Defender didn’t raise an alert yet. The hunter can then investigate those accounts immediately.
+    ```
+    同様に、FileDownloaded > Xを確認することもできます。このようなクエリは、Defenderがまだアラートを上げていなくても、内部者が徐々にデータを漏洩させたり、侵害されたアカウントがファイルを大量に削除したり（ランサムウェアまたは妨害工作）するのを捉える可能性があります。ハンターはその後、これらのアカウントをすぐに調査できます。
 
-- **Compliance Check:** CloudAppEvents can be used to verify adherence to IT and data usage policies. For example, ensure that only authorized individuals accessed certain confidential files, or that administrative actions in O365 (like mailbox exports) are tracked and done by the right people. It’s also useful for auditing (e.g., who accessed a SharePoint site).  
-  - *Basic Query:* **Data access compliance:** List any access to sensitive files or sites by users outside a permitted group. If you tag sensitive files or know naming conventions (e.g., files containing "HR-confidential"), you can check if anyone outside HR accessed them:  
+- **コンプライアンスチェック:** CloudAppEventsを使用して、ITおよびデータ使用ポリシーの遵守状況を確認できます。たとえば、許可された個人のみが特定の機密ファイルにアクセスしたこと、またはO365での管理アクション（メールボックスのエクスポートなど）が追跡され、適切な担当者によって実行されたことを確認します。また、監査（たとえば、誰がSharePointサイトにアクセスしたか）にも役立ちます。
+  - *基本的なクエリ:* **データアクセスコンプライアンス:** 許可されたグループ外のユーザーによる機密ファイルまたはサイトへのアクセスをリスト表示します。機密ファイルにタグを付けたり、命名規則（たとえば、「HR-confidential」を含むファイル）を知っている場合は、HR以外の人がそれらにアクセスしたかどうかを確認できます。
     ```kql
-    // Potential unauthorized access to HR confidential files
+    // HR機密ファイルへの不正アクセスの可能性
     CloudAppEvents
     | where ActionType == "FileAccessed" and ActivityObjects has "HR-Confidential"
     | summarize count() by AccountUpn, ActionType
-    ```  
-    If an account from, say, Marketing shows up here accessing HR confidential files, that’s a compliance issue to investigate (possible permission creep or misuse).  
-  - *Advanced Query:* **Administrative operations audit:** Ensure only admins perform admin-level operations. For example, verify that all Exchange mailbox export events (if those are logged via CloudAppEvents under an appropriate ActionType) were done by accounts with admin roles. You might do:  
+    ```
+    たとえば、マーケティングのアカウントがHR機密ファイルにアクセスしていることがここで示された場合、それは調査すべきコンプライアンスの問題です（許可の範囲を超えているか、不正使用の可能性があります）。
+  - *高度なクエリ:* **管理操作の監査:** 管理者のみが管理者レベルの操作を実行することを確認します。たとえば、すべてのExchangeメールボックスのエクスポートイベント（適切なActionTypeでCloudAppEvents経由でログに記録されている場合）が管理者ロールを持つアカウントによって実行されたことを確認します。次のように実行できます。
     ```kql
-    // Audit if any non-admin performed admin operations
+    // 管理者でないユーザーが管理操作を実行したかどうかを監査
     CloudAppEvents
     | where IsAdminOperation == false and ActionType in ("AddedMailboxPermission","ResetUserPassword","ChangedOrgSetting")
     | summarize Events=count() by AccountDisplayName, ActionType
-    ```  
-    *(In this hypothetical query, replace ActionType filters with actual admin actions logged.)* If any user without admin privileges (IsAdminOperation == false) attempted or performed an admin-like action, that’s non-compliant. The security team would need to check how that happened (was a role misassigned? a bug? a malicious attempt that somehow succeeded?). This helps ensure that privilege boundaries in cloud apps are respected and quickly flags violations for correction.
+    ```
+    *(この仮説的なクエリでは、ActionTypeフィルターをログに記録された実際の管理アクションに置き換えてください。)* 管理者権限のないユーザー（IsAdminOperation == false）が管理者権限のようなアクションを試行または実行した場合、それは非準拠です。セキュリティチームは、それがどのように起こったか（ロールの割り当てミスか？バグか？何らかの形で成功した悪意のある試みか？）を確認する必要があります。これは、クラウドアプリにおける特権の境界が尊重され、違反がすぐにフラグ付けされて修正されるのに役立ちます。
 
 ### IdentityInfo
-**Schema Description:** The `IdentityInfo` table provides information about user accounts gathered from various sources (like Azure AD/Microsoft Entra and on-prem AD) ([IdentityInfo table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-identityinfo-table#:~:text=The%20,return%20information%20from%20this%20table)). It is essentially an **inventory of identity details** – each record is an identity (user) and includes attributes such as the account’s **display name, UPN, Azure AD ObjectId, on-prem AD SID** (if synced), and directory information like **department, job title, email, city, country**, etc. ([IdentityInfo table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-identityinfo-table#:~:text=%60ReportId%60%20,User%20name%20of%20the%20account)) ([IdentityInfo table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-identityinfo-table#:~:text=,Address%20of%20the%20account%20user)). This table is great for enriching other data (mapping user IDs to friendly names or organizational info) and for compliance or threat hunting by user attributes (e.g., find all accounts in a certain department or with certain properties). It was formerly known as *AccountInfo*.
+**スキーマの説明:** `IdentityInfo`テーブルは、さまざまなソース（Azure AD/Microsoft EntraやオンプレミスADなど）から収集されたユーザーアカウントに関する情報を提供します（[高度な検索スキーマのIdentityInfoテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-identityinfo-table#:~:text=The%20,)）。これは基本的に**IDの詳細のインベントリ**であり、各レコードはID（ユーザー）であり、アカウントの**表示名、UPN、Azure AD ObjectId、オンプレミスAD SID**（同期されている場合）、および**部署、役職、メール、市区町村、国**などのディレクトリ情報が含まれます（[高度な検索スキーマのIdentityInfoテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-identityinfo-table#:~:text=%60ReportId%60%20,)）（[高度な検索スキーマのIdentityInfoテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-identityinfo-table#:~:text=,)）。このテーブルは、他のデータを充実させる（ユーザーIDをわかりやすい名前や組織情報にマッピングする）のに最適であり、ユーザー属性（たとえば、特定の部署のすべてのアカウントや特定のプロパティを持つアカウントを見つける）によるコンプライアンスまたは脅威ハンティングにも役立ちます。以前は*AccountInfo*と呼ばれていました。
 
-**Use Cases:**
+**ユースケース:**
 
-- **Security Investigation:** Investigators often use IdentityInfo to get background on a user involved in an incident. For example, if an alert involves user `alice@contoso.com`, the investigator can quickly pull Alice’s department, job role, whether her account is enabled, etc., to assess impact or insider threat potential.  
-  - *Basic Query:* Get the identity details for a specific user (by UPN or account object ID):  
+- **セキュリティ調査:** 調査担当者は、インシデントに関与したユーザーの背景情報を取得するために、IdentityInfoをよく使用します。たとえば、アラートにユーザー`alice@contoso.com`が含まれている場合、調査担当者はアリスの部署、役職、アカウントが有効かどうかなどをすばやく取得して、影響または内部脅威の可能性を評価できます。
+  - *基本的なクエリ:* 特定のユーザー（UPNまたはアカウントオブジェクトID別）のIDの詳細を取得します。
     ```kql
-    // Fetch identity information for a specific user
+    // 特定のユーザーのID情報を取得
     IdentityInfo
     | where AccountUpn == "alice@contoso.com"
-    ```  
-    This returns Alice’s full profile: name, email, department, title, whether the account is enabled (`IsAccountEnabled`), etc. Knowing her role (say she’s in Finance and the alert was about finance data access) can help determine if the activity was expected or not.  
-  - *Advanced Query:* Enrich an investigation involving multiple accounts. For example, if multiple user IDs were found in a log or alert, you could join those IDs with IdentityInfo to list their departments and job titles in one go, to see if there’s a pattern (maybe all from same department or all new hires):  
+    ```
+    これにより、アリスの完全なプロファイル（名前、メール、部署、役職、アカウントが有効かどうか（`IsAccountEnabled`）など）が返されます。彼女の役割（たとえば、彼女が財務部に所属しており、アラートが財務データへのアクセスに関するものであった場合）を知ることは、そのアクティビティが予期されたものであったかどうかを判断するのに役立ちます。
+  - *高度なクエリ:* 複数のアカウントを含む調査を充実させます。たとえば、ログまたはアラートで複数のユーザーIDが見つかった場合、それらのIDをIdentityInfoと結合して、部署と役職を一度にリスト表示し、パターンがあるかどうかを確認できます（おそらくすべて同じ部署から、またはすべて新入社員）。
     ```kql
-    // Enrich a list of suspicious AccountObjectIds with identity details
+    // 疑わしいAccountObjectIdのリストをIDの詳細で強化
     let suspiciousUsers = datatable(AccountObjectId:string)["<ID1>", "<ID2>", "<ID3>"];
     suspiciousUsers
     | join IdentityInfo on AccountObjectId
     | project AccountDisplayName, AccountUpn, Department, JobTitle, IsAccountEnabled
-    ```  
-    This would output, for example, that ID1 is Alice – Finance Analyst, ID2 is Bob – Sales Rep, etc., allowing the investigator to assess why these users were targeted or involved. If all are from one team, maybe that team’s data was targeted.
+    ```
+    これにより、たとえば、ID1はアリス - 財務アナリスト、ID2はボブ - 営業担当者などが出力され、調査担当者はこれらのユーザーがターゲットにされた理由または関与した理由を評価できます。すべてが1つのチームからのものである場合、おそらくそのチームのデータがターゲットにされました。
 
-- **Threat Hunting:** Hunters can query IdentityInfo to find accounts that meet certain criteria that might pose a risk. For example, *stale accounts* (enabled accounts that haven’t been used, or with no recent logon events), or *high-privileged accounts* for focused monitoring. While IdentityInfo doesn’t directly label privileged accounts, one could hunt by job title or group membership if synchronized (though group info might not be directly in this table, Sentinel’s UEBA might have something similar).  
-  - *Basic Query:* Find **disabled accounts** or accounts marked as *not enabled* in Azure AD that still show up in logs (possibly indicating use of a disabled account). First, just identify disabled accounts:  
+- **脅威ハンティング:** ハンターはIdentityInfoをクエリして、リスクをもたらす可能性のある特定の基準を満たすアカウントを見つけることができます。たとえば、*古いアカウント*（有効になっているが使用されていないアカウント、または最近のログオンイベントがないアカウント）、または集中的な監視のための*高特権アカウント*。IdentityInfoは特権アカウントを直接ラベル付けしませんが、役職またはグループメンバーシップ（同期されている場合）でハンティングできます（ただし、グループ情報はこのテーブルに直接含まれていない可能性があり、SentinelのUEBAには類似のものがあるかもしれません）。
+  - *基本的なクエリ:* Azure ADで*無効*になっているアカウント、または*有効になっていない*とマークされているアカウントで、ログにまだ表示されるもの（無効になっているアカウントの使用を示している可能性）を見つけます。まず、無効になっているアカウントを特定します。
     ```kql
-    // List disabled user accounts (IsAccountEnabled = false)
+    // 無効になっているユーザーアカウントをリスト表示（IsAccountEnabled = false）
     IdentityInfo
     | where IsAccountEnabled == false
     | project AccountDisplayName, AccountUpn, Department, LastUpdated=Timestamp
-    ```  
-    A threat hunter might then cross-reference these with sign-in logs (if a disabled account is logging in, that’s a big issue). This basic query itself is also useful for compliance (ensuring leavers’ accounts are indeed disabled).  
-  - *Advanced Query:* **Shadow admin hunting** – find accounts that are not obviously admins by title or department, but are members of privileged groups. If on-prem AD group memberships were pulled into IdentityInfo’s properties (not sure if **NodeProperties** from ExposureGraphNodes might be needed for that), a complex approach would join IdentityInfo with ExposureGraphEdges/Nodes for group membership. For example, find any account whose `JobTitle` does *not* contain "Admin" but is a member of a domain admins group (this might require using ExposureGraphEdges for group relationships, or if not available, perhaps a custom list of known admins by UPN). A simpler heuristic: find accounts with *password never expires* or other flags if present (not sure if IdentityInfo includes such flags; likely not directly). If not, one can use role keywords:  
+    ```
+    脅威ハンターは、これらをサインインログと相互参照する可能性があります（無効になっているアカウントがログインしている場合、それは大きな問題です）。この基本的なクエリ自体も、コンプライアンス（退職者のアカウントが実際に無効になっていることを確認する）に役立ちます。
+  - *高度なクエリ:* **シャドウ管理者ハンティング** - タイトルや部署では明らかに管理者ではないが、特権グループのメンバーであるアカウントを見つけます。オンプレミスADグループのメンバーシップがIdentityInfoのプロパティに取り込まれた場合（ExposureGraphNodesの**NodeProperties**が必要になるかどうかは不明）、複雑なアプローチでは、IdentityInfoをExposureGraphEdges/Nodesと結合してグループメンバーシップを取得します。たとえば、`JobTitle`に「Admin」が含まれていないが、ドメイン管理者のグループのメンバーであるアカウントを見つけます（これには、ExposureGraphEdgesを使用したグループの関係が必要になるか、利用できない場合は、UPNによる既知の管理者のカスタムリストが必要になる可能性があります）。より簡単なヒューリスティック：*パスワードの有効期限なし*またはその他のフラグ（存在する場合）を持つアカウントを見つけます（IdentityInfoにそのようなフラグが含まれているかどうかは不明；おそらく直接は含まれていません）。そうでない場合は、役割のキーワードを使用できます。
     ```kql
-    // Identify accounts with admin-sounding roles
+    // 管理者と見なされる役割を持つアカウントを特定
     IdentityInfo
     | where JobTitle contains "Admin" or Department contains "IT"
-    ```  
-    (This is a weak proxy; better to correlate with directory group info via other tables if possible.) The idea is to then focus threat hunting on those accounts in other logs (like see if any of these admin accounts had risky logins). Even without direct correlation here, a hunter could generate a list of high-value accounts from IdentityInfo and use it in queries on sign-in or device logs.
+    ```
+    （これは弱いプロキシです。可能であれば、他のテーブルを介してディレクトリグループ情報とより適切に関連付ける必要があります。）目的は、これらのアカウントの脅威ハンティングを他のログ（たとえば、これらの管理者アカウントのいずれかにリスクの高いログインがあったかどうかを確認する）に集中させることです。ここでの直接的な関連付けがなくても、ハンターはIdentityInfoから価値の高いアカウントのリストを生成し、サインインログまたはデバイスログのクエリで使用できます。
 
-- **Compliance Check:** IdentityInfo is very useful for compliance and audit scenarios: ensuring that user account details meet certain standards (like everyone has a department and manager filled in), checking accounts that should be disabled (e.g., last day was 30 days ago, but still enabled), or listing accounts by region for data residency compliance.  
-  - *Basic Query:* **Orphaned account check:** Identify accounts that might have left the organization but are still enabled. If IdentityInfo updates when an account is detected as changed or every 24h, one approach is to cross-check a list of known leavers or use the absence of recent activity. For instance, find enabled accounts that haven’t had a logon in 60 days (requires join with IdentityLogonEvents or using a last logon timestamp if available in IdentityInfo, which it isn’t directly). As a simplified compliance query: list all accounts that are enabled (`IsAccountEnabled == true`) but have no department or title (could indicate service accounts or improperly managed accounts):  
+- **コンプライアンスチェック:** IdentityInfoは、コンプライアンスおよび監査シナリオに非常に役立ちます。たとえば、ユーザーアカウントの詳細が特定の基準を満たしていること（全員に部署とマネージャーが入力されているなど）、無効にする必要があるアカウント（たとえば、最終日が30日前であるが、まだ有効になっている）、またはデータ所在地コンプライアンスのために地域別のアカウントをリスト表示することを確認します。
+  - *基本的なクエリ:* **孤立したアカウントのチェック:** 退職した可能性のあるアカウントで、まだ有効になっているものを特定します。アカウントが変更されたことが検出されたとき、または24時間ごとにIdentityInfoが更新される場合、1つのアプローチは、既知の退職者のリストを相互参照するか、最近のアクティビティがないことを使用することです。たとえば、60日間ログインしていない有効なアカウントを見つけます（IdentityLogonEventsとの結合が必要になるか、IdentityInfoで利用可能な最終ログインタイムスタンプを使用する必要がありますが、直接は利用できません）。簡略化されたコンプライアンスクエリとして：有効になっている（`IsAccountEnabled == true`）が、部署または役職がないすべてのアカウントをリスト表示します（サービスアカウントまたは不適切に管理されているアカウントを示している可能性があります）。
     ```kql
-    // Enabled accounts missing department or title info
+    // 部署または役職情報が欠落している有効なアカウント
     IdentityInfo
     | where IsAccountEnabled == true and (isempty(Department) or isempty(JobTitle))
     | project AccountDisplayName, AccountUpn, Department, JobTitle
-    ```  
-    Such accounts might violate HR/IT policy for account metadata completeness, or could be service accounts (which then should be reviewed for proper handling or MFA enforcement).  
-  - *Advanced Query:* **Role-based compliance:** Ensure that privileged accounts (like global admins) have certain attributes set (like multi-factor authentication enforced or a manager assigned). This might require correlating with an external list of admin accounts. Suppose you have a list of admin AccountObjectIds (`adminList`) from Azure AD roles; you could verify those accounts in IdentityInfo have MFA (not a field here) or at least see if they belong to the IT department and have appropriate titles:  
+    ```
+    このようなアカウントは、アカウントメタデータの完全性に関する人事/ITポリシーに違反している可能性があり、またはサービスアカウントである可能性があり（その場合、適切な処理またはMFAの強制についてレビューする必要があります）。
+  - *高度なクエリ:* **役割ベースのコンプライアンス:** 特権アカウント（グローバル管理者など）が特定の属性（多要素認証の強制やマネージャーの割り当てなど）を持っていることを確認します。これには、管理者アカウントの外部リストとの関連付けが必要になる場合があります。Azure ADロールから管理者AccountObjectId（`adminList`）のリストがあると仮定すると、それらのアカウントがIdentityInfoでMFAを持っているか（ここではフィールドではありません）、少なくともIT部門に属し、適切な役職を持っているかどうかを確認できます。
     ```kql
-    // Cross-check that all tenant admins are in IT department
+    // すべてのテナント管理者がIT部門にいることを相互確認
     let tenantAdmins = datatable(AccountObjectId:string)["<AdminID1>", "<AdminID2>"];
     tenantAdmins
     | join IdentityInfo on AccountObjectId
     | project AccountDisplayName, Department, JobTitle, IsAccountEnabled
     | where Department !contains "IT"
-    ```  
-    This would flag if any of your global admins are not listed under IT (which might be against policy, since only IT staff should have admin roles). Similarly, you could check if `IsAccountEnabled` is true for all (if any admin account is disabled, why does it still have a role?) etc. This kind of query helps ensure alignment between HR role, IT role, and technical privileges – a key compliance aspect in least privilege and account management.
+    ```
+    これは、グローバル管理者のいずれかがIT部門にリストされていない場合（ITスタッフのみが管理者ロールを持つべきであるため、ポリシーに反する可能性があります）にフラグを立てます。同様に、すべてに対して`IsAccountEnabled`がtrueであるかどうかを確認できます（管理者アカウントが無効になっている場合、なぜまだロールを持っているのですか？など）。この種のクエリは、人事ロール、ITロール、および技術的な特権の間の整合性を保証するのに役立ちます。これは、最小特権とアカウント管理における重要なコンプライアンスの側面です。
 
 ### IdentityLogonEvents
-**Schema Description:** The `IdentityLogonEvents` table logs **authentication events** from two realms: on-premises Active Directory (via Defender for Identity) and Microsoft online services (via Defender for Cloud Apps) ([IdentityLogonEvents table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-identitylogonevents-table#:~:text=The%20,return%20information%20from%20this%20table)). It covers interactive logons, RDP, NTLM authentications, Kerberos, as well as cloud sign-ins (particularly those not in AADSignInEventsBeta). Key fields include **ActionType** (the kind of logon activity), **LogonType** (interactive, remote, network, etc. for Windows logons ([DeviceLogonEvents table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-devicelogonevents-table#:~:text=,Type%20of%20logon%20session%2C%20specifically))), **Protocol** (Kerberos, NTLM, OAuth, etc.), **Account** details (name, UPN, SID, objectId), and device info (DeviceName, DeviceType, OS platform) ([IdentityLogonEvents table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-identitylogonevents-table#:~:text=Supported%20logon%20types.%20,account%20in%20Microsoft%20Entra%20ID)) ([IdentityLogonEvents table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-identitylogonevents-table#:~:text=book,Windows%2010%20and%20Windows%207)). Essentially, this is the unified logon table combining signals from on-prem AD and cloud, allowing holistic identity authentication hunting.
+**スキーマの説明:** `IdentityLogonEvents`テーブルは、オンプレミスActive Directory（Defender for Identity経由）とMicrosoftオンラインサービス（Defender for Cloud Apps経由）の2つの領域からの**認証イベント**をログに記録します（[高度な検索スキーマのIdentityLogonEventsテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-identitylogonevents-table#:~:text=The%20,)）。インタラクティブログイン、RDP、NTLM認証、Kerberos、およびクラウドサインイン（特にAADSignInEventsBetaに含まれていないもの）をカバーしています。主要なフィールドには、**ActionType**（ログオンアクティビティの種類）、**LogonType**（Windowsログオンのインタラクティブ、リモート、ネットワークなど（[高度な検索スキーマのDeviceLogonEventsテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-devicelogonevents-table#:~:text=,)））、**Protocol**（Kerberos、NTLM、OAuthなど）、**Account**の詳細（名前、UPN、SID、objectId）、およびデバイス情報（DeviceName、DeviceType、OSプラットフォーム）が含まれます（[高度な検索スキーマのIdentityLogonEventsテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-identitylogonevents-table#:~:text=Supported%20logon%20types.,account%20in%20Microsoft%20Entra%20ID)）（[高度な検索スキーマのIdentityLogonEventsテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-identitylogonevents-table#:~:text=book,Windows%2010%20and%20Windows%207)）。基本的に、これはオンプレミスADとクラウドからのシグナルを組み合わせた統合ログオンテーブルであり、包括的なID認証ハンティングを可能にします。
 
-**Use Cases:**
+**ユースケース:**
 
-- **Security Investigation:** When investigating identity-related incidents (like possible lateral movement or brute force on AD, or suspicious cloud logins), IdentityLogonEvents is the go-to. For example, if a user’s account was potentially compromised, an investigator will pull all logon events for that user around the time in question (both on-prem AD logons and cloud sign-ins that fall into this table).  
-  - *Basic Query:* Get recent logon events for a specific user to see if there were failures, from where, and what type (e.g., Kerberos vs. cloud OAuth). For instance:  
+- **セキュリティ調査:** ID関連のインシデント（オンプレミスADでの潜在的な横方向移動やブルートフォース、または疑わしいクラウドログインなど）を調査する場合、IdentityLogonEventsが頼りになります。たとえば、ユーザーのアカウントが侵害された可能性がある場合、調査担当者は問題の時間帯のそのユーザーのすべてのログオンイベント（オンプレミスADログオンとこのテーブルに該当するクラウドサインインの両方）を取得します。
+  - *基本的なクエリ:* 特定のユーザーの最近のログオンイベントを取得して、失敗があったかどうか、どこから、どのような種類（たとえば、Kerberos対クラウドOAuth）であったかを確認します。たとえば：
     ```kql
-    // Last 5 logon events (on-prem or cloud) for user jdoe
+    // ユーザーjdoeの最新のログオンイベント5件（オンプレミスまたはクラウド）
     IdentityLogonEvents
-    | where AccountUpn == "jdoe@contoso.com" 
+    | where AccountUpn == "jdoe@contoso.com"
     | sort by Timestamp desc
     | take 5
     | project Timestamp, ActionType, LogonType, Protocol, DeviceName, FailureReason
-    ```  
-    This might show, for example, John Doe had an NTLM login failure on a server, followed by a successful cloud login from an unfamiliar device. The investigator can use this timeline to trace suspicious behavior (like an attacker moving from cloud to on-prem).  
-  - *Advanced Query:* Investigate **lateral movement**: For instance, if an alert indicates a certain user logged onto multiple machines (pass-the-hash scenario), query for that user’s distinct DeviceNames in a short timeframe:  
+    ```
+    これは、たとえば、ジョン・ドウがサーバーでNTLMログインに失敗し、その後見慣れないデバイスからクラウドログインに成功したことを示す可能性があります。調査担当者はこのタイムラインを使用して、疑わしい動作（攻撃者がクラウドからオンプレミスに移動するなど）を追跡できます。
+  - *高度なクエリ:* **横方向移動**を調査します。たとえば、アラートが特定のユーザーが複数のマシンにログインしたことを示している場合（パスザハッシュシナリオ）、短時間でそのユーザーの異なるDeviceNameをクエリします。
     ```kql
-    // Check if a user logged into multiple devices in 1 hour (possible lateral movement)
+    // 1時間以内にユーザーが複数のデバイスにログインしたかどうかを確認（横方向移動の可能性）
     IdentityLogonEvents
     | where AccountName == "ADMINISTRATOR" and Timestamp between (ago(1h) .. now())
     | summarize UniqueDevices=dcount(DeviceName), Devices=make_set(DeviceName)
-    ```  
-    If *ADMINISTRATOR* (or any account of interest) shows logons on multiple devices in the same hour, that’s a red flag (unless expected). Investigators would then focus on those devices for further evidence of compromise.
+    ```
+    *ADMINISTRATOR*（または関心のある任意のアカウント）が同じ1時間以内に複数のデバイスでログオンを示している場合、それは危険信号です（予期される場合を除く）。調査担当者は、侵害のさらなる証拠についてこれらのデバイスに焦点を当てます。
 
-- **Threat Hunting:** With IdentityLogonEvents, hunters can look for patterns like **brute force attacks, anomalous logon times, use of legacy protocols** in AD, or unusual logon types (like a service account doing interactive login, which shouldn’t happen). The combination of on-prem and cloud auth data allows detection of patterns spanning both (e.g., an attacker using a compromised account both in AD and in O365).  
-  - *Basic Query:* Hunt for **failed logon streaks** on on-prem AD (a likely brute force). For example, find any account with a high number of failed authentication events (ActionType might include “LogonFailed” or FailureReason not null) within a short period:  
+- **脅威ハンティング:** IdentityLogonEventsを使用すると、ハンターはADでの**ブルートフォース攻撃、異常なログオン時間、レガシープロトコルの使用**、または異常なログオンタイプ（たとえば、サービスアカウントがインタラクティブログインを実行するなど、本来あってはならないこと）などのパターンを探すことができます。オンプレミスとクラウドの認証データの組み合わせにより、両方にまたがるパターン（たとえば、攻撃者が侵害されたアカウントをADとO365の両方で使用するなど）を検出できます。
+  - *基本的なクエリ:* オンプレミスADでの**失敗したログオンの連続**（ブルートフォースの可能性が高い）を探します。たとえば、短期間に多数の失敗した認証イベント（ActionTypeには「LogonFailed」またはFailureReasonがnullでないものが含まれる可能性があります）を持つアカウントを見つけます。
     ```kql
-    // Accounts with >20 failed logons in last 30 minutes (possible brute force)
+    // 過去30分間に20回以上ログインに失敗したアカウント（ブルートフォースの可能性）
     IdentityLogonEvents
     | where Timestamp > ago(30m) and isnotempty(FailureReason)
     | summarize FailedCount=count() by AccountUpn
     | where FailedCount > 20
-    ```  
-    This spots accounts under password guessing attacks. A hunter who finds such accounts will then check if any succeeded or if the same source is hitting many accounts.  
-  - *Advanced Query:* Look for **suspicious logon types** – e.g., a LogonType that is unusual for certain accounts. If service accounts should never log on interactively, but one did, that’s a sign. For example:  
+    ```
+    これは、パスワード推測攻撃を受けているアカウントを特定します。このようなアカウントを見つけたハンターは、成功したものがあるかどうか、または同じソースが多数のアカウントにヒットしているかどうかを確認します。
+  - *高度なクエリ:* **疑わしいログオンタイプ**を探します。たとえば、特定のアカウントにとって異常なLogonTypeです。サービスアカウントがインタラクティブにログオンすべきではないのに、ログオンした場合、それは兆候です。たとえば：
     ```kql
-    // Service accounts (by name pattern) doing interactive or RDP logons
+    // サービスアカウント（名前パターン別）によるインタラクティブまたはRDPログオン
     IdentityLogonEvents
     | where AccountName startswith "svc_" and LogonType in ("Interactive", "RemoteInteractive")
     | project Timestamp, AccountName, DeviceName, LogonType
-    ```  
-    If a service account (often prefixed `svc_` or similar) logged on interactively or via RDP, it could indicate that an attacker is using those credentials to pivot, since normally those accounts are used only for running services, not logging in. This helps hunt down potential misuse of high-privilege service accounts.
+    ```
+    サービスアカウント（多くの場合、`svc_`または類似のプレフィックスが付いています）がインタラクティブまたはRDP経由でログオンした場合、攻撃者がそれらの資格情報を使用してピボットしている可能性があることを示している可能性があります。通常、これらのアカウントはサービスを実行するためだけに使用され、ログインはしないためです。これは、特権の高いサービスアカウントの潜在的な不正使用を追跡するのに役立ちます。
 
-- **Compliance Check:** From a compliance perspective, IdentityLogonEvents can help ensure that authentication policies are followed: e.g., no NTLM where not allowed, no logons outside business hours for certain sensitive systems (depending on policy), or that all admin logons are audited. It’s also useful for detecting accounts that might violate access policies (like logging in from an unauthorized network).  
-  - *Basic Query:* **Legacy auth usage:** Many organizations aim to eliminate NTLM authentication due to security and compliance reasons. You can check if NTLM (an older protocol) is still being used in logons:  
+- **コンプライアンスチェック:** コンプライアンスの観点から見ると、IdentityLogonEventsは、認証ポリシーが遵守されていることを確認するのに役立ちます。たとえば、許可されていない場所でのNTLMの使用、特定の機密システムの営業時間外のログオン（ポリシーによって異なります）、またはすべての管理者ログオンが監査されていることなどです。また、アクセスポリシーに違反する可能性のあるアカウント（許可されていないネットワークからのログオンなど）を検出するのにも役立ちます。
+  - *基本的なクエリ:* **レガシー認証の使用状況:** 多くの組織は、セキュリティとコンプライアンス上の理由から、NTLM認証を排除することを目指しています。NTLM（古いプロトコル）がまだログオンで使用されているかどうかを確認できます。
     ```kql
-    // Count of NTLM vs Kerberos logons in last 24h (on-prem AD)
+    // 過去24時間のNTLMとKerberosのログオン数（オンプレミスAD）
     IdentityLogonEvents
     | where Timestamp > ago(24h) and Protocol in ("NTLM","Kerberos")
     | summarize Count=count() by Protocol
-    ```  
-    If NTLM count is significant, you have non-compliance with a possible policy to prefer Kerberos/modern auth. You could drill down further by device or account to pinpoint where NTLM is happening (maybe an outdated system or an application using it).  
-  - *Advanced Query:* Ensure that **privileged accounts** log on only in approved ways. For instance, domain admins should maybe only log on to domain controllers or jump boxes. You can verify if a highly privileged account logged on to a regular workstation, which might be against policy. If you have a list of privileged accounts (by group membership or naming), use that:  
+    ```
+    NTLMの数が有意である場合、Kerberos/モダン認証を優先するポリシーに非準拠です。デバイスまたはアカウントごとにさらにドリルダウンして、NTLMが発生している場所（古いシステムまたはそれを使用しているアプリケーションなど）を特定できます。
+  - *高度なクエリ:* **特権アカウント**が承認された方法でのみログオンすることを確認します。たとえば、ドメイン管理者はドメインコントローラーまたはジャンプボックスにのみログオンすべきかもしれません。特権の高いアカウントが通常のワークステーションにログオンした場合、それはポリシーに反する可能性があります。特権アカウントのリスト（グループメンバーシップまたは命名規則による）がある場合は、それを使用します。
     ```kql
-    // Check if any Domain Admins logged onto non-domain-controller machines
-    let domainAdmins = pack_array("DAlice", "DBob");  // list of domain admin account names
+    // ドメイン管理者によるドメインコントローラー以外のマシンへのログオンを確認
+    let domainAdmins = pack_array("DAlice", "DBob");  // ドメイン管理者アカウント名のリスト
     IdentityLogonEvents
     | where AccountName in (domainAdmins) and DeviceType != "DomainController" and LogonType == "Interactive"
     | project Timestamp, AccountName, DeviceName, LogonType
-    ```  
-    Any result here means a Domain Admin (DAlice or DBob) logged on interactively to a machine that is not a DC, which many security policies forbid due to risk. This compliance query helps flag risky behavior for further training or enforcement (like reminding admins to use jump servers). Another compliance check could be to detect interactive logons by accounts that are supposed to be *service accounts only* (we did a variant in threat hunting). 
+    ```
+    ここで結果が出た場合、ドメイン管理者（DAliceまたはDBob）がDCではないマシンにインタラクティブにログオンしたことを意味します。多くのセキュリティポリシーでは、リスクがあるため禁止されています。このコンプライアンスクエリは、さらなるトレーニングまたは強制（管理者にジャンプサーバーの使用を促すなど）のために危険な動作にフラグを立てるのに役立ちます。別のコンプライアンスチェックとして、*サービスアカウントのみ*であるはずのアカウントによるインタラクティブログオンを検出できます（脅威ハンティングでバリアントを実行しました）。
 
 ### EmailAttachmentInfo
-**Schema Description:** The `EmailAttachmentInfo` table contains information about **files attached to emails** that were processed by Defender for Office 365 (Exchange Online Protection) ([EmailAttachmentInfo table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailattachmentinfo-table#:~:text=The%20,return%20information%20from%20this%20table)). Each record represents an attachment on an email message, including fields such as the parent email’s identifiers (**NetworkMessageId** and InternetMessageId), sender/recipient info, and details of the attachment file: **FileName**, **FileType** (extension), file **SHA256 hash**, file size, and any threat assessment results (e.g., **ThreatTypes** indicating if malware was detected, **ThreatNames** for malware family, **DetectionMethods** used) ([EmailAttachmentInfo table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailattachmentinfo-table#:~:text=,account%20in%20Microsoft%20Entra%20ID)) ([EmailAttachmentInfo table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailattachmentinfo-table#:~:text=Microsoft%20Entra%20ID%20,malware%20or%20other%20threats%20found)). This table is typically used in conjunction with EmailEvents (which logs the email itself) to investigate malicious attachments or track a specific file in mail flow.
+**スキーマの説明:** `EmailAttachmentInfo`テーブルには、Defender for Office 365（Exchange Online Protection）によって処理された**メールに添付されたファイル**に関する情報が含まれています（[高度な検索スキーマのEmailAttachmentInfoテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailattachmentinfo-table#:~:text=The%20,)）。各レコードはメールメッセージの添付ファイルを表し、親メールの識別子（**NetworkMessageId**とInternetMessageId）、送信者/受信者の情報、および添付ファイルの詳細（**FileName**、**FileType**（拡張子）、ファイル**SHA256ハッシュ**、ファイルサイズ、および脅威評価の結果（たとえば、マルウェアが検出されたかどうかを示す**ThreatTypes**、マルウェアファミリーの**ThreatNames**、使用された**DetectionMethods**））などのフィールドが含まれています（[高度な検索スキーマのEmailAttachmentInfoテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailattachmentinfo-table#:~:text=,)）（[高度な検索スキーマのEmailAttachmentInfoテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailattachmentinfo-table#:~:text=Microsoft%20Entra%20ID%20,)）。このテーブルは通常、悪意のある添付ファイルを調査したり、メールフロー内の特定のファイルを追跡したりするために、EmailEvents（メール自体をログに記録する）と組み合わせて使用されます。
 
-**Use Cases:**
+**ユースケース:**
 
-- **Security Investigation:** When an alert or incident involves a malicious email attachment (e.g., a malware-infected document), investigators use EmailAttachmentInfo to get details on that file and to trace where else it might have appeared. For instance, if a particular attachment hash is known to be malicious, they’ll search this table for that hash to find all users who received it.  
-  - *Basic Query:* Find all instances of a suspicious file (by hash or name) in emails. Suppose you have a SHA256 for a malware attachment, you can query:  
+- **セキュリティ調査:** アラートまたはインシデントが悪意のあるメール添付ファイル（たとえば、マルウェアに感染したドキュメント）に関連する場合、調査担当者はEmailAttachmentInfoを使用してそのファイルの詳細を取得し、それが他にどこに現れた可能性があるかを追跡します。たとえば、特定の添付ファイルのハッシュが悪意のあることがわかっている場合、このテーブルでそのハッシュを検索して、それを受信したすべてのユーザーを見つけます。
+  - *基本的なクエリ:* 疑わしいファイル（ハッシュまたは名前別）のすべてのインスタンスをメールで検索します。マルウェア添付ファイルのSHA256がある場合、次のようにクエリできます。
     ```kql
-    // Find emails carrying a specific malicious file (by SHA256)
+    // 特定の悪意のあるファイル（SHA256別）を運ぶメールを見つける
     EmailAttachmentInfo
     | where SHA256 == "<malicious-file-hash>"
     | project Timestamp, FileName, SenderFromAddress, RecipientEmailAddress, ThreatTypes
-    ```  
-    This shows when and between whom that file was sent, and whether it was flagged (ThreatTypes might show "Malware" if it was detected). It helps scope an incident (did only one person get it or many?).  
-  - *Advanced Query:* Investigate a phishing campaign by correlating attachments with the emails. For example, list all recipients who got an email with a known bad attachment and whether they clicked it (would require joining with UrlClickEvents or other data, but within attachment info you can at least get recipients and whether it was blocked). Another angle: sometimes multiple attachments in different emails have the same ThreatName (malware family). You could gather all attachment hashes labeled as a certain malware:  
+    ```
+    これは、そのファイルがいつ、誰の間で送信されたか、そしてそれがフラグが立てられたかどうかを示しています（ThreatTypesは検出された場合に「Malware」を示す可能性があります）。これは、インシデントの範囲（1人だけが受信したのか、それとも多くの人が受信したのか）を把握するのに役立ちます。
+  - *高度なクエリ:* 添付ファイルをメールと関連付けることで、フィッシングキャンペーンを調査します。たとえば、既知の悪意のある添付ファイルを含むメールを受信したすべての受信者と、彼らがそれをクリックしたかどうかをリスト表示します（UrlClickEventsまたは他のデータとの結合が必要になりますが、添付ファイル情報内では、少なくとも受信者とそれがブロックされたかどうかを取得できます）。別の角度：異なるメールの複数の添付ファイルが同じThreatName（マルウェアファミリー）を持つことがあります。特定のマルウェアとしてラベル付けされたすべての添付ファイルのハッシュを収集できます。
     ```kql
-    // Find all attachment hashes associated with a specific malware family
+    // 特定のマルウェアファミリーに関連付けられたすべての添付ファイルのハッシュを見つける
     EmailAttachmentInfo
-    | where ThreatNames has "Trickbot"  // example malware name
+    | where ThreatNames has "Trickbot"  // マルウェア名の例
     | summarize CountEmails=dcount(NetworkMessageId), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by SHA256, FileName, ThreatNames
-    ```  
-    This gives a set of file hashes identified as Trickbot in emails, how many messages they were found in, and the timeframe. Investigators can then cross-check if those files were executed on endpoints (DeviceFileEvents) or ensure they were blocked.
+    ```
+    これにより、Trickbotとして識別されたメール内のファイルハッシュのセット、それらが検出されたメッセージの数、およびタイムフレームが得られます。調査担当者はその後、これらのファイルがエンドポイント（DeviceFileEvents）で実行されたかどうかを確認したり、ブロックされたことを確認したりできます。
 
-- **Threat Hunting:** Hunters might use EmailAttachmentInfo to search for patterns of potentially malicious attachments that slipped past detection or to identify how new threat campaigns might be manifesting in email. For example, hunting for unusual file types being sent or attachments with suspicious names.  
-  - *Basic Query:* Find **executable attachments** being sent via email – since .exe, .scr, etc., are rarely sent in legitimate business communications, their presence could indicate malicious activity or policy violations. For instance:  
+- **脅威ハンティング:** ハンターはEmailAttachmentInfoを使用して、検出をすり抜けた可能性のある悪意のある添付ファイルのパターンを検索したり、新しい脅威キャンペーンがメールでどのように現れているかを特定したりする場合があります。たとえば、送信されている異常なファイルの種類や、疑わしい名前の添付ファイルをハンティングします。
+  - *基本的なクエリ:* メールで送信されている**実行可能ファイル**の添付ファイルを見つけます。*.exe*、*.scr*などは正当なビジネスコミュニケーションではめったに送信されないため、それらの存在は悪意のあるアクティビティまたはポリシー違反を示している可能性があります。たとえば：
     ```kql
-    // Look for executables or script files in email attachments (last 7 days)
+    // メール添付ファイル内の実行可能ファイルまたはスクリプトファイルを探す（過去7日間）
     EmailAttachmentInfo
     | where Timestamp > ago(7d) and FileType in~ (".exe", ".dll", ".js", ".scr", ".bat")
     | project Timestamp, FileName, SenderFromAddress, RecipientEmailAddress, ThreatTypes
-    ```  
-    Even if ThreatTypes is empty (meaning not flagged as malware), a list of emails with .exe attachments is worth reviewing. The hunter might find a .exe that was not detected as malware (zero-day) and proactively investigate it.  
-  - *Advanced Query:* Hunt for **bulk suspicious attachments** – e.g., the same attachment name sent to many recipients (could be a phishing with common lure file). Using KQL to identify top FileName that was sent to many distinct recipients:  
+    ```
+    ThreatTypesが空（マルウェアとしてフラグが立てられていないことを意味する）であっても、*.exe*添付ファイルを含むメールのリストは確認する価値があります。ハンターは、マルウェアとして検出されなかった*.exe*（ゼロデイ）を見つけて、積極的に調査する可能性があります。
+  - *高度なクエリ:* **大量の疑わしい添付ファイル**を探します。たとえば、同じ添付ファイル名が多くの受信者に送信された場合（一般的なおとりファイルを使用したフィッシングである可能性があります）。KQLを使用して、多くの異なる受信者に送信された上位のFileNameを特定します。
     ```kql
-    // Potential mass phishing: attachments with many distinct recipients
+    // 潜在的な大量フィッシング：多数の異なる受信者を持つ添付ファイル
     EmailAttachmentInfo
     | where Timestamp > ago(2d)
     | summarize RecipCount=dcount(RecipientEmailAddress) by FileName, SHA256, ThreatTypes
-    | where RecipCount > 10 and isempty(ThreatTypes)  // not flagged by AV, but mass-sent
-    ```  
-    This surfaces files that were widely distributed but not necessarily caught by filters. If an attachment shows up in 50 mailboxes and wasn’t flagged, a threat hunter would certainly investigate that file’s nature (it could be an emerging threat).
+    | where RecipCount > 10 and isempty(ThreatTypes)  // AVによってフラグが立てられていないが、大量送信された
+    ```
+    これにより、広く配布されたが、必ずしもフィルターによってキャッチされたわけではないファイルが表面化します。添付ファイルが50個のメールボックスに表示され、フラグが立てられていない場合、脅威ハンターはそのファイルの本質を調査するでしょう（新たな脅威である可能性があります）。
 
-- **Compliance Check:** From a compliance or policy perspective, one might use EmailAttachmentInfo to ensure that certain types of files aren’t being sent via email (like executables or classified docs) or that DLP policies are effective. It can also be used to track large file movements via email.  
-  - *Basic Query:* **Restricted file types** – If company policy forbids sending certain file types via email (e.g., .pst files or password-protected zips), you could query for those. For example:  
+- **コンプライアンスチェック:** コンプライアンスまたはポリシーの観点から、EmailAttachmentInfoを使用して、特定の種類のファイル（実行可能ファイルや機密文書など）がメールで送信されていないこと、またはDLPポリシーが有効であることを確認できます。また、メールによる大きなファイルの移動を追跡するためにも使用できます。
+  - *基本的なクエリ:* **制限されたファイルの種類** - 会社のポリシーで特定のファイルの種類（たとえば、*.pst*ファイルやパスワードで保護されたzipファイル）をメールで送信することが禁止されている場合、それらをクエリできます。たとえば：
     ```kql
-    // Check if any .pst files were sent as attachments (policy violation)
+    // .pstファイルが添付ファイルとして送信されたかどうかを確認（ポリシー違反）
     EmailAttachmentInfo
     | where FileType == ".pst"
     | summarize TotalSent = count(), UniqueSenders=dcount(SenderFromAddress)
-    ```  
-    If this returns any, it means mailbox archives were sent via email, which might breach data management policies. Similarly, you could search for *.zip* and some indicator of encryption (though detection of encrypted files may be in ThreatTypes or detection methods if available).  
-  - *Advanced Query:* **Data leakage auditing** – e.g., find if any sensitive document (perhaps by keyword in filename or by classification label if those propagate to the attachment info) was sent outside the organization. If `RecipientEmailAddress` not ending in your domain indicates external recipient, you can combine that logic:  
+    ```
+    これが何かを返す場合、メールボックスアーカイブがメールで送信されたことを意味し、これはデータ管理ポリシーに違反する可能性があります。同様に、*.zip*と暗号化の何らかの指標（ただし、暗号化されたファイルの検出は、ThreatTypesまたは利用可能な場合は検出方法にある可能性があります）を検索できます。
+  - *高度なクエリ:* **データ漏洩監査** - たとえば、機密文書（ファイル名にキーワードが含まれているか、分類ラベルがある場合、それらが添付ファイル情報に伝播する場合）が組織外に送信されたかどうかを確認します。`RecipientEmailAddress`がドメインで終わらない場合は、外部受信者を示し、そのロジックを組み合わせることができます。
     ```kql
-    // Possible data leak: confidential files sent to external recipients
+    // 潜在的なデータ漏洩：機密ファイルが外部受信者に送信された
     EmailAttachmentInfo
     | where FileName contains "Confidential" or FileName contains "Sensitive"
     | extend IsExternalRecipient = iff(RecipientEmailAddress !endswith "@contoso.com", "Yes", "No")
     | summarize Attachments=count() by FileName, Sender=SenderFromAddress, IsExternalRecipient
     | where IsExternalRecipient == "Yes"
-    ```  
-    This finds attachments with "Confidential" in the name that went to anyone outside contoso.com. Each such occurrence could be a compliance issue (if not sanctioned), and you’d likely cross-check if DLP caught it or not. Even without explicit labels, looking at *IsExternalRecipient == Yes* for large or suspicious file names can help compliance teams catch mistakes or malicious exfiltration via email.
+    ```
+    これは、名前に「Confidential」が含まれる添付ファイルで、contoso.com以外の人に送信されたものを見つけます。そのような発生ごとにコンプライアンスの問題（許可されていない場合）である可能性があり、DLPがそれをキャッチしたかどうかを確認する必要があります。明示的なラベルがなくても、大きなファイル名または疑わしいファイル名で*IsExternalRecipient == Yes*を確認することで、コンプライアンスチームはメールによるミスまたは悪意のあるデータ漏洩を捕捉するのに役立ちます。
 
 ### EmailEvents
-**Schema Description:** The `EmailEvents` table logs **Microsoft 365 email events**, covering the journey and filtering of each email message ([EmailEvents table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailevents-table#:~:text=The%20,return%20information%20from%20this%20table)). Each record typically represents an email and includes details like **NetworkMessageId** (internal unique ID for the email), **InternetMessageId** (SMTP Message-ID), sender and recipient addresses, subject, and what happened to the email (delivery status, spam/phish verdicts as part of ActionType). It also logs **EmailDirection** (Inbound, Outbound) and various source/destination info, plus fields like **DeliveryLocation** or **ThreatTypes** if any were detected. Essentially, this table is used to trace email flow (delivered, blocked, dropped, etc.) and analyze email metadata.
+**スキーマの説明:** `EmailEvents`テーブルは、各メールメッセージの経路とフィルタリングを網羅する**Microsoft 365メールイベント**をログに記録します（[高度な検索スキーマのEmailEventsテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailevents-table#:~:text=The%20,)）。各レコードは通常1つのメールを表し、**NetworkMessageId**（メールの内部一意ID）、**InternetMessageId**（SMTP Message-ID）、送信者と受信者のアドレス、件名、およびメールに何が起こったか（配信ステータス、スパム/フィッシング判定（ActionTypeの一部として））などの詳細が含まれます。また、**EmailDirection**（Inbound、Outbound）やさまざまな送信元/宛先の情報、および**DeliveryLocation**や**ThreatTypes**（検出された場合）などのフィールドもログに記録します。基本的に、このテーブルはメールフロー（配信、ブロック、ドロップなど）を追跡し、メールのメタデータを分析するために使用されます。
 
-**Use Cases:**
+**ユースケース:**
 
-- **Security Investigation:** When investigating a phishing incident, EmailEvents is used to find the email that delivered the phish: who sent it, who received it, when, and what was done (was it delivered or filtered). Analysts also use it to retrieve the subject and network message ID to correlate with attachments and URL data.  
-  - *Basic Query:* Find a specific email by subject or by sender/recipient. For example, if an executive reported a suspicious email with subject "Invoice", an investigator can search:  
+- **セキュリティ調査:** フィッシングインシデントを調査する場合、EmailEventsを使用して、フィッシングメールを配信したメールを見つけます。誰が送信したか、誰が受信したか、いつ、そして何が行われたか（配信されたか、フィルタリングされたか）。アナリストは、件名とネットワークメッセージIDを取得して、添付ファイルとURLデータを関連付けるためにも使用します。
+  - *基本的なクエリ:* 件名または送信者/受信者で特定のメールを検索します。たとえば、役員が「請求書」という件名の疑わしいメールを報告した場合、調査担当者は次のように検索できます。
     ```kql
-    // Search for emails with a specific subject
+    // 特定の件名を持つメールを検索
     EmailEvents
     | where Subject has "Invoice" and RecipientEmailAddress == "ceo@contoso.com"
     | project Timestamp, SenderFromAddress, RecipientEmailAddress, DeliveryLocation, EmailDirection
-    ```  
-    This shows if the CEO received any invoice-related emails, from whom, and whether they landed in Inbox or were filtered (DeliveryLocation might say Inbox, Junk, Quarantine, etc.). This helps confirm if the reported email exists and its path.  
-  - *Advanced Query:* Trace a phishing campaign by finding all emails with the same characteristics. If one malicious email is found, use its NetworkMessageId or InternetMessageId as an identifier to find related messages (sometimes multiple recipients cause multiple NetworkMessageIds with same InternetMessageId if it’s the same email). For instance:  
+    ```
+    これにより、CEOが請求書関連のメールを受信したかどうか、誰から、そして受信トレイに届いたか、フィルタリングされたか（DeliveryLocationは受信トレイ、迷惑メール、検疫などを示す可能性があります）がわかります。これは、報告されたメールが存在するかどうかとその経路を確認するのに役立ちます。
+  - *高度なクエリ:* 同じ特性を持つすべてのメールを見つけることで、フィッシングキャンペーンを追跡します。1通の悪意のあるメールが見つかった場合は、そのNetworkMessageIdまたはInternetMessageIdを識別子として使用して、関連するメッセージを見つけます（複数の受信者がいる場合、同じInternetMessageIdで複数のNetworkMessageIdが発生することがあります）。たとえば：
     ```kql
-    // Get all recipients of a phishing email by InternetMessageId
+    // InternetMessageIdでフィッシングメールのすべての受信者を取得
     let phishId = EmailEvents
                   | where Subject == "[Payment Notice]" and SenderFromDomain == "evil.com"
                   | project InternetMessageId
@@ -671,93 +675,93 @@ published_at: 2024-12-31 08:00
     EmailEvents
     | where InternetMessageId in (phishId)
     | project Timestamp, SenderFromAddress, RecipientEmailAddress, DeliveryLocation, ThreatTypes
-    ```  
-    This finds all instances of that email (maybe sent to many people). Investigators can then see who else got it and if it was blocked (ThreatTypes might indicate if it was marked as phishing or not). If some got through (Inbox), those users need immediate action (like forcible quarantine via ZAP or user education).
+    ```
+    これにより、そのメールのすべてのインスタンス（おそらく多くの人に送信された）が見つかります。調査担当者は、他に誰が受信したか、そしてそれがブロックされたかどうか（ThreatTypesはフィッシングとしてマークされたかどうかを示す可能性があります）を確認できます。一部が（受信トレイに）届いた場合、それらのユーザーには緊急の対応（ZAPによる強制的な検疫やユーザー教育など）が必要です。
 
-- **Threat Hunting:** Hunters query EmailEvents to uncover malicious patterns that might not have triggered an alert. For example, a sudden surge in emails from a new domain, or many emails with suspicious keywords, or unusual senders for internal users.  
-  - *Basic Query:* Hunt for **mass mail-outs** from one internal account (could indicate a compromised account sending spam internally). For instance, find if any internal sender sent email to an unusually high number of recipients in a short time:  
+- **脅威ハンティング:** ハンターはEmailEventsをクエリして、アラートをトリガーしなかった可能性のある悪意のあるパターンを明らかにします。たとえば、新しいドメインからのメールの急増、疑わしいキーワードを含む多数のメール、または内部ユーザーにとって異常な送信者などです。
+  - *基本的なクエリ:* 1つの内部アカウントからの**大量のメール送信**（侵害されたアカウントが内部スパムを送信している可能性がある）を検索します。たとえば、短時間で異常に多数の受信者にメールを送信した内部送信者がいるかどうかを確認します。
     ```kql
-    // Internal accounts sending to many recipients (possible compromised account spamming)
+    // 多数の受信者に送信している内部アカウント（侵害されたアカウントによるスパムの可能性）
     EmailEvents
     | where EmailDirection == "Outbound" and SenderFromDomain == "contoso.com"
     | summarize RecipCount=dcount(RecipientEmailAddress), LastSeen=max(Timestamp) by SenderFromAddress
     | where RecipCount > 50
-    ```  
-    If an internal user account is found sending to 50+ distinct recipients recently, that’s suspicious (especially if they don’t normally do that). A threat hunter would investigate that account for compromise.  
-  - *Advanced Query:* Identify **targeted phishing** by looking for certain keywords in subjects among inbound emails that were delivered (i.e., might have bypassed filters). For example:  
+    ```
+    内部ユーザーアカウントが最近50人以上の異なる受信者に送信していることが判明した場合、それは疑わしいです（特に通常そうしない場合）。脅威ハンターはそのアカウントが侵害されていないか調査します。
+  - *高度なクエリ:* 配信された（つまり、フィルターをバイパスした可能性がある）受信メールの件名で特定のキーワードを探すことで、**標的型フィッシング**を特定します。たとえば：
     ```kql
-    // Potential phishing: look for delivered emails with common phishing subject keywords and no detection
+    // 潜在的なフィッシング：一般的なフィッシング件名キーワードを含み、検出されていない配信済みメールを探す
     EmailEvents
     | where EmailDirection == "Inbound" and DeliveryLocation == "Inbox"
       and Subject matches regex @"(?i)urgent|password|verify|action required"
       and isempty(ThreatTypes)
     | project Timestamp, Subject, SenderFromAddress, RecipientEmailAddress
-    ```  
-    This picks up emails that contain typical phishing lingo in the subject ("urgent", "action required", etc.), that landed in inbox without being classified as malware/phish (ThreatTypes empty). A hunter can review these subjects and senders – they may find a phishing attempt that EOP missed due to being low-volume or cleverly crafted. It’s a way to catch what automated filters might have missed.
+    ```
+    これは、件名に典型的なフィッシング用語（「緊急」、「対応が必要」など）を含み、マルウェア/フィッシングとして分類されずに受信トレイに届いたメール（ThreatTypesが空）を抽出します。ハンターはこれらの件名と送信者を確認できます。EOPが見落としたフィッシング試行（少量の送信または巧妙に作成されたため）が見つかる可能性があります。これは、自動フィルターが見落とした可能性のあるものを捉える方法です。
 
-- **Compliance Check:** EmailEvents can help in compliance scenarios like ensuring email usage policies are followed (e.g., no auto-forwarding to personal accounts, no mass mailing of sensitive info, etc.), and to gather metrics for compliance reports (like number of emails encrypted, or how many were blocked as spam which might relate to anti-spam compliance).  
-  - *Basic Query:* **External forwarding check:** Many organizations disallow auto-forwarding of corporate email to external addresses for data protection. To verify compliance, one could check if any user is sending a high volume of mail to the same external address (which might indicate a forward or manual exfiltration). For example, count how many emails each internal user sent to *@gmail.com addresses:  
+- **コンプライアンスチェック:** EmailEventsは、メールの使用ポリシー（たとえば、個人アカウントへの自動転送の禁止、機密情報の大量メール送信の禁止など）が遵守されていることを確認したり、コンプライアンスレポートのメトリック（暗号化されたメールの数、スパムとしてブロックされたメールの数など、アンチスパムコンプライアンスに関連する可能性のあるもの）を収集したりするなど、コンプライアンスシナリオに役立ちます。
+  - *基本的なクエリ:* **外部転送のチェック:** 多くの組織では、データ保護のために企業メールの個人アドレスへの自動転送を禁止しています。コンプライアンスを確認するために、ユーザーが同じ外部アドレスに大量のメールを送信しているかどうかを確認できます（転送または手動によるデータ漏洩を示している可能性があります）。たとえば、各内部ユーザーが*@gmail.comアドレスに送信したメールの数をカウントします。
     ```kql
-    // Detect potential auto-forwarding: internal to external patterns
+    // 潜在的な自動転送の検出：内部から外部へのパターン
     EmailEvents
     | where EmailDirection == "Outbound" and RecipientEmailAddress !endswith "@contoso.com"
     | summarize ExternalEmails=count() by SenderFromAddress, RecipientDomain = tostring(split(RecipientEmailAddress, "@")[1])
     | where ExternalEmails > 100 and RecipientDomain endswith "gmail.com"
-    ```  
-    This might show that bob@contoso.com sent 300 emails to gmail.com addresses – possibly auto-forwarding to a personal account. Compliance can then investigate if that’s an approved exception or a violation.  
-  - *Advanced Query:* **Encryption/Confidentiality compliance:** If using O365 Message Encryption or sensitivity labels, one might want to ensure that sensitive info sent out is always encrypted. While EmailEvents might not directly show if a mail was encrypted, it could show if a sensitivity label or certain header was applied. Alternatively, check if emails marked with a certain classification (if that populates ThreatTypes or other fields) were sent in clear. Without that, another approach: ensure that all emails with certain keywords (like "SSN" or "Confidential") were caught by DLP (which might appear as ActionType indicating a DLP rule or in EmailEvents possibly not, might need the DLP events via CloudAppEvents if integrated). A simplistic check:  
+    ```
+    これは、bob@contoso.comがgmail.comアドレスに300通のメールを送信したことを示す可能性があります。これは、個人アカウントへの自動転送である可能性があります。コンプライアンスは、それが承認された例外であるかポリシー違反であるかを調査できます。
+  - *高度なクエリ:* **暗号化/機密性コンプライアンス:** O365メッセージ暗号化または秘密度ラベルを使用している場合、送信される機密情報が常に暗号化されていることを確認したい場合があります。EmailEventsはメールが暗号化されたかどうかを直接示さないかもしれませんが、秘密度ラベルまたは特定のヘッダーが適用されたかどうかを示す可能性があります。または、特定の分類（ThreatTypesまたは他のフィールドに設定されている場合）でマークされたメールがクリアで送信されたかどうかを確認します。それがない場合、別のアプローチ：特定のキーワード（「SSN」または「Confidential」など）を含むすべてのメールがDLPによってキャッチされたことを確認します（DLPルールを示すActionTypeとしてEmailEventsに表示される可能性があります。そうでない場合は、統合されている場合はCloudAppEvents経由でDLPイベントが必要になる可能性があります）。簡単なチェック：
     ```kql
-    // Check if any email with 'Confidential' in subject/body was sent unencrypted externally
+    // 件名/本文に「Confidential」を含むメールが外部に暗号化されずに送信されたかどうかを確認
     EmailEvents
     | where EmailDirection == "Outbound" and DeliveryLocation == "Delivered"
       and (Subject has "Confidential" or Subject has "Sensitive")
       and RecipientEmailAddress !endswith "@contoso.com"
-      and isempty(ThreatTypes)  // not blocked or modified by DLP (assuming it'd tag as threat if so)
-    ```  
-    This is not a definitive method, but if it yields results, compliance might need to review those emails to ensure no sensitive info leaked. A more direct compliance query could be to list all emails that were blocked by DLP (if DLP events surface as ThreatTypes or a specific ActionType like "DLPBlock" – those might be logged in EmailEvents or perhaps EmailPostDeliveryEvents if removed after delivery). For example, count how many emails were blocked due to sensitive info to report compliance with data protection policies.
+      and isempty(ThreatTypes)  // DLPによってブロックまたは変更されていない（そうであれば脅威としてタグ付けされると仮定）
+    ```
+    これは決定的な方法ではありませんが、結果が出た場合、コンプライアンスはそれらのメールを確認して、機密情報が漏洩していないことを確認する必要があるかもしれません。より直接的なコンプライアンスクエリは、DLPによってブロックされたすべてのメールをリスト表示することです（DLPイベントがThreatTypesまたは「DLPBlock」のような特定のActionTypeとして表示される場合 - それらはEmailEventsまたは配信後に削除された場合はEmailPostDeliveryEventsにログに記録される可能性があります）。たとえば、機密情報のためにブロックされたメールの数をカウントして、データ保護ポリシーの遵守状況を報告します。
 
 ### EmailPostDeliveryEvents
-**Schema Description:** The `EmailPostDeliveryEvents` table logs **security-related actions on emails after they have been delivered** to mailboxes ([EmailPostDeliveryEvents table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailpostdeliveryevents-table#:~:text=The%20,return%20information%20from%20this%20table)). This includes things like automated remediation (e.g., **ZAP** – Zero-hour Auto Purge removing a phishing email from Inbox after initial delivery), manual remedial actions (admin removing or releasing from quarantine), or user actions (like user report phish). Key fields include the email identifiers (NetworkMessageId, InternetMessageId), the **Action** taken (e.g., MovedToJunk, Deleted, ReleasedFromQuarantine), **ActionType** (what triggered it: e.g., Phish ZAP, Malware ZAP, Manual remediation) ([EmailPostDeliveryEvents table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailpostdeliveryevents-table#:~:text=,recipient%20after%20distribution%20list%20expansion)), who triggered it (**ActionTrigger** – admin vs system), and the result of the action ([EmailPostDeliveryEvents table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailpostdeliveryevents-table#:~:text=,recipient%20after%20distribution%20list%20expansion)). Essentially, this table is used to see what happened to an email *after* delivery, especially if it was later flagged as malicious or moved.
+**スキーマの説明:** `EmailPostDeliveryEvents`テーブルは、メールボックスに配信された**後のメールに対するセキュリティ関連のアクション**をログに記録します（[高度な検索スキーマのEmailPostDeliveryEventsテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailpostdeliveryevents-table#:~:text=The%20,)）。これには、自動修復（たとえば、**ZAP** - ゼロ時間自動削除が最初の配信後にフィッシングメールを受信トレイから削除する）、手動修復アクション（管理者が検疫から削除または解放する）、またはユーザーアクション（ユーザーがフィッシングを報告するなど）が含まれます。主要なフィールドには、メールの識別子（NetworkMessageId、InternetMessageId）、実行された**アクション**（たとえば、迷惑メールに移動、削除、検疫から解放）、**ActionType**（それをトリガーした原因：たとえば、Phish ZAP、Malware ZAP、手動修復）（[高度な検索スキーマのEmailPostDeliveryEventsテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailpostdeliveryevents-table#:~:text=,)）、それをトリガーした人（**ActionTrigger** - 管理者対システム）、およびアクションの結果が含まれます（[高度な検索スキーマのEmailPostDeliveryEventsテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailpostdeliveryevents-table#:~:text=,)）。基本的に、このテーブルは、配信*後*にメールに何が起こったか、特に後で悪意のあるものとしてフラグが立てられたり、移動されたりした場合に確認するために使用されます。
 
-**Use Cases:**
+**ユースケース:**
 
-- **Security Investigation:** If an email was delivered and later removed by the system (or an admin), investigators will look at EmailPostDeliveryEvents to understand that timeline. For instance, after a user reports a phishing email, an admin might run a script to delete it from all mailboxes – that action would show up here. This helps confirm whether a malicious email was contained.  
-  - *Basic Query:* Check if a particular email (by NetworkMessageId or subject) was removed by ZAP or other means. For example, if investigating a phishing email with known NetworkMessageId:  
+- **セキュリティ調査:** メールが配信された後、システム（または管理者）によって削除された場合、調査担当者はEmailPostDeliveryEventsを見てそのタイムラインを理解します。たとえば、ユーザーがフィッシングメールを報告した後、管理者はすべてのメールボックスからそれを削除するスクリプトを実行する可能性があります。そのアクションはここに表示されます。これは、悪意のあるメールが封じ込められたかどうかを確認するのに役立ちます。
+  - *基本的なクエリ:* 特定のメール（NetworkMessageIdまたは件名別）がZAPまたは他の手段によって削除されたかどうかを確認します。たとえば、既知のNetworkMessageIdを持つフィッシングメールを調査する場合：
     ```kql
-    // Check post-delivery actions for a specific email
+    // 特定のメールの配信後のアクションを確認
     EmailPostDeliveryEvents
     | where NetworkMessageId == "<message-id-guid>"
     | project Timestamp, Action, ActionType, ActionTrigger, RecipientEmailAddress, ActionResult
-    ```  
-    This reveals, say, that at a certain time, the email was `MovedToDeletedItems` by `Phish ZAP` automatically, result `Succeeded`. The investigator thus knows the email was initially delivered but then ZAP took it out of user inboxes.  
-  - *Advanced Query:* See how widespread a ZAP action was – e.g., if a phish was removed, list all recipients that had it removed. You can join with EmailEvents to get subject or sender if needed. For instance:  
+    ```
+    これにより、たとえば、特定の時間に、メールが`MovedToDeletedItems`、`Phish ZAP`によって自動的に、結果`Succeeded`になったことがわかります。調査担当者は、メールが最初に配信されたが、その後ZAPによってユーザーの受信トレイから削除されたことを知ることができます。
+  - *高度なクエリ:* ZAPアクションがどれほど広範囲に及んだかを確認します。たとえば、フィッシングが削除された場合、それを削除されたすべての受信者をリスト表示します。必要に応じて、EmailEventsと結合して件名または送信者を取得できます。たとえば：
     ```kql
-    // List recipients of a ZAPped phishing email (by InternetMessageId)
+    // ZAPされたフィッシングメールの受信者リスト（InternetMessageId別）
     let zapMsg = EmailPostDeliveryEvents
-                | where ActionType == "Phish ZAP"
-                | project InternetMessageId, NetworkMessageId;
+                  | where ActionType == "Phish ZAP"
+                  | project InternetMessageId, NetworkMessageId;
     zapMsg
     | join (EmailEvents | project InternetMessageId, Subject, SenderFromAddress) on InternetMessageId
     | join kind=inner (EmailPostDeliveryEvents | where ActionType == "Phish ZAP") on InternetMessageId
     | project Timestamp, Subject, SenderFromAddress, AffectedRecipient=RecipientEmailAddress, ActionResult
-    ```  
-    This yields the list of recipients whose emails got ZAPped (since EmailEvents might show multiple NetworkMessageIds for the same InternetMessageId if sent separately). It confirms the scope – investigators ensure all copies were addressed.
+    ```
+    これは、ZAPされたメールの受信者のリストを生成します（EmailEventsは、個別に送信された場合、同じInternetMessageIdに対して複数のNetworkMessageIdを示す可能性があるため）。これにより、範囲が確認されます。調査担当者は、すべてのコピーが対処されたことを確認します。
 
-- **Threat Hunting:** Hunters might examine EmailPostDeliveryEvents for patterns of post-delivery cleanup, which could indicate missed phish that were later caught. For example, frequent Phish ZAP actions might reveal that some phish are getting through initial filters. They might also hunt for any **user reports** (if user report is logged here, possibly as an Action like "UserReported", ActionTrigger = user).  
-  - *Basic Query:* Hunt for **trends in ZAP** – e.g., how many phishing ZAPs happened in the last week, which might indicate volume of phish getting through initially.  
+- **脅威ハンティング:** ハンターは、配信後のクリーンアップのパターンについてEmailPostDeliveryEventsを調べることがあります。これは、後でキャッチされた見逃されたフィッシングを示している可能性があります。たとえば、頻繁なPhish ZAPアクションは、一部のフィッシングが最初のフィルターを通過していることを示している可能性があります。また、**ユーザーレポート**（ユーザーレポートがここにログに記録されている場合、おそらくAction="UserReported"、ActionTrigger = userとして）もハンティングする可能性があります。
+  - *基本的なクエリ:* **ZAPの傾向**（たとえば、過去1週間に発生したフィッシングZAPの数）を検索します。これは、最初に通過したフィッシングの量を示している可能性があります。
     ```kql
-    // Count of Phish ZAP actions by day (last 7 days)
+    // 日ごとのPhish ZAPアクション数（過去7日間）
     EmailPostDeliveryEvents
     | where Timestamp > ago(7d) and ActionType == "Phish ZAP"
     | summarize ZAPs=count() by bin(Timestamp, 1d)
-    ```  
-    A hunter sees if there's a spike on a particular day, meaning a campaign slipped through and then got mass-removed. They might then pivot to what those emails were (joining EmailEvents as shown above) to analyze the campaign characteristics and improve filtering.  
-  - *Advanced Query:* Identify if **any malicious emails might have evaded even ZAP.** One heuristic: look for user reports of phish *without* corresponding ZAP actions. If users reported but system didn't auto-remove, that could be a gap. If user reporting is logged (it might show Action="UserReported" or similar in this table or another audit log), one could do:  
+    ```
+    ハンターは、特定の日にスパイクがあるかどうかを確認します。これは、キャンペーンがすり抜けて、その後大量に削除されたことを意味します。その後、それらのメールが何であったか（上記のようにEmailEventsと結合）にピボットして、キャンペーンの特性を分析し、フィルタリングを改善する可能性があります。
+  - *高度なクエリ:* **ZAPさえも回避した可能性のある悪意のあるメール**を特定します。1つのヒューリスティック：対応するZAPアクションのないユーザーによるフィッシングの報告を探します。ユーザーが報告したが、システムが自動的に削除しなかった場合、それはギャップである可能性があります。ユーザーレポートがログに記録されている場合（このテーブルまたは別の監査ログにAction="UserReported"または類似のものとして表示される可能性があります）、次のように実行できます。
     ```kql
-    // User reported phish that were not ZAPped
+    // ZAPされなかったユーザー報告のフィッシング
     let reported = EmailPostDeliveryEvents
-                   | where Action == "UserReported" or ActionTrigger == "User"
-                   | project NetworkMessageId, ReportTime = Timestamp;
+                    | where Action == "UserReported" or ActionTrigger == "User"
+                    | project NetworkMessageId, ReportTime = Timestamp;
     let zapped = EmailPostDeliveryEvents
                  | where ActionType contains "ZAP"
                  | distinct NetworkMessageId;
@@ -765,150 +769,150 @@ published_at: 2024-12-31 08:00
     | where NetworkMessageId !in (zapped)
     | join (EmailEvents | project NetworkMessageId, SenderFromAddress, Subject) on NetworkMessageId
     | project ReportTime, Subject, SenderFromAddress, ReportedBy = RecipientEmailAddress
-    ```  
-    This query finds emails that a user reported as phishing but that were never ZAPped (meaning the system didn’t automatically remove them). These could be missed phish; a threat hunter would review these emails to see why filters missed them and perhaps add blocks or raise awareness.
+    ```
+    このクエリは、ユーザーがフィッシングとして報告したが、ZAPされなかった（つまり、システムが自動的に削除しなかった）メールを見つけます。これらは見逃されたフィッシングである可能性があり、脅威ハンターはこれらのメールをレビューして、フィルターがそれらを見逃した理由を確認し、おそらくブロックを追加したり、認識を高めたりするでしょう。
 
-- **Compliance Check:** From a compliance perspective, EmailPostDeliveryEvents can verify that certain procedures happened. For example, ensuring that all malicious emails were cleaned up (no stragglers left unremoved), or documenting the response to phishing for audit. It can also help demonstrate that the organization’s DLP or threat response policies (like removing bad emails within X hours) are being enforced.  
-  - *Basic Query:* **Verification of removal:** If policy says all confirmed phishing emails must be removed from mailboxes, check if any known phishing emails (perhaps by presence in EmailEvents with ThreatTypes "Phish") did *not* have a corresponding removal action. A simple check: ensure that any email marked as phish was indeed moved or deleted (Action could be Phish ZAP or moved to quarantine). For instance:  
+- **コンプライアンスチェック:** コンプライアンスの観点から見ると、EmailPostDeliveryEventsは、特定の手順が実行されたことを検証するのに役立ちます。たとえば、すべての悪意のあるメールがクリーンアップされたこと（未削除のものが残っていないこと）、または監査のためにフィッシングへの対応を文書化することなどです。また、組織のDLPまたは脅威対応ポリシー（たとえば、X時間以内に悪意のあるメールを削除するなど）が実施されていることを示すのにも役立ちます。
+  - *基本的なクエリ:* **削除の検証:** ポリシーで、確認されたすべてのフィッシングメールはメールボックスから削除する必要があると定められている場合、既知のフィッシングメール（おそらくEmailEventsにThreatTypes "Phish"が存在することによって）に対応する削除アクションが*なかった*かどうかを確認します。簡単なチェック：フィッシングとマークされたすべてのメールが実際に移動または削除されたことを確認します（ActionはPhish ZAPまたは検疫に移動されたなど）。たとえば：
     ```kql
-    // Verify every phish verdict email had a post-delivery action
+    // すべてのフィッシング判定メールに配信後のアクションがあったことを確認
     let phishEmails = EmailEvents | where ThreatTypes has "Phish" | distinct NetworkMessageId;
     phishEmails
     | join kind=leftanti (EmailPostDeliveryEvents | distinct NetworkMessageId) on NetworkMessageId
-    ```  
-    If this returns any NetworkMessageId, it means an email flagged as phish in EmailEvents did not show up in post-delivery actions (maybe it was blocked pre-delivery, or worst case, delivered and not removed). Compliance would want to ensure none were delivered without later action. If results are found, those need review to see if an action was missed.  
-  - *Advanced Query:* **Quarantine release audit:** If policy restricts releasing quarantined emails (e.g., only admins can, or it requires justification), use this table to audit releases. For example, list all emails that were released from quarantine and by whom (ActionTrigger might indicate admin).  
+    ```
+    これがNetworkMessageIdを返す場合、EmailEventsでフィッシングとしてフラグが立てられたメールが配信後のアクションに表示されなかったことを意味します（おそらく配信前にブロックされたか、最悪の場合、配信されて削除されなかった）。コンプライアンスは、後続のアクションなしに配信されたものがないことを確認する必要があります。結果が見つかった場合は、アクションが見落とされていないか確認する必要があります。
+  - *高度なクエリ:* **検疫からの解放の監査:** ポリシーで、検疫されたメールの解放が制限されている場合（たとえば、管理者のみが可能、または正当な理由が必要）、このテーブルを使用して解放を監査します。たとえば、検疫から解放されたすべてのメールと、誰によって解放されたかをリスト表示します（ActionTriggerは管理者を示す可能性があります）。
     ```kql
-    // Audit of released-from-quarantine emails
+    // 検疫から解放されたメールの監査
     EmailPostDeliveryEvents
     | where Action == "MessageReleased" or Action has "Released"
     | project Timestamp, ReleasedBy=ActionTrigger, Recipient=RecipientEmailAddress, ActionResult
-    ```  
-    This shows when and how quarantined emails got released. If ReleasedBy indicates an admin action, compliance can cross-verify if proper approvals were in place. If it shows "User" (if allowed), compliance might flag it if policy says users shouldn’t release their own quarantined mail. Essentially, it’s checking that quarantine release controls are followed. This can be extended by joining EmailEvents to know what the email was (subject, sender) for reporting.
+    ```
+    これは、検疫されたメールがいつ、どのように解放されたかを示しています。ReleasedByが管理者アクションを示す場合、コンプライアンスは適切な承認があったかどうかを相互検証できます。「User」（許可されている場合）を示す場合、ポリシーでユーザーが自分の検疫されたメールを解放すべきではないと定められている場合、コンプライアンスはフラグを立てる可能性があります。基本的に、検疫解放の制御が遵守されているかどうかを確認しています。これは、EmailEventsと結合して、レポートのためにメールの内容（件名、送信者）を知ることで拡張できます。
 
 ### EmailUrlInfo
-**Schema Description:** The `EmailUrlInfo` table contains information about **URLs found in emails and attachments** processed by Defender for Office 365 ([EmailUrlInfo table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailurlinfo-table#:~:text=The%20,return%20information%20from%20this%20table)). Each record represents a URL that was extracted from an email (either in the body, subject, or even inside an attachment like a PDF with a link). Key fields include the **NetworkMessageId** (linking it to the specific email), the full **Url**, the **UrlDomain** (host part of the URL), and **UrlLocation** indicating where in the email the URL was found (e.g., Body, Headers, Attachment, or even “QRCode” if it came from a scanned QR code image ([EmailUrlInfo table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailurlinfo-table#:~:text=,the%20DeviceName%20and%20Timestamp%20columns)) ([EmailUrlInfo table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailurlinfo-table#:~:text=To%20hunt%20for%20attacks%20based,URLs%20extracted%20from%20QR%20codes))). This table is especially useful for phishing investigations to identify malicious links in emails and pivot on those across multiple messages.
+**スキーマの説明:** `EmailUrlInfo`テーブルには、Defender for Office 365によって処理された**メールおよび添付ファイルで見つかったURL**に関する情報が含まれています（[高度な検索スキーマのEmailUrlInfoテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailurlinfo-table#:~:text=The%20,)）。各レコードは、メール（本文、件名、または添付ファイル内（PDFなどのリンク付き）にさえある）から抽出されたURLを表します。主要なフィールドには、**NetworkMessageId**（特定のメールへのリンク）、完全な**Url**、**UrlDomain**（URLのホスト部分）、およびURLがメールのどこにあったかを示す**UrlLocation**（たとえば、本文、ヘッダー、添付ファイル、またはスキャンされたQRコード画像から来た場合は「QRCode」（[高度な検索スキーマのEmailUrlInfoテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailurlinfo-table#:~:text=,)）（[高度な検索スキーマのEmailUrlInfoテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-emailurlinfo-table#:~:text=To%20hunt%20for%20attacks%20based,URLs%20extracted%20from%20QR%20codes)））が含まれます。このテーブルは、特にフィッシング調査で、メール内の悪意のあるリンクを特定し、それらを複数のメッセージにわたってピボットするのに役立ちます。
 
-**Use Cases:**
+**ユースケース:**
 
-- **Security Investigation:** If a phishing email is suspected, investigators will extract any URLs from it to see where they point (and if they are known malicious). EmailUrlInfo provides those links without needing to manually parse the email. For example, if a user clicked a link, you’d want to know what that link was. By using the NetworkMessageId from the user’s email (via EmailEvents or UrlClickEvents), you can get the URL.  
-  - *Basic Query:* Given a particular email’s NetworkMessageId (or known subject/sender to filter), retrieve all URLs present in that email:  
+- **セキュリティ調査:** フィッシングメールが疑われる場合、調査担当者はそこからURLを抽出して、それらがどこを指しているか（既知の悪意のあるものであるかどうか）を確認します。EmailUrlInfoは、メールを手動で解析する必要なく、それらのリンクを提供します。たとえば、ユーザーがリンクをクリックした場合、そのリンクが何であったかを知りたいでしょう。ユーザーのメール（EmailEventsまたはUrlClickEvents経由）からNetworkMessageIdを使用することで、URLを取得できます。
+  - *基本的なクエリ:* 特定のメールのNetworkMessageId（またはフィルタリングするための既知の件名/送信者）を指定して、そのメールに存在するすべてのURLを取得します。
     ```kql
-    // Get URLs from a specific email by subject
-    let msg = EmailEvents 
-             | where Subject == "Action Required: Update Account"
-             | project NetworkMessageId;
+    // 件名で特定のメールからURLを取得
+    let msg = EmailEvents
+                  | where Subject == "Action Required: Update Account"
+                  | project NetworkMessageId;
     EmailUrlInfo
     | where NetworkMessageId in (msg)
     | project Url, UrlDomain, UrlLocation
-    ```  
-    This would list something like `http://contoso-updates.com/verify` domain `contoso-updates.com` in body, etc. Investigators can then check these domains against threat intel or see if they appear in other emails.  
-  - *Advanced Query:* Determine if the same phishing URL was sent to multiple people. For instance, take a known bad URL domain from one phishing email and find all emails containing URLs from that domain:  
+    ```
+    これにより、`http://contoso-updates.com/verify`ドメイン`contoso-updates.com`が本文にあるなどのリストが表示されます。調査担当者はその後、これらのドメインを脅威インテリジェンスと照らし合わせたり、他のメールに現れるかどうかを確認したりできます。
+  - *高度なクエリ:* 同じフィッシングURLが複数の人に送信されたかどうかを判断します。たとえば、1つのフィッシングメールから既知の悪意のあるURLドメインを取り出し、そのドメインからのURLを含むすべてのメールを見つけます。
     ```kql
-    // Find all emails that contained URLs from a suspicious domain
+    // 疑わしいドメインからのURLを含むすべてのメールを見つける
     EmailUrlInfo
     | where UrlDomain == "contoso-updates.com"
     | join EmailEvents on NetworkMessageId
     | project Timestamp, SenderFromAddress, RecipientEmailAddress, Subject, Url
-    ```  
-    This correlates URL info with the email details. It helps an investigator see the scope of a phishing campaign using that fake domain. If 10 people got emails with that link, all need to be warned or the emails removed.
+    ```
+    これにより、URL情報がメールの詳細と関連付けられます。調査担当者は、その偽のドメインを使用したフィッシングキャンペーンの範囲を確認するのに役立ちます。10人がそのリンクを含むメールを受信した場合、全員に警告するか、メールを削除する必要があります。
 
-- **Threat Hunting:** Hunters can use EmailUrlInfo to search for **patterns in URLs** that might indicate phishing or other malicious intent. For example, domains that are newly seen, or URLs with certain suspicious strings (like “login” or “verify” plus a non-official domain), or even any occurrence of IP addresses as URLs (often a bad sign).  
-  - *Basic Query:* Hunt for **URLs in emails that are plain IP addresses** (e.g., `http://123.456...` which is often suspicious).  
+- **脅威ハンティング:** ハンターはEmailUrlInfoを使用して、フィッシングやその他の悪意のある意図を示す可能性のある**URLのパターン**を検索できます。たとえば、新しく見られたドメイン、または特定の疑わしい文字列（「login」や「verify」に非公式ドメインが加わったものなど）を含むURL、またはIPアドレスがURLとして現れる場合（多くの場合、悪い兆候）などです。
+  - *基本的なクエリ:* メール内の**プレーンなIPアドレスであるURL**（たとえば、`http://123.456...`は多くの場合疑わしい）を検索します。
     ```kql
-    // Find email URLs that use bare IP addresses (possible malicious)
+    // ベアIPアドレスを使用するメールURLを探す（悪意のある可能性）
     EmailUrlInfo
     | where Url matches regex @"http[s]?://\d+\.\d+\.\d+\.\d+"
     | summarize CountEmails=dcount(NetworkMessageId) by Url
-    ```  
-    If such URLs appear, likely someone sent an email with a direct IP link (which is rare in legitimate email). A hunter would examine those (maybe they point to a malware download).  
-  - *Advanced Query:* Look for **typosquatting domains** in email URLs. For example, hunt domains that look like your company domain or common sites but aren’t exact (like “micros0ft.com” or “contoso-security.com” instead of contoso.com). A heuristic: find URLs where the domain contains the string "contoso" but is not the exact contoso.com.  
+    ```
+    そのようなURLが表示された場合、おそらく誰かが直接IPリンク（正当なメールではまれです）を含むメールを送信しました。ハンターはそれらを確認します（マルウェアのダウンロードを指している可能性があります）。
+  - *高度なクエリ:* メールURL内の**タイポスクワッティングドメイン**を探します。たとえば、あなたの会社ドメインや一般的なサイトに似ているが、正確ではないドメイン（「micros0ft.com」やcontoso.comの代わりに「contoso-security.com」など）をハンティングします。ヒューリスティック：ドメインに「contoso」という文字列が含まれているが、正確なcontoso.comではないURLを見つけます。
     ```kql
-    // Hunt for potential typosquat domains similar to 'contoso'
+    // 'contoso'に類似する可能性のあるタイポスクワットドメインを探す
     EmailUrlInfo
     | where UrlDomain contains "contoso" and UrlDomain != "contoso.com"
     | summarize Examples=count() by UrlDomain
     | sort by Examples desc
-    ```  
-    This might reveal domains like "contoso-login.com" which could be used in phishing. The hunter can then check those domains’ reputation or search who received such links. This proactively identifies targeted phishing attempts that mimic the company’s brand.
+    ```
+    これにより、「contoso-login.com」のようなドメインが表示される可能性があり、これはフィッシングで使用される可能性があります。ハンターはその後、それらのドメインの評判を確認したり、そのようなリンクを受信した人を探したりできます。これは、会社のブランドを模倣した標的型フィッシング試行をプロアクティブに特定します。
 
-- **Compliance Check:** While EmailUrlInfo is more for security, it can also assist compliance by tracking if users are being targeted by certain categories of content, or to ensure logging of clickable links (Safe Links) is working. Perhaps compliance wants to ensure that all emailed URLs are scanned (which having them in this table implies). Another angle: if there's a policy against certain types of links (like personal cloud storage links being sent), you could query that.  
-  - *Basic Query:* **Usage of personal storage links:** If company policy says not to use personal Dropbox/Google Drive for work files, one could search for those domains in outgoing emails:  
+- **コンプライアンスチェック:** EmailUrlInfoはセキュリティのためにより多く使用されますが、ユーザーが特定のカテゴリのコンテンツのターゲットにされているかどうかを追跡したり、クリック可能なリンク（セーフリンク）のロギングが機能していることを確認したりすることで、コンプライアンスにも役立ちます。おそらくコンプライアンスは、すべてのメールで送信されたURLがスキャンされていることを保証したいでしょう（このテーブルにそれらがあることは、スキャンされていることを意味します）。別の観点：特定の種類のリンク（たとえば、個人のクラウドストレージリンクが送信されている）に対するポリシーがある場合、それをクエリできます。
+  - *基本的なクエリ:* **個人用ストレージリンクの使用状況:** 会社のポリシーで、仕事用のファイルに個人のDropbox/Googleドライブを使用しないように定められている場合、送信メールでそれらのドメインを検索できます。
     ```kql
-    // Check for personal file-sharing links in outbound emails
+    // 送信メール内の個人用ファイル共有リンクを確認
     EmailUrlInfo
     | where UrlDomain in ("dropbox.com","drive.google.com","wetransfer.com")
       and NetworkMessageId in (EmailEvents | where EmailDirection == "Outbound" | select NetworkMessageId)
     | summarize count() by UrlDomain
-    ```  
-    If this shows a number of links, employees might be violating policy by sharing files via personal cloud links. Compliance can use that to educate or enforce alternative methods.  
-  - *Advanced Query:* **Phishing defense coverage:** For compliance with security standards, an org might need to report on how many malicious URLs were detected and blocked. EmailUrlInfo plus UrlClickEvents can show if Safe Links is working. One approach: identify URLs that were later flagged (Safe Links click verdict) but initially present. Or simply count unique URL domains in email and see how many were categorized as malicious (if ThreatTypes in EmailEvents or if those URLs appear in UrlClickEvents with "Blocked"). If ThreatTypes doesn’t include "PhishURL", you may have to correlate with UrlClickEvents. For brevity:  
+    ```
+    これが多数のリンクを示す場合、従業員は個人用クラウドリンクを介してファイルを共有することでポリシーに違反している可能性があります。コンプライアンスはそれを使用して、代替方法を教育または強制することができます。
+  - *高度なクエリ:* **フィッシング対策のカバレッジ:** セキュリティ標準への準拠のために、組織は検出およびブロックされた悪意のあるURLの数を報告する必要がある場合があります。EmailUrlInfoとUrlClickEventsは、セーフリンクが機能しているかどうかを示すことができます。1つのアプローチ：後でフラグが立てられた（セーフリンククリック判定）、しかし最初は存在していたURLを特定します。または、メール内のユニークなURLドメインを単純にカウントし、悪意のあるものとして分類されたものの数を調べます（EmailEventsのThreatTypes、またはそれらのURLが「Blocked」のUrlClickEventsに表示される場合）。ThreatTypesに「PhishURL」が含まれていない場合は、UrlClickEventsと関連付ける必要があるかもしれません。簡潔にするために：
     ```kql
-    // Check if known malicious domains (from a TI list) ever appeared in emails
+    // 既知の悪意のあるドメイン（TIリストから）がメールに現れたことがあるかどうかを確認
     let badDomains = datatable(domain:string)["evil.com","malicious.org"];
     EmailUrlInfo
     | where UrlDomain in (badDomains)
     | distinct UrlDomain, NetworkMessageId
-    ```  
-    If any known bad domain is found in emails, compliance would ask if those were caught. You’d cross-check those NetworkMessageIds in EmailEvents to see if they were blocked or delivered. While this is more security, reporting these incidents is part of compliance with incident management processes. Generally, compliance might mandate that all email links are scanned – having this data available is evidence of that scanning.
+    ```
+    既知の悪意のあるドメインがメールで見つかった場合、コンプライアンスはそれらがキャッチされたかどうかを尋ねます。EmailEventsでそれらのNetworkMessageIdを相互確認して、それらがブロックされたか配信されたかを確認します。これはセキュリティに関するものですが、これらのインシデントを報告することはインシデント管理プロセスへの準拠の一部です。一般的に、コンプライアンスはすべてのメールリンクがスキャンされることを義務付けるかもしれません - このデータを利用できることはそのスキャンニングの証拠です。
 
 ### UrlClickEvents
-**Schema Description:** The `UrlClickEvents` table records events of users **clicking Safe Links** in emails, Teams, or Office apps ([UrlClickEvents table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-urlclickevents-table#:~:text=)). Safe Links is the feature that scans and wraps URLs for checking at time-of-click. Each entry includes the **Timestamp** of click, the full **Url** clicked, an **ActionType** indicating if the click was allowed or blocked by Safe Links (e.g., ClickAllowed, ClickBlocked) ([UrlClickEvents table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-urlclickevents-table#:~:text=,being%20Email%2C%20Office%2C%20and%20Teams)), the **AccountUpn** of the user who clicked, the **Workload** (whether the click was from Email, Teams, or Office application) ([UrlClickEvents table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-urlclickevents-table#:~:text=list%20,being%20Email%2C%20Office%2C%20and%20Teams)), the **NetworkMessageId** (if from an email, linking back to that email), and threat verdict info like **ThreatTypes** (malicious, phishing) and **DetectionMethods**. It also logs the user’s device public IP and whether they *clicked through* the warning (IsClickedThrough == true means they went past the Safe Links warning) ([UrlClickEvents table in the advanced hunting schema - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-urlclickevents-table#:~:text=the%20clicked%20link%2C%20generated%20by,0)). This table is crucial for understanding user behavior in response to phishing attempts and measuring effectiveness of Safe Links.
+**スキーマの説明:** `UrlClickEvents`テーブルは、ユーザーがメール、Teams、またはOfficeアプリで**セーフリンクをクリックしたイベント**を記録します（[高度な検索スキーマのUrlClickEventsテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-urlclickevents-table#:~:text=)）。セーフリンクは、クリック時にチェックするためにURLをスキャンしてラップする機能です。各エントリには、クリックの**タイムスタンプ**、クリックされた完全な**Url**、セーフリンクによってクリックが許可されたかブロックされたかを示す**ActionType**（例：ClickAllowed、ClickBlocked）（[高度な検索スキーマのUrlClickEventsテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-urlclickevents-table#:~:text=,)）、クリックしたユーザーの**AccountUpn**、**Workload**（クリックがメール、Teams、またはOfficeアプリケーションからのものかどうか）（[高度な検索スキーマのUrlClickEventsテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-urlclickevents-table#:~:text=list%20,)）、**NetworkMessageId**（メールからの場合、そのメールへのリンク）、および脅威判定情報（**ThreatTypes**（悪意のあるもの、フィッシング）や**DetectionMethods**など）が含まれます。また、ユーザーのデバイスのパブリックIPと、警告を*クリックして進んだ*かどうか（IsClickedThrough == trueは、セーフリンクの警告を無視して進んだことを意味します）（[高度な検索スキーマのUrlClickEventsテーブル - Microsoft Defender XDR | Microsoft Learn](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-urlclickevents-table#:~:text=the%20clicked%20link%2C%20generated%20by,0)）もログに記録します。このテーブルは、フィッシング攻撃に対するユーザーの行動を理解し、セーフリンクの効果を測定するのに非常に重要です。
 
-**Use Cases:**
+**ユースケース:**
 
-- **Security Investigation:** If a user is compromised or fell for a phishing attack, UrlClickEvents can confirm if they clicked a malicious link. For instance, after a phishing email incident, investigators check this table to see who clicked the phishing URL and whether Safe Links blocked it or the user bypassed the warning.  
-  - *Basic Query:* Find whether a specific user clicked on any malicious links recently. For example, if Bob received a phish, did he click it?  
+- **セキュリティ調査:** ユーザーが侵害された場合、またはフィッシング攻撃に引っかかった場合、UrlClickEventsは悪意のあるリンクをクリックしたかどうかを確認できます。たとえば、フィッシングメールのインシデント後、調査担当者はこのテーブルを確認して、誰がフィッシングURLをクリックしたか、セーフリンクがそれをブロックしたか、ユーザーが警告を無視したかを確認します。
+  - *基本的なクエリ:* 特定のユーザーが最近悪意のあるリンクをクリックしたかどうかを確認します。たとえば、ボブがフィッシングメールを受信した場合、彼はそれをクリックしましたか？
     ```kql
-    // Recent clicks by Bob that were classified as malicious
+    // ボブによる最近のクリックで、悪意のあるものとして分類されたもの
     UrlClickEvents
     | where AccountUpn == "bob@contoso.com" and ThreatTypes contains "Phish"
     | project Timestamp, Url, ActionType, IsClickedThrough, Workload
-    ```  
-    This shows Bob clicked a link that was flagged as phishing; if ActionType is "ClickBlocked" but IsClickedThrough is 1, it means Bob was warned but proceeded anyway (i.e., clicked through the block). That’s critical evidence in an investigation to determine user action.  
-  - *Advanced Query:* For a particular phishing campaign, identify all users who clicked the link. If you have the NetworkMessageId of the phishing email or the URL itself, you can query by that. For example, using the URL domain:  
+    ```
+    これは、ボブが悪意のあるものとしてフラグが立てられたリンクをクリックしたことを示しています。ActionTypeが「ClickBlocked」であり、IsClickedThroughが1の場合、ボブは警告されましたが、それでも続行した（つまり、ブロックをクリックして進んだ）ことを意味します。これは、ユーザーの行動を判断するための調査における重要な証拠です。
+  - *高度なクエリ:* 特定のフィッシングキャンペーンについて、リンクをクリックしたすべてのユーザーを特定します。フィッシングメールのNetworkMessageIdまたはURL自体がある場合は、それによってクエリできます。たとえば、URLドメインを使用します。
     ```kql
-    // List of users who clicked any link on phishing domain "contoso-updates.com"
+    // フィッシングドメイン「contoso-updates.com」のリンクをクリックしたユーザーのリスト
     UrlClickEvents
     | where Url contains "contoso-updates.com" and ThreatTypes has "Phish"
     | summarize ClickCount=count(), FirstClick=min(Timestamp) by AccountUpn, ActionType, IsClickedThrough
-    ```  
-    This reveals which users attempted to visit that phishing domain from their emails, and whether Safe Links blocked them or not. Investigators then know which users to follow up with (especially if they clicked through an allowed threat).
+    ```
+    これにより、メールからそのフィッシングドメインを訪問しようとしたユーザーと、セーフリンクがそれらをブロックしたかどうか、またはしなかったかが明らかになります。調査担当者は、どのユーザーにフォローアップするか（特に許可された脅威をクリックして進んだ場合）を知ることができます。
 
-- **Threat Hunting:** UrlClickEvents is great for hunting because it directly shows user interaction with potentially malicious links. Hunters can search for patterns like users clicking through warnings, or high volumes of clicks on newly seen domains, etc. It’s essentially “who is interacting with shady stuff”.  
-  - *Basic Query:* Hunt for any instance of **Safe Links bypass** – users clicking through a warning. Those events have IsClickedThrough = 1 and typically ActionType "ClickAllowed" (meaning they ignored the warning).  
+- **脅威ハンティング:** UrlClickEventsは、ユーザーが潜在的に悪意のあるリンクとどのようにやり取りしたかを直接示すため、ハンティングに最適です。ハンターは、ユーザーが警告をクリックして進んだパターン、または新しく見られたドメインへの大量のクリックなどを検索できます。これは基本的に「誰が怪しいものとやり取りしているか」を示しています。
+  - *基本的なクエリ:* **セーフリンクのバイパス**（ユーザーが警告をクリックして進んだすべてのインスタンス）を検索します。これらのイベントには、IsClickedThrough = 1があり、通常ActionTypeは「ClickAllowed」（警告を無視したことを意味します）です。
     ```kql
-    // All instances where users clicked through a Safe Links warning in last 30 days
+    // 過去30日間にユーザーがセーフリンクの警告を無視してクリックしたすべてのインスタンス
     UrlClickEvents
     | where Timestamp > ago(30d) and IsClickedThrough == true
     | project Timestamp, AccountUpn, Url, ThreatTypes, Workload
-    ```  
-    A threat hunter would review these. If ThreatTypes indicated the URL was malicious and the user still proceeded, those users might need targeted security training or follow-up checks on their accounts/devices.  
-  - *Advanced Query:* Look for **trending malicious URLs** – e.g., a particular URL or domain receiving many clicks across the organization. That could indicate a broad phishing campaign.  
+    ```
+    脅威ハンターはこれらを確認します。ThreatTypesが悪意のあるURLを示しており、ユーザーがそれでも続行した場合、それらのユーザーは標的を絞ったセキュリティトレーニングまたはアカウント/デバイスのフォローアップチェックが必要になる可能性があります。
+  - *高度なクエリ:* **トレンドの悪意のあるURL**（たとえば、組織全体で特定のURLまたはドメインが多数のクリックを受けている）を探します。これは、広範なフィッシングキャンペーンを示している可能性があります。
     ```kql
-    // Top 5 clicked malicious URL domains in the past week
+    // 過去1週間で最もクリックされた悪意のあるURLドメイン上位5件
     UrlClickEvents
-    | where Timestamp > ago(7d) and ThreatTypes != ""  // only where a threat verdict exists (malicious)
+    | where Timestamp > ago(7d) and ThreatTypes != ""  // 脅威判定が存在する場合のみ（悪意のあるもの）
     | summarize Clicks=count() by UrlDomain = tostring(parse_url(Url).Host)
     | sort by Clicks desc
     | take 5
-    ```  
-    This shows, for example, that `contoso-updates.com` had 10 clicks, `office-secure-login.net` had 8, etc. A hunter seeing these can drill down to who clicked (as above) and also feed these domains into threat intel or blocking. It’s essentially identifying the most successful phishing lures of the week.
+    ```
+    これにより、たとえば、`contoso-updates.com`が10回クリックされ、`office-secure-login.net`が8回クリックされたなどが示されます。これらを見たハンターは、（上記のように）誰がクリックしたかをドリルダウンし、これらのドメインを脅威インテリジェンスまたはブロックに追加することもできます。これは基本的に、その週で最も成功したフィッシングの誘いを特定することです。
 
-- **Compliance Check:** UrlClickEvents can serve as a metric for security awareness (compliance with training) – e.g., are users clicking phishing links less over time? It can also help ensure that Safe Links is operational (if no data is coming in, that’s a problem). Additionally, for compliance, one might use it to ensure that no users are clicking on disallowed categories of sites (if ThreatTypes covers not just malware/phish but maybe blocked URL categories, though typically Safe Links focuses on malicious content).  
-  - *Basic Query:* **User awareness metrics:** Count how many users clicked through warnings in a quarter. If compliance mandate is to reduce this number, you can track it.  
+- **コンプライアンスチェック:** UrlClickEventsは、セキュリティ意識（トレーニングへの準拠）の指標として役立ちます。たとえば、時間の経過とともにユーザーがフィッシングリンクをクリックする回数が減っているかどうかなどです。また、セーフリンクが運用されていることを確認するのにも役立ちます（データが何も入ってこない場合は問題です）。さらに、コンプライアンスのために、ユーザーが許可されていないカテゴリのサイトをクリックしていないことを確認するために使用できます（ThreatTypesがマルウェア/フィッシングだけでなく、ブロックされたURLカテゴリもカバーしている場合ですが、通常、セーフリンクは悪意のあるコンテンツに焦点を当てています）。
+  - *基本的なクエリ:* **ユーザー意識の指標:** 四半期ごとに警告をクリックして進んだユーザーの数をカウントします。コンプライアンスの義務としてこの数を減らす必要がある場合、それを追跡できます。
     ```kql
-    // Number of distinct users who ignored Safe Links warnings (per month)
+    // セーフリンクの警告を無視した異なるユーザーの数（月ごと）
     UrlClickEvents
     | where IsClickedThrough == true
     | summarize UsersWhoClickedThrough=dcount(AccountUpn) by Month=bin(Timestamp, 30d)
-    ```  
-    If this number is going down after security training, compliance can show improvement. If not, additional training might be needed.  
-  - *Advanced Query:* **Policy enforcement:** Perhaps there’s a policy that all external email links must be scanned and blocked if malicious. UrlClickEvents can be used to verify that malicious links indeed show as blocked. For instance, if any ThreatTypes has a value but ActionType was "ClickAllowed", that could mean the system thought it was malicious but still allowed (which shouldn’t happen normally unless policy was override-able). Checking for that scenario:  
+    ```
+    セキュリティトレーニングの後、この数が減少している場合、コンプライアンスは改善を示すことができます。そうでない場合は、追加のトレーニングが必要になる可能性があります。
+  - *高度なクエリ:* **ポリシーの実施:** たとえば、すべての外部メールリンクはスキャンされ、悪意のある場合はブロックされるというポリシーがあるとします。UrlClickEventsを使用して、悪意のあるリンクが実際にブロックとして表示されることを確認できます。たとえば、ThreatTypesに値があるのにActionTypeが「ClickAllowed」だった場合、システムは悪意のあるものと見なしたが、それでも許可した（通常はポリシーが上書き可能でない限り発生しないはず）ことを意味する可能性があります。そのシナリオを確認します。
     ```kql
-    // Check if any known malicious link clicks were allowed through
+    // 既知の悪意のあるリンクのクリックが許可されたかどうかを確認
     UrlClickEvents
     | where ThreatTypes contains "Malware" or ThreatTypes contains "Phish"
     | summarize AllowedCount=sumif(1, ActionType == "ClickAllowed"), Total=sum(1)
-    ```  
-    Ideally, AllowedCount should be 0 if ThreatTypes indicated bad content (since Safe Links should block). If not zero, that’s a compliance gap in security controls to investigate. Another compliance use: if certain departments shouldn’t be using external links, you could filter by AccountUpn (via IdentityInfo join to get Department) to see if, say, Finance team had any clicks on risky links and ensure they have extra controls. Compliance teams can then target additional controls or training at those groups.
+    ```
+    ThreatTypesが悪意のあるコンテンツを示している場合（セーフリンクがブロックするため）、理想的にはAllowedCountは0であるべきです。ゼロでない場合、それは調査すべきセキュリティ制御のコンプライアンスギャップです。別のコンプライアンスの使用法：特定の部門が外部リンクを使用すべきではない場合、AccountUpnでフィルタリングできます（IdentityInfoと結合して部門を取得）して、たとえば、財務チームがリスクの高いリンクをクリックしたかどうかを確認し、追加の制御があることを確認します。コンプライアンスチームはその後、それらのグループに追加の制御またはトレーニングをターゲットにすることができます。
