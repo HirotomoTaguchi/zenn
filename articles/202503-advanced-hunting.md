@@ -4,7 +4,7 @@ emoji: "💻"
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft Defender XDR, Microsoft Defender for Endpoint, Microsoft Defender for Office365] 
 published: true
-published_at: 2025-3-15 08:00
+published_at: 2025-03-15
 ---
 Advanced Hunting のユースケースをメモってく（WIP）
 
