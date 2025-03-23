@@ -2,9 +2,9 @@
 title: "Advanced Hunting のユースケースをメモってく（WIP）"
 emoji: "💻" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
-topics: [Intune, MAC] 
-published: false
-published_at: 2024-12-31 08:00
+topics: [Microsoft Defender XDR, Microsoft Defender for Endpoint, Microsoft Defender for Office365] 
+published: true
+published_at: 2025-3-15 08:00
 ---
 Advanced Hunting のユースケースをメモってく（WIP）
 
