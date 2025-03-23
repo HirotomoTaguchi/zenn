@@ -18,12 +18,12 @@ Advanced Hunting のユースケースをメモってく（WIP）
 
 特定のアラート（AlertIdまたはTitle別）のエビデンスエンティティを取得します。これにより、さらなる分析のために、その警告に関与するすべてのファイル、IPを表示します。
 
-    ```kql
-    // 特定のタイトルを持つアラートのすべてのエビデンスエンティティを取得
-    AlertEvidence
-    | where Title == "Suspicious PowerShell Behavior"
-    | project Timestamp, EntityType, EvidenceRole, FileName, SHA1, AccountName, DeviceName
-    ```
+```kql
+// 特定のタイトルを持つアラートのすべてのエビデンスエンティティを取得
+AlertEvidence
+| where Title == "Suspicious PowerShell Behavior"
+| project Timestamp, EntityType, EvidenceRole, FileName, SHA1, AccountName, DeviceName
+```
 
 ### 概要
 
