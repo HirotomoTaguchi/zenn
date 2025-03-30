@@ -58,3 +58,6 @@ OAuth 同意のリスクを理解させ、見返しがつくようなアプリ�
 ## 終わりに
 
 Microsoft 365 環境におけるOAuthアプリケーションのセキュリティは、組織の重要な資産を守る上で不可欠な要素です。これらの対策を組み合わせることで、OAuthを悪用した攻撃から組織を守りながら、必要な業務効率化を実現していきましょう。
+
+## 参考文献
+https://techcommunity.microsoft.com/blog/microsoftthreatprotectionblog/protect-saas-apps-from-oauth-threats-with-attack-path-advanced-hunting-and-more/4395997
