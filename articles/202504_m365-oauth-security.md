@@ -1,47 +1,39 @@
 ---
-title: "CrowdStrikeでのUSBデバイス制御"
+title: "Microsoft 365環境におけるOAuthアプリケーションのリスクと対策"
 emoji: "💻" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
-topics: [CrowdStrike] 
+topics: [Microsoft 365] 
 published: false
 ---
 
 本記事では、Microsoft 365環境におけるOAuthアプリケーションの主要なリスクと、それに対する具体的な対策について解説します。特に、最近増加しているOAuthを悪用した攻撃手法と、それらを防ぐために考えられる対策について言及します。
 
-## OAuthとは何か
+## OAuthとは
 
-OAuthはユーザーのパスワードを共有することなく、第三者アプリに限定されたリソースアクセス権を委譲できる認可のプロトコルです。Microsoft 365 では Azure AD (現 Entra ID)が OAuth 2.0 の基盤を提供しており、ユーザーがアプリにサインインする際に「同意画面」が表示されます。この同意を行うと、同意時に許可した権限において、第三者アプリが Microsoft 365 テナント上の情報にアクセスします。Microsoft 365の環境では、OAuthは以下のような場面で広く利用されています。
+![ChatGPT Image 2025年3月31日 19_52_58](https://github.com/user-attachments/assets/e4d90178-8ffb-49ba-88b7-4e4236ed3dc2)
 
-- モバイルアプリからのメールアクセス
-- サードパーティのカレンダー連携
-- ドキュメント管理ツールとの連携
-- カスタム業務アプリケーションの統合
+OAuth は、サードパーティのアプリケーションがユーザーの認証情報を直接扱うことなく、ユーザーの許可のもとで特定のリソースやデータにアクセスするための認可フレームワークです。​これにより、ユーザーは自分のパスワードを共有することなく、アプリケーションに限定的なアクセス権を付与できます。Microsoft 365 では Entra ID が OAuth 2.0 の基盤を提供しており、ユーザーがアプリにサインインする際に「同意画面」が表示されます。
+
+![image](https://github.com/user-attachments/assets/373a04ef-7cfd-4085-8b9a-1881280022bb)
+
+この同意を行うと、同意時に許可した権限において、第三者アプリが Microsoft 365 テナント上の情報にアクセスします。
 
 ## OAuth を悪用したリスク事例
 
-このように便利な機能である一方で、適切な管理が行われないと、組織のセキュリティに重大な影響を与える可能性があります。以下では、OAuthを悪用した具体的なリスク事例と、それに対する対策について説明します。
-
-### 1. 過剰な権限要求によるデータ漏洩
-
-一見無害なアプリが、必要以上の権限 (Mail.ReadWriteやFiles.Read.All 等)を要求し、ユーザーが同意することで、悪意のデータ消失が起きます。
-
-### 2. コンセントフィッシング
-
-Microsoft 公式の同意画面を補ふしたフィッシングメールにより、ユーザーに OAuth の同意をさせる手法です。
-
-### 3. 永続的トークンによる接続維持
-
-OAuth の offline_access スコープを通じて発行される refresh token により、ユーザーのログアウト後も接続維持が可能となります。
-
-### 4. Microsoft 自身が対応した事例
-
-Verified Publisher を悪用した OAuth アプリが Azure AD に登録され、同意を得たユーザーのメールなどが漏洩した事例があります。Microsoft はこの事案で対象アプリを強制無効化しました。
+このように便利な機能である一方で、適切な管理が行われないと、以下のような組織のセキュリティに重大な影響を与える可能性があります。一見無害なアプリが、必要以上の権限を要求し、ユーザーが同意することで、データの過剰共有が起きる可能性があります。また、攻撃者が正規のアプリケーションを装った悪意のあるOAuthアプリケーションを作成し、ユーザーを騙して広範な権限を付与させる同意フィッシングなどのリスクもあります。
 
 ## Microsoft 365 でできる対策
 
+OAtuth アプリのリスクは Microsoft 365 に限定したものではありませんが、今回は Microsoft 365 に限定してとれる対策を考えてみます。
+
+### 前提条件
+- 
+
 ### 1. OAuth アプリの見える化 & 管理
 
-Microsoft Defender for Cloud Apps の App Governance 機能を使うことで、統合ダッシュボードで OAuth アプリの発見、リスク分析、ポリシー設定が可能です。
+M356への対策の第一歩として、Microsoft Defender for Cloud Apps にて、OAuth アプリの利用状況を可視化することが考えられます。
+
+![image](https://github.com/user-attachments/assets/c5953c15-578c-4172-8c8e-54f060545068)
 
 ### 2. アプリ同意ポリシーの定義
 
@@ -60,4 +52,8 @@ OAuth 同意のリスクを理解させ、見返しがつくようなアプリ�
 Microsoft 365 環境におけるOAuthアプリケーションのセキュリティは、組織の重要な資産を守る上で不可欠な要素です。これらの対策を組み合わせることで、OAuthを悪用した攻撃から組織を守りながら、必要な業務効率化を実現していきましょう。
 
 ## 参考文献
+https://openid-foundation-japan.github.io/rfc6749.ja.html
+
 https://techcommunity.microsoft.com/blog/microsoftthreatprotectionblog/protect-saas-apps-from-oauth-threats-with-attack-path-advanced-hunting-and-more/4395997
+
+https://learn.microsoft.com/ja-jp/entra/architecture/auth-oauth2
