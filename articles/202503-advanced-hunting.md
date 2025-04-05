@@ -39,6 +39,15 @@ AlertEvidence
 
 ## CloudAppEvents
 
+## OAuthAppInfo
+
+```kql
+OAuthAppInfo
+| where AppStatus == "Enabled"
+| where PrivilegeLevel == "High"
+| where VerifiedPublisher == "{}" and AppOrigin == “External”
+```
+
 ## IdentityInfo
 
 ## IdentityLogonEvents
