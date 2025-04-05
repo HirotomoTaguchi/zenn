@@ -16,12 +16,12 @@ Advanced Hunting のユースケースをメモってく（WIP）
   - `AlertEvidence` テーブルには、Defender のアラートをトリガーしたイベントに関する追加情報が保存されています。アラートをキーに様々な情報を確認できるので、インシデントレスポンスや定期的な振り返りなどのユースケースで活用できます。
 - ユースケース
   - 特定のアラート（AlertIdまたはTitle別）のエビデンスエンティティを取得します。これにより、さらなる分析のために、その警告に関与するすべてのファイル、IPを表示します。ここでは、アラートのタイトルをベースに検索を行います。
-  ```kql
-  // 特定のアラートのエビデンスエンティティを取得
-  AlertEvidence
-  | where Title == "Suspicious PowerShell Behavior"
-  | project Timestamp, EntityType, EvidenceRole, FileName, SHA1, AccountName, DeviceName
-  ```
+    ```kql
+    // 特定のアラートのエビデンスエンティティを取得
+    AlertEvidence
+    | where Title == "Suspicious PowerShell Behavior"
+    | project Timestamp, EntityType, EvidenceRole, FileName, SHA1, AccountName, DeviceName
+    ```
 
 ### AlertInfo
 
@@ -44,12 +44,12 @@ Advanced Hunting のユースケースをメモってく（WIP）
 ### OAuthAppInfo
 - ユースケース
   - リスクの高いOAuthアプリを発見する。^[[Microsoft 365 環境におけるOAuthアプリのリスクと対策](https://zenn.dev/hirotomotaguchi/articles/202504_m365-oauth-security##oauth-%E3%82%A2%E3%83%97%E3%83%AA%E3%81%AE%E8%A6%8B%E3%81%88%E3%82%8B%E5%8C%96%E3%81%A8%E5%80%8B%E5%88%A5%E3%81%AE%E5%88%B6%E5%BE%A1)]
-  ```kql
-  OAuthAppInfo
-  | where AppStatus == "Enabled"
-  | where PrivilegeLevel == "High"
-  | where VerifiedPublisher == "{}" and AppOrigin == "External"
-  ```
+    ```kql
+    OAuthAppInfo
+    | where AppStatus == "Enabled"
+    | where PrivilegeLevel == "High"
+    | where VerifiedPublisher == "{}" and AppOrigin == "External"
+    ```
 
 ## メールとコラボレーション
 
@@ -61,12 +61,12 @@ Advanced Hunting のユースケースをメモってく（WIP）
   - ここでは、Defender for Office 365の結果などメールに関わる情報も踏まえた分析を行うことができます。
 - ユースケース
   - MDOのAIで脅威のあるメールと判定されたメールの一覧を取得する
-  ```kql
-  EmailEvents
-  | where isnotempty(ThreatClassification)
-  | summarize Count = dcount(NetworkMessageId) by ThreatClassification
-  | render columnchart
-  ```
+    ```kql
+    EmailEvents
+    | where isnotempty(ThreatClassification)
+    | summarize Count = dcount(NetworkMessageId) by ThreatClassification
+    | render columnchart
+    ```
 
 ### EmailPostDeliveryEvents
 
