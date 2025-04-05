@@ -128,8 +128,11 @@ Microsoft Defender XDRポータルから「アプリガバナンス」に移動�
 
 ![image](https://github.com/user-attachments/assets/38ca0783-29c5-4af0-9c29-d6e4454116d5)
 
-### 対応（攻撃の中断）
+### 対応（自動攻撃中断）
 
+Microsoft Defender XDRは「自動攻撃中断」機能^[https://learn.microsoft.com/en-us/defender-xdr/automatic-attack-disruption?view=o365-worldwide]を提供しています。​この機能は、OAuthアプリに限った話ではなく、Endpoint/Identity/Office 365（メール）/Cloud App 等、Microsoft Defender XDR 全体シグナルを最大限に活用しながら、AIと機械学習を活用して攻撃者の意図を分析し、リアルタイムでデバイスの隔離、ユーザーアカウントの無効化などの対応を自動的に実行する機能です。 ​これにより、攻撃の進行を迅速に阻止し、被害の拡大を防ぐことが可能となります。
+
+そんな、自動攻撃中断ですが、2025年3月に悪意のあるOAuthアプリの無効化というアクションが含まれると発表がありました。 ^[https://techcommunity.microsoft.com/blog/microsoftthreatprotectionblog/defending-against-oauth-based-attacks-with-automatic-attack-disruption/4384381] もちろん、必ず中断してくれるとは限らないので、前段で紹介したような対策は必要となりますが、最後の最後やられないための命綱として、この機能を有効化しておくことは非常に有意義だと思います。詳しい有効化方法はMSのドキュメントをご覧ください。^[https://learn.microsoft.com/en-us/defender-xdr/automatic-attack-disruption?view=o365-worldwide]
 
 ## 終わりに
 
