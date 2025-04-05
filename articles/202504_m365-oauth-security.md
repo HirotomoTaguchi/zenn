@@ -29,7 +29,7 @@ Microsoft 365 では Entra ID が OAuth 2.0 の基盤を提供しており、ユ
 
 この同意を行うと、同意時に許可した権限において、第三者アプリが Microsoft 365 テナント上の情報にアクセスします。^[https://learn.microsoft.com/ja-jp/entra/architecture/auth-oauth2] 特に、Microsoft GraphはMicrosoft 365のデータへの統一APIとして機能し、OAuthを通じてアクセスされることが多いです。アプリケーションはMicrosoft Graphを介して、メール、予定表、ファイル、チャットなど様々なリソースにアクセスできます。
 
-![image](https://github.com/user-attachments/assets/7b3f9d09-7dbc-4771-949a-69532d7c917f)
+![image](https://github.com/user-attachments/assets/3fbe8e14-7079-4a9a-ba6a-564b5c782a87)
 *概念図*
 
 ## OAuth を取り巻く状況
@@ -117,9 +117,7 @@ Entra ID では、同意を許可するアプリの条件を設定できます�
 
 ### 個別の制御（アクセス権の取り消し）
 
-OAuth アプリに対する個別の制御も重要です。既存アプリを含めて潜在的なリスクを持つアプリに対して、特定のアクセス許可を制限したり、完全に禁止したりすることができます。
-
-Microsoft Defender XDRポータルから「アプリガバナンス」に移動します。
+OAuth アプリに対する個別の制御も重要です。既存アプリを含めて潜在的なリスクを持つアプリに対して、特定のアクセス許可を制限したり、完全に禁止したりすることができます。Microsoft Defender XDRポータルから「アプリガバナンス」に移動し、アプリを指定して[無効にする]を選択します。
 
 ![image](https://github.com/user-attachments/assets/d1eaedeb-d595-44f1-8153-5353029510a4)
 
