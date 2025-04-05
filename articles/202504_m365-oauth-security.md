@@ -126,6 +126,10 @@ OAuth アプリに対する個別の制御も重要です。既存アプリを�
 ![image](https://github.com/user-attachments/assets/eda5e8d2-25bd-40a6-aa51-cb8fa6a9bca6)
 *ブロック画面*
 
+ちなみに、管理者権限を持たないユーザーが自身が許可したアプリを削除するには、[MyAppのページ](https://myapplications.microsoft.com/) を利用します。
+
+![image](https://github.com/user-attachments/assets/b2291514-a878-40ed-8cac-02aa1e8e88c0)
+
 ### 監視体制
 
 継続的な監視は防御の重要な要素です。Microsoft 365環境におけるOAuthアプリケーションの活動を監視するために、Microsoft Defender for Cloud Apps のアプリガバナンスでアラートポリシーを設定して、不審なOAuthアプリケーションの活動を検出します。アプリガバナンスには、デフォルトで監視のポリシーが設定してあるので、まずはそれらを利用しつつ、それらを参考にしながらポリシーを磨き上げていくことが重要です。
