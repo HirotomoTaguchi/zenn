@@ -14,7 +14,7 @@ Microsoft 365 では数年前からOAuthアプリケーションに関するリ�
 
 ## OAuth とは
 
-OAuth は、サードパーティのアプリケーションがユーザーの認証情報を直接扱うことなく、ユーザーの許可のもとで特定のリソースやデータにアクセスするための認可フレームワークです。これにより、ユーザーは自分のパスワードを共有することなく、アプリケーションに限定的なアクセス権を付与できます。^[[URL](https://openid-foundation-japan.github.io/rfc6749.ja.html)]
+OAuth は、サードパーティのアプリケーションがユーザーのパスワードを直接扱うことなく、ユーザーの許可のもとで特定のリソースやデータにアクセスするための認可フレームワークです。これにより、ユーザーは自分のパスワードを共有することなく、アプリケーションに限定的なアクセス権を付与できます。^[[URL](https://openid-foundation-japan.github.io/rfc6749.ja.html)]
 
 ![ChatGPT Image 2025年3月31日 19_52_58](https://github.com/user-attachments/assets/e4d90178-8ffb-49ba-88b7-4e4236ed3dc2)
 
