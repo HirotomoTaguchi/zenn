@@ -14,7 +14,7 @@ Microsoft 365 では数年前からOAuthアプリケーションに関するリ�
 
 ## OAuth とは
 
-OAuth は、サードパーティのアプリケーションがユーザーの認証情報を直接扱うことなく、ユーザーの許可のもとで特定のリソースやデータにアクセスするための認可フレームワークです。これにより、ユーザーは自分のパスワードを共有することなく、アプリケーションに限定的なアクセス権を付与できます。^[https://openid-foundation-japan.github.io/rfc6749.ja.html]
+OAuth は、サードパーティのアプリケーションがユーザーの認証情報を直接扱うことなく、ユーザーの許可のもとで特定のリソースやデータにアクセスするための認可フレームワークです。これにより、ユーザーは自分のパスワードを共有することなく、アプリケーションに限定的なアクセス権を付与できます。^[[URL](https://openid-foundation-japan.github.io/rfc6749.ja.html)]
 
 ![ChatGPT Image 2025年3月31日 19_52_58](https://github.com/user-attachments/assets/e4d90178-8ffb-49ba-88b7-4e4236ed3dc2)
 
@@ -27,7 +27,7 @@ Microsoft 365 では Entra ID が OAuth 2.0 の基盤を提供しており、ユ
 ![image](https://github.com/user-attachments/assets/373a04ef-7cfd-4085-8b9a-1881280022bb)
 *同意画面*
 
-この同意を行うと、同意時に許可した権限において、第三者アプリが Microsoft 365 テナント上の情報にアクセスします。^[https://learn.microsoft.com/ja-jp/entra/architecture/auth-oauth2] 特に、Microsoft GraphはMicrosoft 365のデータへの統一APIとして機能し、OAuthを通じてアクセスされることが多いです。アプリケーションはMicrosoft Graphを介して、メール、予定表、ファイル、チャットなど様々なリソースにアクセスできます。
+この同意を行うと、同意時に許可した権限において、第三者アプリが Microsoft 365 テナント上の情報にアクセスします。^[[URL](https://learn.microsoft.com/ja-jp/entra/architecture/auth-oauth2)] 特に、Microsoft GraphはMicrosoft 365のデータへの統一APIとして機能し、OAuthを通じてアクセスされることが多いです。アプリケーションはMicrosoft Graphを介して、メール、予定表、ファイル、チャットなど様々なリソースにアクセスできます。
 
 ![image](https://github.com/user-attachments/assets/3fbe8e14-7079-4a9a-ba6a-564b5c782a87)
 *概念図*
@@ -56,7 +56,7 @@ OAuthトークンは、一度許可されると明示的に取り消されるま
 
 ### 同意フィッシング（Consent Phishing）攻撃
 
-2020年以降特に増加している攻撃手法で、攻撃者が正規のアプリケーションを装った悪意のあるOAuthアプリケーションを作成し、ユーザーを騙して広範な権限を付与させ情報を搾取します。具体的な事例として、2023年にはAzureとMicrosoft 365をターゲットにした「OiVaVoii」キャンペーンが確認されました。この攻撃では、正規のアプリを装ったフィッシングメールによって、ユーザーが広範な権限を許可してしまい、アカウントの乗っ取り等の被害が発生しています。^[https://www.proofpoint.com/us/blog/cloud-security/oivavoii-active-malicious-hybrid-cloud-threats-campaign]
+2020年以降特に増加している攻撃手法で、攻撃者が正規のアプリケーションを装った悪意のあるOAuthアプリケーションを作成し、ユーザーを騙して広範な権限を付与させ情報を搾取します。具体的な事例として、2023年にはAzureとMicrosoft 365をターゲットにした「OiVaVoii」キャンペーンが確認されました。この攻撃では、正規のアプリを装ったフィッシングメールによって、ユーザーが広範な権限を許可してしまい、アカウントの乗っ取り等の被害が発生しています。^[[URL](https://www.proofpoint.com/us/blog/cloud-security/oivavoii-active-malicious-hybrid-cloud-threats-campaign)]
 
 ### アプリ検証の限界
 
@@ -81,11 +81,11 @@ OAtuth アプリのリスクは Microsoft 365 に限定したものではあり�
 
 ![image](https://github.com/user-attachments/assets/8b3fa5f4-426b-4b01-94f8-7746ff1f7c93)
 
-また、組織のセキュリティリスク（特に攻撃対象領域や脆弱性）を把握し、優先順位をつけて対策を講じるためのソリューションである「Microsoft Security Exposure Management」のAttack Surface Map を使用すると、お客様は、アプリの所有者やアクセス許可レベルなど、OAuth アプリケーションへの組織の接続を視覚化できるようになるそうです。^[https://techcommunity.microsoft.com/blog/microsoftthreatprotectionblog/protect-saas-apps-from-oauth-threats-with-attack-path-advanced-hunting-and-more/4395997] （僕の手元には来ていない）これらを使うと、影響範囲を気にしながら、優先度の高い対策を考えるインプットとなると思います。
+また、組織のセキュリティリスク（特に攻撃対象領域や脆弱性）を把握し、優先順位をつけて対策を講じるためのソリューションである「Microsoft Security Exposure Management」のAttack Surface Map を使用すると、お客様は、アプリの所有者やアクセス許可レベルなど、OAuth アプリケーションへの組織の接続を視覚化できるようになるそうです。^[[URL](https://techcommunity.microsoft.com/blog/microsoftthreatprotectionblog/protect-saas-apps-from-oauth-threats-with-attack-path-advanced-hunting-and-more/4395997)] （僕の手元には来ていない）これらを使うと、影響範囲を気にしながら、優先度の高い対策を考えるインプットとなると思います。
 
 ![image](https://github.com/user-attachments/assets/3cc30760-eec8-474b-a795-b7d4c006a5cc)
 
-加えて、Defender XDR の Advanced Hunting では、2025年4月よりこれらの情報をクエリで検索することができるようになったので、リスクの高いアプリのみを抽出して対策を行うことが考え得られます。^[https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-oauthappinfo-table]
+加えて、Defender XDR の Advanced Hunting では、2025年4月よりこれらの情報をクエリで検索することができるようになったので、リスクの高いアプリのみを抽出して対策を行うことが考え得られます。^[[URL](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-oauthappinfo-table)]
 
 ```kql
 OAuthAppInfo
@@ -117,7 +117,7 @@ Entra ID では、同意を許可するアプリの条件を設定できます�
 
 ### 個別の制御（アクセス権の取り消し）
 
-OAuth アプリに対する個別の制御も重要です。既存アプリを含めて潜在的なリスクを持つアプリに対して、特定のアクセス許可を制限したり、完全に禁止したりすることができます。Microsoft Defender XDRポータルから「アプリガバナンス」に移動し、アプリを指定して[無効にする]を選択します。
+OAuth アプリに対する個別の制御も重要です。既存アプリを含めて潜在的なリスクを持つアプリに対して完全に禁止したりすることができます。Microsoft Defender XDRポータルから「アプリガバナンス」に移動し、アプリを指定して[無効にする]を選択します。
 
 ![image](https://github.com/user-attachments/assets/d1eaedeb-d595-44f1-8153-5353029510a4)
 
@@ -134,9 +134,9 @@ OAuth アプリに対する個別の制御も重要です。既存アプリを�
 
 ### 対応（自動攻撃中断）
 
-Microsoft Defender XDRは「自動攻撃中断」機能^[https://learn.microsoft.com/en-us/defender-xdr/automatic-attack-disruption?view=o365-worldwide]を提供しています。​この機能は、OAuthアプリに限った話ではなく、Endpoint/Identity/Office 365（メール）/Cloud App 等、Microsoft Defender XDR 全体シグナルを最大限に活用しながら、AIと機械学習を活用して攻撃者の意図を分析し、リアルタイムでデバイスの隔離、ユーザーアカウントの無効化などの対応を自動的に実行する機能です。 ​これにより、攻撃の進行を迅速に阻止し、被害の拡大を防ぐことが可能となります。
+Microsoft Defender XDRは「自動攻撃中断」機能^[[URL](https://learn.microsoft.com/en-us/defender-xdr/automatic-attack-disruption?view=o365-worldwide)]を提供しています。​この機能は、OAuthアプリに限った話ではなく、Endpoint/Identity/Office 365（メール）/Cloud App 等、Microsoft Defender XDR 全体シグナルを最大限に活用しながら、AIと機械学習を活用して攻撃者の意図を分析し、リアルタイムでデバイスの隔離、ユーザーアカウントの無効化などの対応を自動的に実行する機能です。 ​これにより、攻撃の進行を迅速に阻止し、被害の拡大を防ぐことが可能となります。
 
-そんな、自動攻撃中断ですが、2025年3月に悪意のあるOAuthアプリの無効化というアクションが含まれると発表がありました。 ^[https://techcommunity.microsoft.com/blog/microsoftthreatprotectionblog/defending-against-oauth-based-attacks-with-automatic-attack-disruption/4384381] もちろん、必ず中断してくれるとは限らないので、前段で紹介したような対策は必要となりますが、最後の最後やられないための命綱として、この機能を有効化しておくことは非常に有意義だと思います。詳しい有効化方法はMSのドキュメントをご覧ください。^[https://learn.microsoft.com/en-us/defender-xdr/automatic-attack-disruption?view=o365-worldwide]
+そんな、自動攻撃中断ですが、2025年3月に悪意のあるOAuthアプリの無効化というアクションが含まれると発表がありました。 ^[[URL](https://techcommunity.microsoft.com/blog/microsoftthreatprotectionblog/defending-against-oauth-based-attacks-with-automatic-attack-disruption/4384381)] もちろん、必ず中断してくれるとは限らないので、前段で紹介したような対策は必要となりますが、最後の最後やられないための命綱として、この機能を有効化しておくことは非常に有意義だと思います。詳しい有効化方法はMSのドキュメントをご覧ください。^[[URL](https://learn.microsoft.com/en-us/defender-xdr/automatic-attack-disruption?view=o365-worldwide)]
 
 ## 終わりに
 
