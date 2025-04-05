@@ -1,9 +1,9 @@
 ---
-title: "Microsoft 365環境におけるOAuthアプリケーションのリスクと対策"
+title: "Microsoft 365 環境におけるOAuthアプリのリスクと対策"
 emoji: "💻" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
-topics: [Microsoft 365] 
-published: false
+topics: [Microsoft 365, Microsoft Defender XDR, Microsoft Defender for Cloud Apps] 
+published: true
 ---
 
 Microsoft 365 では数年前からOAuthアプリケーションに関するリスク対策のソリューションを提供してきましたが、最近さらにパワーアップしてきたので改めてまとめてみました。
@@ -42,7 +42,7 @@ OAuthは便利な技術ですが、適切な管理が行われないと、組織
 
 ### 委任されたアクセスの危険性
 
-委任されたアクセス範囲が広く、アプリが悪用された場合に被害を受けてしまうリスクがあります。特に危険性の高い権限スコープとしては以下が挙げられます。これらの権限を持つアプリは、実質的にテナント全体に対する広範なアクセス権を持ち、大規模なデータ窃取や権限昇格が可能になります。
+委任されたアクセス範囲が広く、アプリが悪用された場合に被害を受けてしまうリスクがあります。特に危険性の高い権限スコープとしては以下のようなものがあります。これらの権限を持つアプリは、実質的にテナント全体に対する広範なアクセス権を持ち、大規模なデータ窃取や権限昇格が可能になります。
 
 - Mail.ReadWrite.All: すべてのユーザーのメールボックスへの読み書きアクセス
 - Files.ReadWrite.All: すべてのユーザーのOneDriveやSharePointファイルへの読み書きアクセス
@@ -56,11 +56,11 @@ OAuthトークンは、一度許可されると明示的に取り消されるま
 
 ### 同意フィッシング（Consent Phishing）攻撃
 
-2020年以降特に増加している攻撃手法で、攻撃者が正規のアプリケーションを装った悪意のあるOAuthアプリケーションを作成し、ユーザーを騙して広範な権限を付与させ情報を搾取します。具体的な事例として、2023年にはAzureとMicrosoft 365をターゲットにした「OiVaVoii」キャンペーンが確認されました。この攻撃では、正規のアプリを装ったフィッシングメールによって、ユーザーが広範な権限を許可してしまい、アカウントの乗っ取り等の被害が発生しました。^[https://www.proofpoint.com/us/blog/cloud-security/oivavoii-active-malicious-hybrid-cloud-threats-campaign]
+2020年以降特に増加している攻撃手法で、攻撃者が正規のアプリケーションを装った悪意のあるOAuthアプリケーションを作成し、ユーザーを騙して広範な権限を付与させ情報を搾取します。具体的な事例として、2023年にはAzureとMicrosoft 365をターゲットにした「OiVaVoii」キャンペーンが確認されました。この攻撃では、正規のアプリを装ったフィッシングメールによって、ユーザーが広範な権限を許可してしまい、アカウントの乗っ取り等の被害が発生しています。^[https://www.proofpoint.com/us/blog/cloud-security/oivavoii-active-malicious-hybrid-cloud-threats-campaign]
 
 ### アプリ検証の限界
 
-Microsoft Entra ID では「確認済み発行元（Verified Publisher）」の仕組みがありますが、これはあくまで発行元のアイデンティティを確認しているだけであり、アプリケーションが安全であることを保証するものではありません。確認済み発行元のアプリでも過剰な権限を要求したり、データを適切に保護しない可能性があります。また、一部の発行元はパブリッシャー検証を経ていないものの、組織内では必要なアプリであるケースもあり、一律のブロックだけでは運用上の課題が生じます。
+Microsoft Entra ID ではアプリの検証の仕組みとして「確認済み発行元（Verified Publisher）」の仕組みがあります。しかし、これはあくまで発行元のアイデンティティを確認しているだけであり、アプリケーションが安全であることを保証するものではありません。確認済み発行元のアプリでも過剰な権限を要求したり、データを適切に保護しない可能性があります。また、一部の発行元はパブリッシャー検証を経ていないものの、組織内では必要なアプリであるケースもあり、一律のブロックだけでは運用上の課題が生じます。
 
 ![image](https://github.com/user-attachments/assets/1abb292f-e61a-4556-bc7d-fa458ec91dfe)
 *出所：[発行者の確認](https://learn.microsoft.com/ja-jp/entra/identity-platform/publisher-verification-overview?utm_source=chatgpt.com)*
