@@ -85,7 +85,9 @@ OAtuth アプリのリスクは Microsoft 365 に限定したものではあり�
 
 ![image](https://github.com/user-attachments/assets/3cc30760-eec8-474b-a795-b7d4c006a5cc)
 
-加えて、Defender XDR の Advanced Hunting では、2025年4月よりこれらの情報をクエリで検索することができるようになったので、リスクの高いアプリのみを抽出して対策を行うことが考え得られます。^[[URL](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-oauthappinfo-table)]
+加えて、Defender XDR の Advanced Hunting では、2025年4月よりこれらの情報をクエリで検索することができるようになったので、リスクの高いアプリのみを抽出して対策を行うことが考え得られます。^[[advanced-hunting-oauthappinfo-table](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-oauthappinfo-table)]
+
+![image](https://github.com/user-attachments/assets/936eadd7-55c9-4f49-aa96-0216ccd2fbca)
 
 ```kql
 OAuthAppInfo
@@ -94,7 +96,7 @@ OAuthAppInfo
 | where VerifiedPublisher == "{}" and AppOrigin == "External"
 ```
 
-![image](https://github.com/user-attachments/assets/936eadd7-55c9-4f49-aa96-0216ccd2fbca)
+
 
 ### アプリ同意ポリシーの定義
 
