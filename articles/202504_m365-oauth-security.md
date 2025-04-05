@@ -54,9 +54,9 @@ OAuthは便利な技術ですが、適切な管理が行われないと、組織
 
 OAuthトークンは、一度許可されると明示的に取り消されるまで有効であるため、悪意のあるアプリが長期間（数ヶ月から数年）にわたって環境内に潜伏し続ける可能性があります。これは通常のパスワード変更では無効化されないため、侵害の発見が遅れる原因となります。また、利用しなくなったOAuthアプリ連携を解除せずに放置しておくと、そのアプリが将来的に侵害された場合に、連携されたアカウント情報が悪用されるリスクが残ります。
 
-### 同意フィッシング（Consent Phishing）攻撃
+### 同意フィッシング攻撃
 
-2020年以降特に増加している攻撃手法で、攻撃者が正規のアプリケーションを装った悪意のあるOAuthアプリケーションを作成し、ユーザーを騙して広範な権限を付与させ情報を搾取します。具体的な事例として、2023年にはAzureとMicrosoft 365をターゲットにした「OiVaVoii」キャンペーンが確認されました。この攻撃では、正規のアプリを装ったフィッシングメールによって、ユーザーが広範な権限を許可してしまい、アカウントの乗っ取り等の被害が発生しています。^[[URL](https://www.proofpoint.com/us/blog/cloud-security/oivavoii-active-malicious-hybrid-cloud-threats-campaign)]
+同意フィッシング攻撃（Consent Phishing）は2020年以降特に増加している攻撃手法で、攻撃者が正規のアプリケーションを装った悪意のあるOAuthアプリケーションを作成し、ユーザーを騙して広範な権限を付与させ情報を搾取します。具体的な事例として、2023年にはAzureとMicrosoft 365をターゲットにした「OiVaVoii」キャンペーンが確認されました。この攻撃では、正規のアプリを装ったフィッシングメールによって、ユーザーが広範な権限を許可してしまい、アカウントの乗っ取り等の被害が発生しています。^[[URL](https://www.proofpoint.com/us/blog/cloud-security/oivavoii-active-malicious-hybrid-cloud-threats-campaign)]
 
 ### アプリ検証の限界
 
@@ -65,13 +65,13 @@ Microsoft Entra ID ではアプリの検証の仕組みとして「確認済み�
 ![image](https://github.com/user-attachments/assets/1abb292f-e61a-4556-bc7d-fa458ec91dfe)
 *出所：[発行者の確認](https://learn.microsoft.com/ja-jp/entra/identity-platform/publisher-verification-overview?utm_source=chatgpt.com)*
 
-## Microsoft 365 でできる対策
+## Microsoft 365 環境に対しての対策
 
-OAtuth アプリのリスクは Microsoft 365 に限定したものではありませんが、今回は Microsoft 365 に限定してとれる対策を考えてみます。
+OAtuth アプリのリスクは Microsoft 365 に限定したものではありませんが、Microsoft 365 を利用していればたくさんのデータが365上にあり、重要度が高いケースが多いのではと思います。そこで、今回は Microsoft 365 に限定してとれる対策を考えてみます。
 
 ### 前提：アプリガバナンスの有効化
 
-これから対策の前提として、Defender for Cloud Apps のアプリガバナンスを有効化します。
+これから対策の前提として、Microsoft Defender for Cloud Apps のアプリガバナンスを有効化します。アプリガバナンスは、Microsoft 365やその他のクラウドプラットフォームの機密データにアクセス、使用、共有する方法について、可視性、修復、ガバナンスを提供する機能です。OAuthアプリの制御についても様々な機能を持っています。^[[Microsoft Defender for Cloud Appsでのアプリ ガバナンス](https://learn.microsoft.com/ja-jp/defender-cloud-apps/app-governance-manage-app-governance)]
 
 ![image](https://github.com/user-attachments/assets/dc739c80-7da4-47f2-837c-5eb512fe3b1f)
 
