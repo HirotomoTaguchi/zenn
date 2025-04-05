@@ -81,7 +81,6 @@ OAtuth アプリのリスクは Microsoft 365 に限定したものではあり�
 
 ![image](https://github.com/user-attachments/assets/8b3fa5f4-426b-4b01-94f8-7746ff1f7c93)
 
-
 また、組織のセキュリティリスク（特に攻撃対象領域や脆弱性）を把握し、優先順位をつけて対策を講じるためのソリューションである「Microsoft Security Exposure Management」のAttack Surface Map を使用すると、お客様は、アプリの所有者やアクセス許可レベルなど、OAuth アプリケーションへの組織の接続を視覚化できるようになるそうです。^[https://techcommunity.microsoft.com/blog/microsoftthreatprotectionblog/protect-saas-apps-from-oauth-threats-with-attack-path-advanced-hunting-and-more/4395997] （僕の手元には来ていない）これらを使うと、影響範囲を気にしながら、優先度の高い対策を考えるインプットとなると思います。
 
 ![image](https://github.com/user-attachments/assets/3cc30760-eec8-474b-a795-b7d4c006a5cc)
@@ -120,13 +119,14 @@ Entra ID では、同意を許可するアプリの条件を設定できます�
 
 OAuth アプリに対する個別の制御も重要です。既存アプリを含めて潜在的なリスクを持つアプリに対して、特定のアクセス許可を制限したり、完全に禁止したりすることができます。
 
-Microsoft Defender XDRポータルから「アプリガバナンス」に移動します。「アプリの構成と許可」セクションで、特定のアプリや権限スコープに対する制限ポリシーを作成します。
+Microsoft Defender XDRポータルから「アプリガバナンス」に移動します。
 
 ![image](https://github.com/user-attachments/assets/d1eaedeb-d595-44f1-8153-5353029510a4)
 
 これにより、リスクの高いアプリケーションやアクセス許可をコントロールし、組織データへの不適切なアクセスを防止できます。
 
-![image](https://github.com/user-attachments/assets/aeaac340-bc7b-468f-b727-e9d9e2643937)
+![image](https://github.com/user-attachments/assets/eda5e8d2-25bd-40a6-aa51-cb8fa6a9bca6)
+*ブロック画面*
 
 ### 監視体制
 
