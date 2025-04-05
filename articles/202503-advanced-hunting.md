@@ -39,18 +39,18 @@ AlertEvidence
 
 ## CloudAppEvents
 
-## OAuthAppInfo
+## IdentityInfo
 
+## IdentityLogonEvents
+
+## OAuthAppInfo
+- リスクの高いOAuthアプリを発見する。^[[Microsoft 365 環境におけるOAuthアプリのリスクと対策](https://zenn.dev/hirotomotaguchi/articles/202504_m365-oauth-security#oauth-%E3%82%A2%E3%83%97%E3%83%AA%E3%81%AE%E8%A6%8B%E3%81%88%E3%82%8B%E5%8C%96%E3%81%A8%E5%80%8B%E5%88%A5%E3%81%AE%E5%88%B6%E5%BE%A1)]
 ```kql
 OAuthAppInfo
 | where AppStatus == "Enabled"
 | where PrivilegeLevel == "High"
 | where VerifiedPublisher == "{}" and AppOrigin == “External”
 ```
-
-## IdentityInfo
-
-## IdentityLogonEvents
 
 # メールとコラボレーション
 
