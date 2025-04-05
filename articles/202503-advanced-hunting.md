@@ -49,7 +49,7 @@ AlertEvidence
 OAuthAppInfo
 | where AppStatus == "Enabled"
 | where PrivilegeLevel == "High"
-| where VerifiedPublisher == "{}" and AppOrigin == “External”
+| where VerifiedPublisher == "{}" and AppOrigin == "External"
 ```
 
 # メールとコラボレーション
