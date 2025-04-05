@@ -18,11 +18,11 @@ OAuth は、サードパーティのアプリケーションがユーザーの�
 
 ![ChatGPT Image 2025年3月31日 19_52_58](https://github.com/user-attachments/assets/e4d90178-8ffb-49ba-88b7-4e4236ed3dc2)
 
-OAuth の発展は主に2つのバージョンがあります。OAuth 1.0は2010年に標準化されましたが、実装の複雑さや課題から、2012年にはより簡素化・改良されたOAuth 2.0が策定されました。現在、Microsoft 365を含む多くのサービスはOAuth 2.0を採用しています。
+OAuth 1.0は2010年に標準化されましたが、実装の複雑さや課題から、2012年にはより簡素化・改良されたOAuth 2.0が策定されました。現在、Microsoft 365を含む多くのサービスはOAuth 2.0を採用しています。
 
 ## Microsoft 365におけるOAuth実装
 
-Microsoft 365 では Entra ID が OAuth 2.0 の基盤を提供しており、ユーザーがアプリにサインインする際に「同意画面」が表示されます。
+Microsoft 365 では Entra ID が OAuth 2.0 の基盤を提供しています。ユーザーがサードパーティアプリとMicrosoft 365 を連携する際に「同意画面」が表示されます。
 
 ![image](https://github.com/user-attachments/assets/373a04ef-7cfd-4085-8b9a-1881280022bb)
 *同意画面*
