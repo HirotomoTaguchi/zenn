@@ -22,9 +22,15 @@ OAuth の発展は主に2つのバージョンがあります。OAuth 1.0は2010
 
 ## Microsoft 365におけるOAuth実装
 
-Microsoft 365 では Entra ID が OAuth 2.0 の基盤を提供しており、ユーザーがアプリにサインインする際に「同意画面」が表示されます。この同意を行うと、同意時に許可した権限において、第三者アプリが Microsoft 365 テナント上の情報にアクセスします。^[https://learn.microsoft.com/ja-jp/entra/architecture/auth-oauth2] 特に、Microsoft GraphはMicrosoft 365のデータへの統一APIとして機能し、OAuthを通じてアクセスされることが多いです。アプリケーションはMicrosoft Graphを介して、メール、予定表、ファイル、チャットなど様々なリソースにアクセスできます。
+Microsoft 365 では Entra ID が OAuth 2.0 の基盤を提供しており、ユーザーがアプリにサインインする際に「同意画面」が表示されます。
 
 ![image](https://github.com/user-attachments/assets/373a04ef-7cfd-4085-8b9a-1881280022bb)
+*同意画面*
+
+この同意を行うと、同意時に許可した権限において、第三者アプリが Microsoft 365 テナント上の情報にアクセスします。^[https://learn.microsoft.com/ja-jp/entra/architecture/auth-oauth2] 特に、Microsoft GraphはMicrosoft 365のデータへの統一APIとして機能し、OAuthを通じてアクセスされることが多いです。アプリケーションはMicrosoft Graphを介して、メール、予定表、ファイル、チャットなど様々なリソースにアクセスできます。
+
+![image](https://github.com/user-attachments/assets/7b3f9d09-7dbc-4771-949a-69532d7c917f)
+*概念図*
 
 ## OAuth を取り巻く状況
 
@@ -50,7 +56,7 @@ OAuthトークンは、一度許可されると明示的に取り消されるま
 
 ### 同意フィッシング（Consent Phishing）攻撃
 
-2020年以降特に増加している攻撃手法で、攻撃者が正規のアプリケーションを装った悪意のあるOAuthアプリケーションを作成し、ユーザーを騙して広範な権限を付与させ情報を搾取します。具体的な事例として、2023年にはAzureとMicrosoft 365をターゲットにした「OiVaVoii」キャンペーンが確認されました。この攻撃では、正規のアプリを装ったフィッシングメールによって、ユーザーが広範な権限を許可してしまい、アカウントの乗っ取りが発生しました。^[https://www.proofpoint.com/us/blog/cloud-security/oivavoii-active-malicious-hybrid-cloud-threats-campaign]
+2020年以降特に増加している攻撃手法で、攻撃者が正規のアプリケーションを装った悪意のあるOAuthアプリケーションを作成し、ユーザーを騙して広範な権限を付与させ情報を搾取します。具体的な事例として、2023年にはAzureとMicrosoft 365をターゲットにした「OiVaVoii」キャンペーンが確認されました。この攻撃では、正規のアプリを装ったフィッシングメールによって、ユーザーが広範な権限を許可してしまい、アカウントの乗っ取り等の被害が発生しました。^[https://www.proofpoint.com/us/blog/cloud-security/oivavoii-active-malicious-hybrid-cloud-threats-campaign]
 
 ### アプリ検証の限界
 
