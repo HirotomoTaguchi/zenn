@@ -2,7 +2,7 @@
 title: "第5回 Azure Travelers 勉強会 沖縄の旅に参加してきたよ"
 emoji: "🛫" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
-topics: [イベント参加レポート, Azure] 
+topics: [イベント参加レポート, Azure, Microsoft Defender] 
 published: true
 ---
 2025年2月15日に沖縄で開催された第5回 Azure Travelers 勉強会に参加してきました。 [Lagoon KOZA](https://lagoon-koza.org/about) で行われたこのイベントは、Azure の様々な機能をテーマにした充実した内容でした。ブログを書くまでが勉強会ということで、簡単ですがブログに残しておこうと思います。
