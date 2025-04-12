@@ -2,7 +2,7 @@
 title: "企業パワポテンプレを M365 Copilot in PowerPoint に最適化させる"
 emoji: "💻" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
-topics: [M365 Copilot, PowerPoint] 
+topics: [Microsoft Copilot, PowerPoint] 
 published: true
 published_at: 2024-11-20 08:00
 ---
