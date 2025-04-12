@@ -2,7 +2,7 @@
 title: "Microsoft 365 Copilot ユーザー向け研修資料をリニューアルしました！"
 emoji: "💻" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
-topics: [Copilot, Microsoft 365 Copilot] 
+topics: [Copilot, Microsoft Copilot] 
 published: true
 published_at: 2024-10-29 08:00
 ---
