@@ -20,7 +20,7 @@ Advanced Hunting のユースケースをメモってく（WIP）
     // 特定のアラートのエビデンスエンティティを取得
     AlertEvidence
     | where Title == "Suspicious PowerShell Behavior"
-    | project Timestamp, InitiatingProcessFileName, EntityType, EvidenceRole, FileName, SHA1, AccountName, DeviceName
+    | project Timestamp, EntityType, EvidenceRole, FileName, SHA1, AccountName, DeviceName
     ```
 
 ### AlertInfo
@@ -82,7 +82,7 @@ Advanced Hunting のユースケースをメモってく（WIP）
 
 ### DeviceFileEvents
 - 概要
-  - 。
+  - DeviceFileEvents テーブルは、デバイス上でのファイルの作成、変更、削除、名前変更といったファイルシステム関連のアクティビティを記録するテーブルです 
 - ユースケース
   - 特定のファイルハッシュのファイルが作成されたりしていないかを調査する。
     ```kql
@@ -94,7 +94,7 @@ Advanced Hunting のユースケースをメモってく（WIP）
     ];
     DeviceFileEvents
     | where SHA256 in (hashList)
-    | project Timestamp, DeviceName, FileName, SHA256
+    | project Timestamp, DeviceName, FileName, InitiatingProcessFileName, SHA256
     ```
 ### DeviceImageLoadEvents
 
