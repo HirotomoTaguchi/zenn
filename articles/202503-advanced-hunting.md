@@ -81,7 +81,21 @@ Advanced Hunting のユースケースをメモってく（WIP）
 ### DeviceFileCertificateInfo
 
 ### DeviceFileEvents
-
+- 概要
+  - 。
+- ユースケース
+  - 特定のファイルハッシュのファイルが作成されたりしていないかを調査する。
+    ```kql
+    let hashList = datatable(SHA256: string)
+    [
+        "XXX",  // XXXに調査したいハッシュを入れる
+        "XXX",
+        "XXX" 
+    ];
+    DeviceFileEvents
+    | where SHA256 in (hashList)
+    | project Timestamp, DeviceName, FileName, SHA256
+    ```
 ### DeviceImageLoadEvents
 
 ### DeviceInfo
