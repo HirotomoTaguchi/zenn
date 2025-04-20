@@ -20,7 +20,7 @@ Advanced Hunting のユースケースをメモってく（WIP）
     // 特定のアラートのエビデンスエンティティを取得
     AlertEvidence
     | where Title == "Suspicious PowerShell Behavior"
-    | project Timestamp, EntityType, EvidenceRole, FileName, SHA1, AccountName, DeviceName
+    | project Timestamp, InitiatingProcessFileName, EntityType, EvidenceRole, FileName, SHA1, AccountName, DeviceName
     ```
 
 ### AlertInfo
