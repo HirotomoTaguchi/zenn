@@ -108,16 +108,17 @@ Advanced Hunting のユースケースをメモってく（WIP）
 - ユースケース
   - XXX
     ```kql
-   //let SanctionRMM = dynamic("bomgarcloud.com"); // E.g Approved RMM - whitelisting
-   let RMMList=externaldata(URI: string, RMMTool: string)
-    [h'https://raw.githubusercontent.com/jischell-msft/RemoteManagementMonitoringTools/refs/heads/main/Network%20Indicators/RMM_SummaryNetworkURI.csv'];
-   let RMMUrl = RMMList
-     | project URI;
-   DeviceNetworkEvents
-   | where Timestamp > ago(1h)
-   | where RemoteUrl has_any(RMMUrl)
-   //| where not (RemoteUrl has_any(SanctionRMM))
-   | summarize arg_max(Timestamp, *) by DeviceId
+    //let SanctionRMM = dynamic("bomgarcloud.com"); // E.g Approved RMM - whitelisting
+    let RMMList=externaldata(URI: string, RMMTool: string)
+        [h'https://raw.githubusercontent.com/jischell-msft/RemoteManagementMonitoringTools/refs/heads/main/Network%20Indicators/RMM_SummaryNetworkURI.csv'];
+    let RMMUrl =
+        RMMList
+        | project URI;
+    DeviceNetworkEvents
+    | where Timestamp > ago(1h)
+    | where RemoteUrl has_any(RMMUrl)
+    //| where not (RemoteUrl has_any(SanctionRMM))
+    | summarize arg_max(Timestamp, *) by DeviceId
     ```
 ### DeviceNetworkInfo
 
