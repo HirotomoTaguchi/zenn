@@ -56,6 +56,7 @@ Advanced Hunting のユースケースをメモってく（WIP）
 ### EmailAttachmentInfo
 
 ### EmailEvents
+
 - 概要
   - `EmailEvents` テーブルにはExcange Onlineのメールのログが保存されています。
   - ここでは、Defender for Office 365の結果などメールに関わる情報も踏まえた分析を行うことができます。
@@ -81,6 +82,7 @@ Advanced Hunting のユースケースをメモってく（WIP）
 ### DeviceFileCertificateInfo
 
 ### DeviceFileEvents
+
 - 概要
   - DeviceFileEvents テーブルは、デバイス上でのファイルの作成、変更、削除、名前変更といったファイルシステム関連のアクティビティを記録するテーブルです 
 - ユースケース
@@ -103,6 +105,7 @@ Advanced Hunting のユースケースをメモってく（WIP）
 ### DeviceLogonEvents
 
 ### DeviceNetworkEvents
+
 - 概要
   - 
 - ユースケース
@@ -120,6 +123,7 @@ Advanced Hunting のユースケースをメモってく（WIP）
     //| where not (RemoteUrl has_any(SanctionRMM))
     | summarize arg_max(Timestamp, *) by DeviceId
     ```
+    
 ### DeviceNetworkInfo
 
 ### DeviceProcessEvents
