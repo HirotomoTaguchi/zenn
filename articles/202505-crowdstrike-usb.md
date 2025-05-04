@@ -6,7 +6,7 @@ topics: [CrowdStrike]
 published: false
 ---
 
-本記事では、CrowdSrkeにおけるUSBデバイス制御について解説します。普段はマイクロソフト系のソリューションでやることが多いですが、気分転換にCrowdStrikeを使ってみました。
+本記事では、CrowdSrkeにおけるUSBデバイス制御についてまとめています。USB制御は普段はマイクロソフト系のソリューションでやることが多いですが、今回はCrowdStrikeを使ってみました。
 
 ## USBデバイス制御（Device Control）とは？
 
