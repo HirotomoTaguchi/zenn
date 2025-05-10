@@ -4,7 +4,6 @@ emoji: "💻"
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft Defender, Security] 
 published: false
-published_at: 2025-03-15
 ---
 
 今回は、Microsoft Defender for Endpoint のAdvanced Hunting機能を活用し、リモートマネジメント・モニタリングツール（RMMツール）の通信を検出する方法について紹介します。
