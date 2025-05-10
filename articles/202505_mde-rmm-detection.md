@@ -51,7 +51,7 @@ DeviceNetworkEvents
 2.  **RMMツールのURIリスト作成**:
     次に、読み込んだ`RMMList`からURIのみを抽出し、`make_list()`関数を使って動的な配列 `RMMUrlDynamicList` を作成します。
 3.  **RMMツール関連の通信検知**:
-    最後に、`RemoteUrl` フィールド（接続先のURL）が、先ほど作成した `RMMUrlDynamicList` のいずれかのURLを含んでいるイベントを `has_any` 演算子で検索します。これにより、監視対象のRMMツールへのネットワーク接続が検知されます。
+    最後に、`DeviceNetworkEvents` テーブルの`RemoteUrl` フィールド（接続先のURL）が、先ほど作成した `RMMUrlDynamicList` のいずれかのURLを含んでいるイベントを `has_any` 演算子で検索します。これにより、監視対象のRMMツールへのネットワーク接続が検知されます。
 
 ## このクエリで検出できる可能性がある脅威
 
