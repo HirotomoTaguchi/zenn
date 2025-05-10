@@ -1,6 +1,6 @@
 ---
 title: "【小ネタ】Sentinelのセキュリティ運用状況を月次で集計しSlackで通知する"
-emoji: "💻" 
+emoji: "🛡" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [Sentinel] 
 published: true
