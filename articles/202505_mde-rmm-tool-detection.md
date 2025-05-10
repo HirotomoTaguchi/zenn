@@ -79,13 +79,13 @@ DeviceNetworkEvents
     Microsoft Defender for Endpoint ではカスタム検出といって、クエリを登録しておくと自動で検知をしてくれる機能があります。そちらを利用することで、継続的に監視ができます。
 * **本件以外の対策**:
     当然の話ですが、本件以外の対策は平行して実施することを推奨します。たとえば、攻撃者にRMMツールをインストールさせない入口対策（メールセキュリティ等）、端末の管理者権限の適正化、FWやSWGなどでの通信先の絞り込みなどが考えられます。
-  
-## 参考元・謝辞
-
-本記事内でご紹介したクエリは、GitHub にて Steven Lim 氏が公開されたクエリ^[[URL](https://github.com/SlimKQL/Hunting-Queries-Detection-Rules/blob/main/Sentinel/Detecting%20Unauthorized%20RMM%20Instances%20in%20Your%20MDE%20Environment.kql)]を、私の要件に基づいて若干のカスタマイズをしたものとなります。Steven Lim 氏にはこの場を借りて感謝申し上げます。また、RMMのリストを作ってGithubで公開してくださった J Schell 氏にも感謝申し上げます。本当に助かりました。
 
 ## まとめ
 
 今回紹介したMicrosoft Defender Advanced Hunting クエリは、RMMツールを悪用したサイバー攻撃や、組織内のポリシー違反となるシャドーITの発見に非常に有効です。このクエリを定期的に実行し、検知されたイベントを適切に調査することで、セキュリティインシデントの早期発見と対応、そして組織全体のセキュリティ体制の強化に繋げることができます。
 
 是非、このクエリを自社の環境で試し、セキュリティ監視の一助としてご活用ください。
+
+## 参考元・謝辞
+
+本記事内でご紹介したクエリは、GitHub にて Steven Lim 氏が公開されたクエリ^[[URL](https://github.com/SlimKQL/Hunting-Queries-Detection-Rules/blob/main/Sentinel/Detecting%20Unauthorized%20RMM%20Instances%20in%20Your%20MDE%20Environment.kql)]を、私の要件に基づいて若干のカスタマイズをしたものとなります。Steven Lim 氏にはこの場を借りて感謝申し上げます。また、RMMのリストを作ってGithubで公開してくださった J Schell 氏にも感謝申し上げます。本当に助かりました！
