@@ -27,17 +27,36 @@ AnyDesk や TeamViewer などがに代表されるRMMツールは、IT管理者�
 
 ## RMMツールの不正利用を検知する
 
-今回紹介するクエリは、既知のRMMツールのURLをまとめたリストを活用し、Microsoft Defender for Endpoint P2 がオンボートされている対象デバイスがこれらのURLに通信を試みた際に検出するものです。
+今回紹介するクエリは、既知のRMMツールをまとめたリストを活用し、Microsoft Defender for Endpoint P2 がオンボートされている対象デバイスがこれらのURLに通信を試みた際に検出するものです。
 
 ```kql
-let RMMList = externaldata(URI: string, RMMTool: string)
-    [h'https://raw.githubusercontent.com/jischell-msft/RemoteManagementMonitoringTools/refs/heads/main/Network%20Indicators/RMM_SummaryNetworkURI.csv']
+// RMMツールのバイナリリストを外部CSVから取得
+let RMMList = externaldata(rmm_program: string, rmm_binary: string)
+    [h'https://raw.githubusercontent.com/Kithu29/RMM-Tools-List/main/rmm_list.csv']
     with (format="csv", ignoreFirstRecord=true);
-let RMMUrlDynamicList =
+// rmm_binary のみを取り出し、重複を除いたリストを作成
+let RMMBinaryList =
     RMMList
-    | summarize make_list(URI);
+    | summarize make_set(rmm_binary)
+    | project RMMBinaryList = set_rmm_binary; // make_setの結果を単一の配列として扱いやすくする
+// DeviceNetworkEventsテーブルで、通信を開始したプロセスのファイル名がRMMバイナリリストに含まれるものを検索
 DeviceNetworkEvents
-| where RemoteUrl has_any (RMMUrlDynamicList) 
+// InitiatingProcessFileName がRMMバイナリリストのいずれかと（大文字・小文字を区別せずに）一致するかどうかを評価
+| where InitiatingProcessFileName in~ (RMMBinaryList)
+// 必要に応じて、以下の情報を追加で表示
+| project
+    Timestamp,
+    DeviceId,
+    DeviceName,
+    InitiatingProcessAccountName,
+    InitiatingProcessFileName,       // RMMツールに該当する可能性のある通信プロセスファイル名
+    InitiatingProcessFolderPath,     // 通信プロセスが存在するフォルダパス
+    InitiatingProcessCommandLine,    // 通信プロセスのコマンドライン引数
+    InitiatingProcessParentFileName, // 通信プロセスの親プロセスファイル名 (参考情報として)
+    RemoteUrl,
+    RemoteIP,
+    RemotePort
+// | summarize count() by InitiatingProcessFileName // 検出されたRMMバイナリ毎の件数を集計する場合
 ```
 
 検出画面はこちらです。画面見ていただくと分かる通り、anydesk.exe は anydesk 社に署名されているので、デフォルトの検出だけでは正当な利用か悪意がある利用なのかが判別しにくいです。（もちろん、ツールの使用やポリシーによっては検出する可能性もあります。）
@@ -52,6 +71,25 @@ DeviceNetworkEvents
     次に、読み込んだ`RMMList`からURIのみを抽出し、`make_list()`関数を使って動的な配列 `RMMUrlDynamicList` を作成します。
 3.  **RMMツール関連の通信検知**:
     最後に、`DeviceNetworkEvents` テーブルの`RemoteUrl` フィールド（接続先のURL）が、先ほど作成した `RMMUrlDynamicList` のいずれかのURLを含んでいるイベントを `has_any` で検索します。これにより、監視対象のRMMツールへのネットワーク接続が検知されます。
+
+### 深堀調査
+
+このクエリでRMMツールによる不審な通信の多くを捉えることが期待できますが、より検知の精度を高め、誤検知を減らすためには、以下の点を考慮してアラートのチューニングや追加の分析を行うことをお勧めします。
+
+- 接続先情報 (RemoteUrl, RemoteIP) の確認: 正規の業務で利用しているRMMサーバー以外への接続がないか。
+  ```kql
+  let RMMList = externaldata(URI: string, RMMTool: string)
+    [h'https://raw.githubusercontent.com/jischell-msft/RemoteManagementMonitoringTools/refs/heads/main/Network%20Indicators/RMM_SummaryNetworkURI.csv']
+    with (format="csv", ignoreFirstRecord=true);
+  let RMMUrlDynamicList =
+      RMMList
+      | summarize make_list(URI);
+  DeviceNetworkEvents
+  | where RemoteUrl has_any (RMMUrlDynamicList) 
+  ```
+- コマンドライン引数 (InitiatingProcessCommandLine) の確認: 不審な接続先を指定する引数や、通常業務では使用しないオプションが使われていないか。
+- 実行場所 (InitiatingProcessFolderPath) の確認: RMMツールが一時フォルダやユーザープロファイル下など、通常インストールされない場所から実行されていないか。
+- 発生頻度や時間帯: 通常業務では考えられない時間帯や頻度でRMMツールによる通信が発生していないか。
 
 ## このクエリで検出できる可能性がある脅威
 
@@ -73,7 +111,7 @@ DeviceNetworkEvents
 * **正規利用との区別（誤検知の低減）**:
     組織内で正式に利用が許可されているRMMツールや、特定の部署・ユーザーによる正当な利用も検知される可能性があります。そのため、検知されたアラートが真の脅威なのか、正規の利用なのかを切り分ける運用（ホワイトリストの作成、部署への確認など）が重要になります。例えば、特定のIPアドレスや部署からの通信を除外するフィルタを追加するなどのカスタマイズが考えられます。
 * **外部リストの管理や網羅性**:
-    クエリが参照する外部リストの内容は、作成者によって管理されています。リストの正確性や網羅性、更新頻度を把握し、必要であれば自組織でリストを管理・カスタマイズすることも検討してください。かなりの数のRMMツールが掲載されていますが、すべてを網羅しているわけではありません。また、RMMツールのリストは他にもある（例：[rmm_list.csv](https://github.com/Kithu29/RMM-Tools-List/blob/main/rmm_list.csv)）ので、そのようなものを探すとより良いかもしれません。
+    クエリが参照する外部リストの内容は、作成者によって管理されています。リストの正確性や網羅性、更新頻度を把握し、必要であれば自組織でリストを管理・カスタマイズすることも検討してください。かなりの数のRMMツールが掲載されていますが、すべてを網羅しているわけではありません。
 * **継続的監視**:
     Microsoft Defender for Endpoint ではカスタム検出といって、クエリを登録しておくと自動で検知をしてくれる機能があります。そちらを利用することで、継続的に監視ができます。
 * **本件以外の対策**:
@@ -87,4 +125,4 @@ DeviceNetworkEvents
 
 ## 参考元・謝辞
 
-本記事内でご紹介したクエリは、GitHub にて Steven Lim 氏が公開されたクエリ^[[URL](https://github.com/SlimKQL/Hunting-Queries-Detection-Rules/blob/main/Sentinel/Detecting%20Unauthorized%20RMM%20Instances%20in%20Your%20MDE%20Environment.kql)]を、カスタマイズをしたものとなります。Steven Lim 氏にはこの場を借りて感謝申し上げます。また、RMMのリストを作ってGithubで公開してくださった J Schell 氏にも感謝申し上げます。本当に助かりました！
+本記事内でご紹介したクエリは、GitHub にて Steven Lim 氏が公開されたクエリ^[[URL](https://github.com/SlimKQL/Hunting-Queries-Detection-Rules/blob/main/Sentinel/Detecting%20Unauthorized%20RMM%20Instances%20in%20Your%20MDE%20Environment.kql)]を、カスタマイズをしたものとなります。Steven Lim 氏にはこの場を借りて感謝申し上げます。また、RMMのリストを作ってGithubで公開してくださった Kithu29 氏、J Schell 氏にも感謝申し上げます。本当に助かりました！
