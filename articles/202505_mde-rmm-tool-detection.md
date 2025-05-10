@@ -38,6 +38,11 @@ DeviceNetworkEvents
 | where RemoteUrl has_any (RMMUrlDynamicList) // dynamic 配列を使用
 ```
 
+検出画面はこちらです。画面見ていただくと分かる通り、anydesk.exe は anydesk 社に署名されているので、デフォルトの検出だけでは正当な利用か悪意がある利用なのかが判別しにくいです。
+
+![image](https://github.com/user-attachments/assets/2d2a2930-d63d-4aae-a5e4-04e4ce5ba026)
+
+
 ### クエリの解説
 
 1.  **`externaldata`演算子**:
