@@ -16,7 +16,7 @@ published: false
 
 AnyDesk や TeamViewer などがに代表されるRMMツールは、IT管理者がリモートからシステムをメンテナンスしたり、サポートを提供したりするための非常に便利なツールです。しかし、その強力な機能が悪用されると、セキュリティ上の大きな脅威となり得ます。
 
-最近のランサムウェア攻撃や標的型攻撃の中では、攻撃者がRMMツールを不正に導入し、遠隔操作でデバイスに侵入するケースが後を絶ちません。下記図が示す通り、2024年以降RMMツールの利用した攻撃キャンペーンが爆増しています。攻撃者は正規のRMMツールを不正に利用して環境に侵入し、機密情報を窃取したり、マルウェアを拡散したりします。また、従業員が組織の許可なくRMMツールを使用する「シャドーIT」も、セキュリティリスクを高める要因となります。
+最近のランサムウェア攻撃や標的型攻撃の中では、攻撃者がRMMツールを不正にデバイスに導入させ、遠隔操作でデバイス・内部ネットワークに侵入するケースが後を絶ちません。下記図が示す通り、2024年以降RMMツールの利用した攻撃キャンペーンが爆増しています。攻撃者は正規のRMMツールを不正に利用して環境に侵入し、機密情報を窃取したり、マルウェアを拡散したりします。また、従業員が組織の許可なくRMMツールを使用する「シャドーIT」も、セキュリティリスクを高める要因となります。
 
 ![image](https://github.com/user-attachments/assets/e3fa0d29-eb9e-436c-b375-1f6766293f6b)
 *出所: [Remote Monitoring and Management (RMM) Tooling Increasingly an Attacker’s First Choice | Proofpoint US](https://www.proofpoint.com/us/blog/threat-insight/remote-monitoring-and-management-rmm-tooling-increasingly-attackers-first-choice)*
