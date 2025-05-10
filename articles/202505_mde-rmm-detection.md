@@ -42,8 +42,7 @@ DeviceNetworkEvents
 
 検出画面はこちらです。画面見ていただくと分かる通り、anydesk.exe は anydesk 社に署名されているので、デフォルトの検出だけでは正当な利用か悪意がある利用なのかが判別しにくいです。（もちろん、ツールの使用やポリシーによっては検出する可能性もあります。）
 
-![image](https://github.com/user-attachments/assets/2d2a2930-d63d-4aae-a5e4-04e4ce5ba026)
-
+![image](https://github.com/user-attachments/assets/24a101b8-49ff-4970-8ff7-cd753c8a8248)
 
 ### クエリ解説
 
