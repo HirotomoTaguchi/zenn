@@ -19,7 +19,7 @@ AnyDesk や TeamViewer などがに代表されるRMMツールは、IT管理者�
 最近のランサムウェア攻撃や標的型攻撃の中では、攻撃者がRMMツールを不正に導入し、遠隔操作でデバイスに侵入するケースが後を絶ちません。下記図が示す通り、2024年以降RMMツールの利用した攻撃キャンペーンが爆増しています。攻撃者は正規のRMMツールを不正に利用して環境に侵入し、機密情報を窃取したり、マルウェアを拡散したりします。また、従業員が組織の許可なくRMMツールを使用する「シャドーIT」も、セキュリティリスクを高める要因となります。
 
 ![image](https://github.com/user-attachments/assets/e3fa0d29-eb9e-436c-b375-1f6766293f6b)
-*出所[Remote Monitoring and Management (RMM) Tooling Increasingly an Attacker’s First Choice | Proofpoint US](https://www.proofpoint.com/us/blog/threat-insight/remote-monitoring-and-management-rmm-tooling-increasingly-attackers-first-choice)*
+*出所: [Remote Monitoring and Management (RMM) Tooling Increasingly an Attacker’s First Choice | Proofpoint US](https://www.proofpoint.com/us/blog/threat-insight/remote-monitoring-and-management-rmm-tooling-increasingly-attackers-first-choice)*
 
 加えて、RMMツール自体は悪意のあるツールではなく、通常の業務でも利用することが多いことから、FWやSWG、EDRで検出されない可能性があるという点も非常に厄介です。例えば、EDR導入していて、攻撃者のサーバーに直接通信しようとすると、EDR側で検出することがありますが、RMMツールでは対象外となってしまうことがあります。（もちろん、製品や設定によります。）そのため、自社環境で許可されていないRMMツールの通信を迅速に検出し、潜在的な脅威を排除することが重要です。
 
