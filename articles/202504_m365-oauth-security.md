@@ -1,6 +1,6 @@
 ---
 title: "Microsoft 365 環境におけるOAuthアプリのリスクと対策"
-emoji: "💻" 
+emoji: "🛡" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft 365, Microsoft Defender, OAuth, Security] 
 published: true
