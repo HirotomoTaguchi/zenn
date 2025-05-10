@@ -25,7 +25,7 @@ AnyDesk や TeamViewer などがに代表されるRMMツールは、IT管理者�
 
 加えて、RMMツール自体は悪意のあるツールではなく、通常の業務でも利用することが多いことから、FWやSWG、EDRで検出されない可能性があるという点も非常に厄介です。例えば、EDR導入していて、攻撃者のサーバーに直接通信しようとすると、EDR側で検出することがありますが、RMMツールでは対象外となってしまうことがあります。（もちろん、製品や設定によります。）そのため、自社環境で許可されていないRMMツールの通信を迅速に検出し、潜在的な脅威を排除することが重要です。
 
-## クエリの解説
+## RMMツールの不正利用による脅威を検知する
 
 今回紹介するクエリは、既知のRMMツールのURLをまとめたリストを活用し、Microsoft Defender for Endpoint P2 がオンボートされている対象デバイスがこれらのURLに通信を試みた際に検出するものです。
 
@@ -37,7 +37,7 @@ let RMMUrlDynamicList =
     RMMList
     | summarize make_list(URI);
 DeviceNetworkEvents
-| where RemoteUrl has_any (RMMUrlDynamicList) // dynamic 配列を使用
+| where RemoteUrl has_any (RMMUrlDynamicList) 
 ```
 
 検出画面はこちらです。画面見ていただくと分かる通り、anydesk.exe は anydesk 社に署名されているので、デフォルトの検出だけでは正当な利用か悪意がある利用なのかが判別しにくいです。（もちろん、ツールの使用やポリシーによっては検出する可能性もあります。）
@@ -45,7 +45,7 @@ DeviceNetworkEvents
 ![image](https://github.com/user-attachments/assets/2d2a2930-d63d-4aae-a5e4-04e4ce5ba026)
 
 
-### Microsoft Defender Advanced Hunting でリモートマネジメントモニタリング（RMM）ツールの不正利用による脅威を検知する
+### クエリ解説
 
 1.  **`externaldata`演算子**:
     まず、`externaldata`演算子を使用して、GitHub上で公開されているRMMツールのネットワークインジケータ（URIとツール名）のリスト（CSVファイル）を外部データとして読み込みます。このリストには、Action1, Addigy, AeroAdmin, AnyDesk, Atera, TeamViewerなど、多数のRMMツールに関連するURIが含まれています。
