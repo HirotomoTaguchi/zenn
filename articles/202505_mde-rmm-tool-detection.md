@@ -45,7 +45,7 @@ DeviceNetworkEvents
 ![image](https://github.com/user-attachments/assets/2d2a2930-d63d-4aae-a5e4-04e4ce5ba026)
 
 
-### クエリの解説
+### Microsoft Defender Advanced Hunting でリモートマネジメントモニタリング（RMM）ツールの不正利用による脅威を検知する
 
 1.  **`externaldata`演算子**:
     まず、`externaldata`演算子を使用して、GitHub上で公開されているRMMツールのネットワークインジケータ（URIとツール名）のリスト（CSVファイル）を外部データとして読み込みます。このリストには、Action1, Addigy, AeroAdmin, AnyDesk, Atera, TeamViewerなど、多数のRMMツールに関連するURIが含まれています。
