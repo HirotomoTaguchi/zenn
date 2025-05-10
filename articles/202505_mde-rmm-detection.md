@@ -1,5 +1,5 @@
 ---
-title: "Microsoft Defender Advanced Hunting でリモートマネジメントモニタリング（RMM）ツールの不正利用による脅威を検知する"
+title: "Microsoft Defender for Endpoint でリモートマネジメントモニタリング（RMM）ツールによる脅威を検知する"
 emoji: "💻" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft Defender, Security] 
