@@ -1,6 +1,6 @@
 ---
 title: "Advanced Hunting のユースケースをメモってく（WIP）"
-emoji: "💻" 
+emoji: "🛡" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft Defender] 
 published: false
