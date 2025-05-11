@@ -125,4 +125,4 @@ DeviceNetworkEvents
 
 ## 参考元・謝辞
 
-本記事内でご紹介したクエリは、GitHub にて Steven Lim 氏が公開されたクエリ^[[URL](https://github.com/SlimKQL/Hunting-Queries-Detection-Rules/blob/main/Sentinel/Detecting%20Unauthorized%20RMM%20Instances%20in%20Your%20MDE%20Environment.kql)]を、カスタマイズをしたものとなります。Steven Lim 氏にはこの場を借りて感謝申し上げます。また、RMMのリストを作ってGithubで公開してくださった Kithu29 氏、J Schell 氏にも感謝申し上げます。本当に助かりました！
+本記事内でご紹介したクエリは、GitHub にて Steven Lim 氏が公開されたクエリ^[[URL](https://github.com/SlimKQL/Hunting-Queries-Detection-Rules/blob/main/Sentinel/Detecting%20Unauthorized%20RMM%20Instances%20in%20Your%20MDE%20Environment.kql)]を、今回の要件に基づいてカスタマイズをしたものとなります。Steven Lim 氏にはこの場を借りて感謝申し上げます。また、RMMのリストを作ってGithubで公開してくださった Kithu29 氏、J Schell 氏にも感謝申し上げます。本当に助かりました！
