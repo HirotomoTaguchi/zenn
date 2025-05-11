@@ -27,7 +27,7 @@ AnyDesk や TeamViewer などがに代表されるRMMツールは、IT管理者�
 
 ## RMMツールの不正利用を検知する
 
-今回紹介するクエリは、既知のRMMツールをまとめたリストを活用し、Microsoft Defender for Endpoint P2 がオンボートされている対象デバイスがこれらのURLに通信を試みた際に検出するものです。
+今回紹介するクエリは、既知のRMMツールをまとめたリストを活用し、Microsoft Defender for Endpoint P2 がオンボートされている対象デバイスのRMMの利用を検出するものです。
 
 ```kql
 // RMMツールのバイナリリストを外部CSVから取得
