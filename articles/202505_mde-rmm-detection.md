@@ -3,7 +3,7 @@ title: "Microsoft Defender for Endpoint でリモートマネジメントモニ�
 emoji: "🛡" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft Defender, Security] 
-published: false
+published: true
 ---
 
 今回は、Microsoft Defender for Endpoint のAdvanced Hunting機能を活用し、リモートマネジメント・モニタリングツール（RMMツール）の通信を検出する方法について紹介します。
@@ -16,12 +16,12 @@ published: false
 
 AnyDesk や TeamViewer などがに代表されるRMMツールは、IT管理者がリモートからシステムをメンテナンスしたり、サポートを提供したりするための非常に便利なツールです。しかし、その強力な機能が悪用されると、セキュリティ上の大きな脅威となり得ます。
 
-最近のランサムウェア攻撃や標的型攻撃の中では、攻撃者がRMMツールを不正にデバイスに導入させ、遠隔操作でデバイス・内部ネットワークに侵入するケースが後を絶ちません。下記図が示す通り、2024年以降RMMツールの利用した攻撃キャンペーンが爆増しています。
+最近のランサムウェア攻撃や標的型攻撃の中では、攻撃者がRMMツールを不正にデバイスに導入させ、デバイスを遠隔操作するバックドアを形成し、社内システムに侵入するケースが後を絶ちません。昔からある攻撃手法ですが下記のProofpoint社の調査が示す通り、2024年以降RMMツールの利用した攻撃キャンペーンが増加しています。
 
 ![image](https://github.com/user-attachments/assets/e3fa0d29-eb9e-436c-b375-1f6766293f6b)
 *出所: [Remote Monitoring and Management (RMM) Tooling Increasingly an Attacker’s First Choice | Proofpoint US](https://www.proofpoint.com/us/blog/threat-insight/remote-monitoring-and-management-rmm-tooling-increasingly-attackers-first-choice)*
 
-攻撃者は正規のRMMツールを不正に利用して環境に侵入し、機密情報を窃取したり、マルウェアを拡散したりします。マイクロソフト社が公表している「Microsoft Digital Defense Report 2024^[[URL](https://www.microsoft.com/en-us/security/security-insider/intelligence-reports/microsoft-digital-defense-report-2024?msockid=0d4bd66716e762e62137c358170d6324)]」においても、ヘルプデスクを装った攻撃者がRMMツールをインストールさせるような手口が攻撃のトレンドになっていることが言及されていました。また、従業員が組織の許可なくRMMツールを使用する「シャドーIT」も、セキュリティリスクを高める要因となります。
+攻撃者は正規のRMMツールを不正に利用して環境に侵入し、機密情報を窃取したり、マルウェアを拡散したりします。例えば、マイクロソフト社が公表している「Microsoft Digital Defense Report 2024^[[URL](https://www.microsoft.com/en-us/security/security-insider/intelligence-reports/microsoft-digital-defense-report-2024?msockid=0d4bd66716e762e62137c358170d6324)]」においては、ヘルプデスクを装った攻撃者がRMMツールをインストールさせるような手口が攻撃のトレンドになっていることが言及されていました。また、従業員が組織の許可なくRMMツールを使用する「シャドーIT」も、セキュリティリスクを高める要因となります。
 
 加えて、RMMツール自体は悪意のあるツールではなく、通常の業務でも利用することが多いことから、FWやSWG、EDRで検出されない可能性があるという点も非常に厄介です。例えば、EDR導入していて、攻撃者のサーバーに直接通信しようとすると、EDR側で検出することがありますが、RMMツールでは対象外となってしまうことがあります。（もちろん、製品や設定によります。また、FWやSWGの担当者はちゃんと仕事しようという話でもあります。）そのため、自社環境で許可されていないRMMツールの通信を迅速に検出し、潜在的な脅威を排除することが重要です。
 
