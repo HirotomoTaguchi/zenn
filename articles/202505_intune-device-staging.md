@@ -6,9 +6,11 @@ topics: [Intune, iOS]
 published: false
 ---
 
-Intuneポータルサイトからアプリをインストールしようとしたら『アプリをインストールする際にはデバイスをマネージドにしてください。』と表示されたり、「ユーザーアフィニティなしで登録したiOSデバイスで、ポータルサイトのセットアップ中に401エラーが出て困ってしまわないために、デバイスステージングを実施する方法をお案内します。
+Intuneポータルサイトからアプリをインストールしようとしたら『アプリをインストールする際にはデバイスをマネージドにしてください。』と表示されたり、「ユーザーアフィニティなしで登録したiOSデバイスで、ポータルサイトのセットアップ中に401エラーが出て困ってしまうことがあります。今回は、特に「ユーザーアフィニティなし」で登録されたiOS/iPadOSデバイスで、ユーザー自身がIntuneポータルサイトからアプリを選んでインストールできるようにするための「デバイスステージング」という手法について解説します。
 
-今回は、特に「ユーザーアフィニティなし」で登録されたiOS/iPadOSデバイスで、ユーザー自身がIntuneポータルサイトからアプリを選んでインストールできるようにするための「デバイスステージング」という手法について、初心者の方にも分かりやすく解説します。
+:::message
+本ブログは2025年5月25日時点の情報を元に執筆しています。
+:::
 
 ## 「ユーザーアフィニティなし」デバイスでIntuneポータル使えない問題
 
@@ -77,13 +79,16 @@ Apple Business Manager (ABM) を使った自動デバイス登録（ADE）でiOS
 
 ![image](https://github.com/user-attachments/assets/f29b4c9b-bccc-4c15-aae8-47748cf39fec)
 
-    ```xml
-    <dict>
-        <key>IntuneUDAUserlessDevice</key>
-        <string>{{SIGNEDDEVICEID}}</string>
-    </dict>
-    ```
-    * **重要**: 上記のXMLはデバイスステージングを有効にするための一例です。キーや値はMicrosoftのドキュメントやIntuneのバージョンアップによって変更される可能性があります。必ず最新の[Microsoft公式ドキュメント](https://learn.microsoft.com/ja-jp/mem/intune/apps/app-configuration-policies-use-ios#configure-the-company-portal-app-to-support-ios-and-ipados-devices-enrolled-with-automated-device-enrollment)を参照し、適切なXMLを使用してください。
+```xml
+<dict>
+    <key>IntuneUDAUserlessDevice</key>
+    <string>{{SIGNEDDEVICEID}}</string>
+</dict>
+```
+    
+:::message
+*重要*: 上記のXMLはデバイスステージングを有効にするための一例です。キーや値はMicrosoftのドキュメントやIntuneのバージョンアップによって変更される可能性があります。必ず最新の[Microsoft公式ドキュメント](https://learn.microsoft.com/ja-jp/mem/intune/apps/app-configuration-policies-use-ios#configure-the-company-portal-app-to-support-ios-and-ipados-devices-enrolled-with-automated-device-enrollment)を参照し、適切なXMLを使用してください。
+:::
 
 11. [次へ] をクリックします。
 
