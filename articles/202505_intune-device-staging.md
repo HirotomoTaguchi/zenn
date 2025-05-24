@@ -90,8 +90,6 @@ Apple Business Manager (ABM) を使った自動デバイス登録（ADE）でiOS
 *重要*: 上記のXMLはデバイスステージングを有効にするための一例です。キーや値はMicrosoftのドキュメントやIntuneのバージョンアップによって変更される可能性があります。必ず最新の[Microsoft公式ドキュメント](https://learn.microsoft.com/ja-jp/mem/intune/apps/app-configuration-policies-use-ios#configure-the-company-portal-app-to-support-ios-and-ipados-devices-enrolled-with-automated-device-enrollment)を参照し、適切なXMLを使用してください。
 :::
 
-11. [次へ] をクリックします。
-
 ### ステップ3: ポリシーの割り当て
 
 作成したアプリ構成ポリシーを、対象のデバイスが含まれるデバイスグループに割り当てます。
