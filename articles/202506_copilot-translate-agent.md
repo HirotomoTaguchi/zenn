@@ -3,7 +3,7 @@ title: "Copilot Agents で翻訳エージェントを作る"
 emoji: "🤖" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [Copilot, Microsoft Copilot] 
-published: false
+published: true
 ---
 
 ## はじめに
@@ -50,7 +50,7 @@ Copilot Agents は、Microsoft Copilot Studio で作成できるカスタムAI�
 この課題を解決する効果的な方法は、**Instructions で一般的な翻訳指示を行い、Starter Prompts で具体的な言語ペアを指定する**ことです。
 
 ### ステップ1: Copilot Studio にアクセス
-[Microsoft Copilot ](https://m365.cloud.microsoft/chat/)にアクセスし、[Create Agent] を選択します。
+[Microsoft Copilot](https://m365.cloud.microsoft/chat/) にアクセスし、[Create Agent] を選択します。
 
 ![image](https://github.com/user-attachments/assets/ff782118-3bd7-402f-a2d8-69b83ac3fdc1)
 
