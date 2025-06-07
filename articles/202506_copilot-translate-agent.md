@@ -3,7 +3,7 @@ title: "Copilot Agent で翻訳エージェントを作る"
 emoji: "🤖" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [Copilot, Microsoft Copilot, Copilot Studio] 
-published: false
+published: true
 ---
 
 ## はじめに
@@ -12,13 +12,15 @@ Copilotエージェント（Copilot Studio エージェント ビルダー） �
 
 ## Copilotエージェント とは？
 
-Copilotエージェントは、Microsoft Copilot Studio で作成できるカスタムAIアシスタントです。特定の目的や業務に特化したエージェントを作成することで、いちいち長文のプロンプトを打たなくても良い応答を得られます。 主な特徴としては以下が挙げられます。
-- **カスタマイズ可能な指示（Instructions）**: エージェントの振る舞いや専門性を定義
-- **スターター プロンプト（Starter Prompts）**: よく使用される質問やタスクを事前定義
-- **ナレッジベース統合**: SharePointやWebなどのデータソースと連携
+Copilotエージェントは、Microsoft Copilot Studio で作成できるカスタムAIアシスタントです^[[Copilot Studio エージェント ビルダーを使用したエージェントの構築](https://learn.microsoft.com/en-us/microsoft-365-copilot/extensibility/copilot-studio-agent-builder-build)]。特定の目的や業務に特化したエージェントを作成することで、いちいち長文のプロンプトを打たなくても良い応答を得られます。
+
+主な特徴としては以下が挙げられます。
+- **カスタマイズ可能な指示（Instructions）**: エージェントの振る舞いや専門性を事前に定義する
+- **スターター プロンプト（Starter Prompts）**: よく使用される質問やタスクを事前定義する
+- **ナレッジベース統合**: SharePointやWebなどのデータソースと連携する
 
 :::message
-今、世間で騒がれているAIエージェントをイメージすると凄そうなものに思いますが、今回紹介するのは非常にライトなものです。ChatGPT におけるGPTs、GeminiにおけるGemをイメージすると良いと思います。
+今、世間で騒がれているAIエージェントをイメージすると凄そうなものに思いますが、今回紹介するのは非常にライトなものです。ChatGPTにおけるGPTs、GeminiにおけるGemをイメージすると良いと思います。
 :::
 
 ## 今回のユースケース
@@ -65,7 +67,7 @@ Copilotエージェントは、Microsoft Copilot Studio で作成できるカス
 
 ### ステップ3: Instructions の設定
 
-以下の Instructions 例をコピーして設定画面に貼り付けます。組織の翻訳ポリシーがある場合は、それに合わせてカスタマイズしてください。
+以下の Instructions 例をコピーして設定画面に貼り付けます。このInstructionsは僕の業務に最適化されているので、適宜修正して利用していただけたら幸いです。（特に「{name}-san」のあたりとか）
 
 ```
 あなたはXX株式会社専用の多言語翻訳エージェントです。以下の原則に従って翻訳を行ってください：
@@ -78,7 +80,7 @@ Copilotエージェントは、Microsoft Copilot Studio で作成できるカス
 - 人の名前が含まれる場合は「Mr {name}」という形式ではなく、「{name}-san」という表現にする。
 - 以下のような社内用語の意味を考慮して翻訳する。
 
-## 社内用語
+## 社内用語集
 - XXX:XXXという意味。
 - XXX:XXXという子会社の略称。
 ```
