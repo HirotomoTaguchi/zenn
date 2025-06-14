@@ -8,3 +8,4 @@ published: false
 
 
 https://learn.microsoft.com/ja-jp/defender-endpoint/tamper-resiliency
+https://techcommunity.microsoft.com/discussions/microsoftdefenderatp/defender-av---activepassive-mode---advanced-hunting/2585781?utm_source=chatgpt.com
