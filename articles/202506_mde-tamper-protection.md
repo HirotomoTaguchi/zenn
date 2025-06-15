@@ -6,6 +6,16 @@ topics: [Intune, iOS]
 published: false
 ---
 
+:::message
+本ブログは2025年4月5日時点の情報を元に執筆しています。
+:::
 
-https://learn.microsoft.com/ja-jp/defender-endpoint/tamper-resiliency
-https://techcommunity.microsoft.com/discussions/microsoftdefenderatp/defender-av---activepassive-mode---advanced-hunting/2585781?utm_source=chatgpt.com
+
+^[[XXX](https://learn.microsoft.com/ja-jp/defender-endpoint/tamper-resiliency)]
+^[[XXX](https://techcommunity.microsoft.com/discussions/microsoftdefenderatp/defender-av---activepassive-mode---advanced-hunting/2585781?utm_source=chatgpt.com)]
+
+```kql
+
+```
+
+
