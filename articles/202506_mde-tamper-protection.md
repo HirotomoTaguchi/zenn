@@ -1,8 +1,8 @@
 ---
 title: "Defender for Endpoint を改ざんから守る！"
-emoji: "💻" 
+emoji: "🛡" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
-topics: [Intune, iOS] 
+topics: [Microsoft Defender, Security] 
 published: false
 ---
 
