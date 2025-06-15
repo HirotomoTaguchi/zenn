@@ -1,5 +1,5 @@
 ---
-title: "Intuneポータルで「デバイスをマネージドに(401)」エラー？デバイスステージングでユーザーアフィニティなしデバイスでアプリを配布する"
+title: "Defender for Endpoint を改ざんから守る！"
 emoji: "💻" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
 topics: [Intune, iOS] 
