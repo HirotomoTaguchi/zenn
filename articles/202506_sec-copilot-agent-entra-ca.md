@@ -25,11 +25,12 @@ Microsoft Entra の条件付きアクセスはセキュリティやアクセス�
 
 ## 条件付きアクセス最適化エージェントでどうにかできないのか？
 
-このような深刻な課題に対し、Microsoftは2025年に「Security Copilot 条件付きアクセス 最適化エージェント」を繰り出してきました。Microsoft Security Copilotは、2023年に発表された生成AIベースのセキュリティ支援ツールでが、MicrosoftはさらにこのCopilotを発展させ、特定の任務を自動化する\*\*「エージェント」機能\*\*を導入してきたものです。
+このような深刻な課題に対し、Microsoftは2025年に「Microsoft Security Copilot 条件付きアクセス 最適化エージェント」を繰り出してきました。Microsoft Security Copilotは、2023年に発表された生成AIベースのセキュリティ支援ツールですが、MicrosoftはさらにこのCopilotを発展させ、特定の任務を自動化するSecurity Copilot Agentを導入してきたものです。
 
-エージェントとは、Copilotがバックグラウンドで自律的に特定分野のタスクを処理するための拡張機能です。他にも、フィッシングメール対応に特化した「Defenderのフィッシング対策エージェント」や、データ漏洩防止におけるアラートの重要度判断を行う「Purviewのアラートトリアージエージェント」など、複数のエージェントがMicrosoftから発表されています。
+Microsoft Security Copilot Agentでは、プロンプトありきだった従来のSecurity Copilotとは異なり、Copilotがバックグラウンドで自律的に特定分野のタスクを処理します。他にも、フィッシングメール対応に特化した「Defenderのフィッシング対策エージェント」や、データ漏洩防止におけるアラートの重要度判断を行う「Purviewのアラートトリアージエージェント」など、複数のエージェントがMicrosoftから発表されています。
 
-Conditional Access Optimization Agentは、Security Copilotに統合されたエージェントの一つであり、Identity/アクセス管理領域を担当するものです。Security Copilot本体が「汎用的なセキュリティAIアシスタント」だとすれば、CA最適化エージェントは「ID管理における専門AIコンサルタント」と言えるでしょう。Security Copilotの画面からエージェントを有効化・管理することで、日々のセキュリティ運用にAIの自動化パワーを取り込めます。
+![image](https://github.com/user-attachments/assets/1a761d09-5024-427a-9a88-87da0ae9a088)
+*^[マイクロソフト、Microsoft Security Copilot エージェントと AI 向けの新しい保護機能を発表](https://www.microsoft.com/en-us/security/blog/2025/03/24/microsoft-unveils-microsoft-security-copilot-agents-and-new-protections-for-ai/?msockid=0d4bd66716e762e62137c358170d6324)*
 
 ## 使ってみる
 
@@ -42,7 +43,10 @@ Conditional Access Optimization Agentは、Security Copilotに統合されたエ
 ![image](https://github.com/user-attachments/assets/a43edbdb-aad6-4dd6-9a6e-0320d2ec44cf)
 
 
-問題が見つかると、Copilotのホーム画面に「Entraからの提案があります」といった形で通知されます。提案をクリックすると、「{ユーザー}はMFAで保護されていないです。これらのユーザーを対象とする新しいポリシーを作成しますか？」といった具体的な改善案が表示され、ワンクリックでレポート専用モード のポリシーを作成できます。
+問題が見つかると、Copilotのホーム画面に一覧化されます。提案をクリックすると、「{ユーザー}はMFAで保護されていないです。これらのユーザーを対象とする新しいポリシーを作成しますか？」といった具体的な改善案が表示され、ワンクリックでレポート専用モード のポリシーを作成できます。
+
+![image](https://github.com/user-attachments/assets/332572c2-1af6-41c2-ac04-0f247ff43a91)
+*ここではサインインの際にリスクが高いと判断された場合にMFAを実施するポリシーがレコメンドされています*
 
 :::message
 エージェントという名前的になんでもやってくれそうな気もしますが、Security Copilot Agent は既存のポリシーを勝手に変更したり、承認なしに新しいポリシーを有効にしたりすることはありません。あくまで管理者のレビューと承認を前提とした「人間中心（Human-in-the-loop）」の設計になっています。
@@ -54,9 +58,11 @@ Conditional Access Optimization Agentは、Security Copilotに統合されたエ
 
 有効化から提案の受け取り、ポリシー作成までの一連の流れは非常にスムーズです。管理者は複雑な操作をする必要がなく、AIからの提案を確認・評価し、クリックするだけで済みます。
 
+![image](https://github.com/user-attachments/assets/c702f4c8-d550-4eab-971e-8215d4d0fe9c)
 
+![image](https://github.com/user-attachments/assets/2a996bea-b8ed-4479-a5e2-1928463674f7)
 
-特に、提案されたポリシーがまず「レポート専用モード」で作成される点は安全サイドに考えられているなと感じました。これにより、実際のユーザーに影響を与える前に、新しいポリシーが誰にどのような影響を及ぼすのか（サインインログで影響を受けるユーザーを確認できる）を安全に評価する時間が確保されます。この安心感は、本番環境への変更に慎重なエンタープライズ管理者にとって非常に重要です。
+また、提案されたポリシーがまず「レポート専用モード」で作成される点は安全サイドに考えられているなと感じました。これにより、実際のユーザーに影響を与える前に、新しいポリシーが誰にどのような影響を及ぼすのか（サインインログで影響を受けるユーザーを確認できる）を安全に評価する時間が確保されます。この安心感は、本番環境への変更に慎重なエンタープライズ管理者にとって非常に重要です。
 
 ### レビューの観点は「現時点では」限定的
 
