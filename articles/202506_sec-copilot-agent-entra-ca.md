@@ -44,9 +44,12 @@ Microsoft Security Copilot Agentでは、プロンプトありきだった従来
 
 有効化すると、エージェントは24時間ごとに自動でテナントをスキャンし、多要素認証（MFA）等が適用されていないユーザーやアプリなどの「保護の穴」がないかを評価します。
 
-![image](https://github.com/user-attachments/assets/a43edbdb-aad6-4dd6-9a6e-0320d2ec44cf)
+![image](https://github.com/user-attachments/assets/c7494f31-28d4-4ff7-ba4d-a49d2259cc1c)
 
 問題が見つかると、Copilotのホーム画面に一覧化されます。提案をクリックすると、「{ユーザー}はMFAで保護されていないです。これらのユーザーを対象とする新しいポリシーを作成しますか？」といった具体的な改善案が表示され、ワンクリックでレポート専用モード のポリシーを作成できます。
+
+![image](https://github.com/user-attachments/assets/f13f4dac-27cb-443c-9a7e-a97a12334343)
+*提案の一覧*
 
 ![image](https://github.com/user-attachments/assets/332572c2-1af6-41c2-ac04-0f247ff43a91)
 *ここではサインインの際にリスクが高いと判断された場合にMFAを実施するポリシーがレコメンドされています*
