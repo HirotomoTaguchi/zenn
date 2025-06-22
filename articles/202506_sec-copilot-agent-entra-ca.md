@@ -25,7 +25,7 @@ Microsoft Entra の条件付きアクセスはセキュリティやアクセス�
 
 ## 条件付きアクセス最適化エージェントでどうにかできないのか？
 
-このような深刻な課題に対し、Microsoftは2025年に「Microsoft Security Copilot 条件付きアクセス 最適化エージェント」を繰り出してきました。Microsoft Security Copilotは、2023年に発表された生成AIベースのセキュリティ支援ツールですが、MicrosoftはさらにこのCopilotを発展させ、特定の任務を自動化するSecurity Copilot **Agent**を導入してきたものです。
+このような深刻な課題に対し、Microsoftは2025年に「Microsoft Security Copilot 条件付きアクセス 最適化エージェント^[Microsoft Security Copilot agents overview](https://learn.microsoft.com/en-us/copilot/security/agents-overview)」を繰り出してきました。Microsoft Security Copilot^[Microsoft Security Copilot](https://learn.microsoft.com/en-us/copilot/security/)は、2023年に発表された生成AIベースのセキュリティ支援ツールですが、MicrosoftはさらにこのCopilotを発展させ、特定の任務を自動化するSecurity Copilot **Agent**を導入してきたものです。
 
 ![image](https://github.com/user-attachments/assets/1a761d09-5024-427a-9a88-87da0ae9a088)
 *^[マイクロソフト、Microsoft Security Copilot エージェントと AI 向けの新しい保護機能を発表](https://www.microsoft.com/en-us/security/blog/2025/03/24/microsoft-unveils-microsoft-security-copilot-agents-and-new-protections-for-ai/?msockid=0d4bd66716e762e62137c358170d6324)*
@@ -89,3 +89,8 @@ Microsoft Security Copilot Agentでは、プロンプトありきだった従来
 ## おわりに
 
 この新機能は現状ではまだ見る観点が狭く発展途上ですが、その真価は将来性にあります。現在の最新モデルが適用されることを考えると、そのポテンシャルは計り知れません。ポリシー管理を属人化された手作業から、AIが支援する客観的で継続的なプロセスへと昇華させるための、これは重要な第一歩だと感じましたし、Security Copilot のトリガーが人の手を離れて、継続的に反復してくれるのは嬉しい傾向だと感じました。
+
+個人的に「AIエージェント」を主語に進めると、フワフワしてミスリードが起きてしまうので好きではないのですが、「AIに渡す玉を大きくする」というイメージで色々な業務を効率化していきたいと思います。
+
+![image](https://github.com/user-attachments/assets/c2982f74-a09a-40ca-b085-2c40da449f8a)
+
