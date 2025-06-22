@@ -2,8 +2,8 @@
 title: "Microsoft Security CopilotのMicrosoft Entra 条件付きアクセス最適化エージェントを使ってみる"
 emoji: "🛡" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
-topics: [Microsoft Defender, Microsoft Entra, Security Copilot, Security]
-published: false
+topics: [Microsoft Entra, Security Copilot, Microsoft Defender, Security]
+published: true
 ---
 
 Microsoft Security CopilotのMicrosoft Entra 条件付きアクセス最適化エージェントを使ってみたので、簡単ですがまとめてみました。
