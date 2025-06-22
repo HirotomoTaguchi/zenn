@@ -1,5 +1,5 @@
 ---
-title: "Microsoft Security CopilotのMicrosoft Entra 条件付きアクセス最適化エージェントを使ってみる"
+title: "Microsoft Security Copilot AgentのMicrosoft Entra 条件付きアクセス最適化エージェントを使ってみる"
 emoji: "🛡" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft Entra, Security Copilot, Microsoft Defender, Security]
