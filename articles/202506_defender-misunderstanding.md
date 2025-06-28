@@ -1,5 +1,5 @@
 ---
-title: "Microsoft Defenderによくある誤解"
+title: "Microsoft Defender のよくある誤解"
 emoji: "🛡" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft Defender, Security] 
