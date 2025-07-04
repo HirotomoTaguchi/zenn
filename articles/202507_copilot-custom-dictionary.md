@@ -47,6 +47,8 @@ Microsoft 365 Copilotの文字起こし機能で、組織固有の用語を正�
 テンプレートを開いて、以下の形式で用語を登録する。
 
 ```csv
+コパ活,kopakatu,Copilot活用,Copilot活用を広めていくための取り組み
+GSP,giiesuesu,Global Security Policy,グループグローバルで定められたセキュリティ規定
 Term (required),Sounds like,Long form of the term (for acronyms),Definition and context
 ポンチ絵,ponchie,,会議などで使用される簡単な概念図やスケッチ
 なるはや,naruhaya,なるべく早く,「なるべく早く」の略語。緊急性を伝える際に使用
