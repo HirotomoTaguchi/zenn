@@ -2,7 +2,7 @@
 title: "Copilot Custom Dictionary（カスタム辞書）を使ってみる"
 emoji: "💻" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
-topics: [] 
+topics: [copilot] 
 published: false
 ---
 
@@ -44,13 +44,23 @@ Microsoft 365 Copilotの文字起こし機能で、組織固有の用語を正�
 - 「CSV template with header only」をダウンロード
 
 #### 3. CSVファイルを編集
-テンプレートを開いて、以下の形式で用語を登録：
+テンプレートを開いて、以下の形式で用語を登録する。
 
 ```csv
 Term (required),Sounds like,Long form of the term (for acronyms),Definition and context
-TAC,Tee-Ay-Cee,Teams Admin Center,Admin portal managing Teams
-TAT,Tee-Ay-Tee,Turn Around Time,Metrics used to applied by support team
-Viva Glint,Vee-Vah-Glint,,Part of Microsoft Viva
+ポンチ絵,ponchie,,会議などで使用される簡単な概念図やスケッチ
+なるはや,naruhaya,なるべく早く,「なるべく早く」の略語。緊急性を伝える際に使用
+よしなに,yoshinani,,「いい感じに」「適切に」という意味。相手に裁量を任せる際に使用
+あいみつ,aimitsu,相見積もり,複数の業者から見積もりを取り、比較検討すること
+たたき台,tatakidai,,議論のベースとなる初版の草案や提案
+サマる,samaru,要約する,要約する（summarize）の和製英語
+コパソウ,kabushikigaisha copilot souken,株式会社copilot創研,主要取引先企業名
+魁プロジェクト,sakigake purojekuto,,新規事業の社内コードネーム
+蒼天ソリューション,souten soryuushon,,架空の主力製品・サービス名
+Zenithシステム,zenisu shisutemu,,社内で開発された基幹業務システム名
+月次定例KAIZEN会議,getsuji teirei kaizen kaigi,,毎月行われる業務改善のための定例会議
+IS,aiesu,情報システム部,社内の情報システムを管理する部署
+DX部,di-ekkusu bu,デジタルトランスフォーメーション推進部,社内のデジタルトランスフォーメーションを推進する部署
 ```
 
 #### 4. アップロード
