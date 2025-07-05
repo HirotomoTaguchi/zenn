@@ -2,8 +2,8 @@
 title: "Copilot Custom Dictionary（カスタム辞書）を使ってみる"
 emoji: "💻" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
-topics: [copilot, Microsoft 365] 
-published: false
+topics: [copilot, Microsoft 365, Microsoft 365 Copilot] 
+published: true
 ---
 
 AI議事録を使っている場合、会社名や製品名が正しく認識されなかったり、社内用語のためAIが文脈を読み取れず議事録の精度が低いケースが多々あります。ましては、私のように活舌が良くないと尚更文字起こしがうまくいかないケースも少なくありません。そんな中、Microsoft 365 CopilotのTeams会議議事録において、これらの問題に対応するための新機能「Copilot Custom Dictionary（カスタム辞書）」が、2025年6-7月にかけて、展開開始されはじめたので、さっそく触ってみました。
@@ -74,7 +74,7 @@ KAIZEN会議,getsuji teirei kaizen kaigi,KAIZEN会議,毎月行われる業務�
 ```
 
 :::message alert
-Microsoft Learn^[[Manage custom dictionaries for Microsoft Teams meetings and events](https://learn.microsoft.com/en-us/microsoftteams/copilot-custom-dictionary)] を読む限り、Sounds like と Long form of the term (for acronyms) は現時点では活用されず、アップデート後に使えるようになるように読めます。また、日本語辞書において、Sounds like を記載する際にローマ字（例：GSPだったら「gi-esu-pi-」と記載するか日本語（ジーエスピー）と記載するのが良いかは調査中です。わかり次第アップデートします。）
+Microsoft Learn^[[Manage custom dictionaries for Microsoft Teams meetings and events](https://learn.microsoft.com/en-us/microsoftteams/copilot-custom-dictionary)] を読む限り、Sounds like と Long form of the term (for acronyms) は現時点では活用されず、将来的に活用されるようになるように読めます。また、日本語辞書において、Sounds like を記載する際にローマ字か日本語か（例：GSPだったら「gi-esu-pi-」と記載するか（ジーエスピー）と記載するのが良いかは調査中です。わかり次第アップデートします。
 :::
 
 #### 4. アップロード
@@ -108,7 +108,7 @@ CSVファイルを「CSV UTF-8」形式で保存し、管理センターでフ�
 
 ## Copilot Tuning とは別物なので注意
 
-2025年5月のMicrosoft Buildにて発表された「Copilot Tuning^[[XXX](https://techcommunity.microsoft.com/blog/microsoft365copilotblog/introducing-microsoft-365-copilot-tuning/4414762)]」と本機能は別機能です。Copilot Tuningは現在、Microsoft 365 Copilotを5000ライセンス以上保持している方を対象とした早期プレビューでのみ利用できます。
+2025年5月のMicrosoft Buildにて発表された「Copilot Tuning^[[Microsoft 365 Copilot Tuning のご紹介](https://techcommunity.microsoft.com/blog/microsoft365copilotblog/introducing-microsoft-365-copilot-tuning/4414762)]」と本機能は別機能です。Copilot Tuningは現在、Microsoft 365 Copilotを5000ライセンス以上保持している方を対象とした早期プレビューでのみ利用できます。
 
 ## まとめ
 
