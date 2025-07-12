@@ -1,9 +1,9 @@
 ---
-title: "Microsoft TeamsのAI通訳機能「インタープリター」を試してみる"
-emoji: "💻" 
-type: "tech" ## tech: 技術記事 / idea: アイデア記事
-topics: [] 
-published: false
+title: "AIの力で言語の壁を壊す！TeamsのAI通訳機能「インタープリター」を試してみる"
+emoji: "🤖" 
+type: "tech" # tech: 技術記事 / idea: アイデア記事
+topics: [Microsoft 365, Microsoft Teams, Microsoft Copilot] 
+published: flse
 ---
 
 Microsoft TeamsのAI通訳機能「インタープリター」が登場しました。この機能は、会議参加者が自分の母国語で話し、相手の発言も母国語で聞けるというものです。本当に使えるのか、実際に試してみました。
