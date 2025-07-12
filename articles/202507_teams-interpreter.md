@@ -18,7 +18,7 @@ Microsoft Teamsに搭載されたAI翻訳機能、テキスト字幕で翻訳を
 
 | 機能項目 | ライブキャプション翻訳^[[Microsoft Teams会議でライブ キャプションを使用する](https://support.microsoft.com/ja-jp/office/microsoft-teams%E4%BC%9A%E8%AD%B0%E3%81%A7%E3%83%A9%E3%82%A4%E3%83%96-%E3%82%AD%E3%83%A3%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%99%E3%82%8B-4be2d304-f675-4b57-8347-cbd000a21260)] | インタープリター^[[Microsoft Teams会議でのインタープリター](https://support.microsoft.com/ja-jp/office/microsoft-teams%E4%BC%9A%E8%AD%B0%E3%81%A7%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%97%E3%83%AA%E3%82%BF%E3%83%BC-c7efe2bb-535d-42ab-a5c4-d2d91619b46d)]|
 | :--- | :--- | :--- |
-| **提供形式** | **テキスト（字幕）**による翻訳 | **音声**による通訳 |
+| **提供形式** | **テキスト（字幕）** による翻訳 | **音声**による通訳 |
 | **体験** | 画面下部に表示される字幕で、自分のペースで内容を読める | 自分の声質を再現した自然な音声で通訳を聞ける |
 | **ライセンス要件** | Teams Premiumが必要※ | Teams PremiumまたはMicrosoft 365 Copilot のライセンスが必要 |
 | **主な利用シーン** | 双方向の議論や活発な意見交換や聴覚に障がいのある方との会議 | 一方向のプレゼン |
@@ -31,12 +31,12 @@ Microsoft Teamsに搭載されたAI翻訳機能、テキスト字幕で翻訳を
 
 ライブキャプションは、各参加者が自分のために設定します。まず、会議コントロールの「その他（...）」から「言語と音声」>「ライブキャプションをオンにする」をクリックします。
 
-<img width="1918" height="1137" alt="image" src="https://github.com/user-attachments/assets/a0fe1785-475a-41ef-bc35-8314780347d1" />
+![](https://github.com/user-attachments/assets/a0fe1785-475a-41ef-bc35-8314780347d1)
 
 
 続いて、画面下部にキャプションが表示されたら、右側の設定アイコン（...）をクリックします。「字幕の言語」で、自分が読みたい言語を選択します。（例: 日本語）これで、話されている言語がリアルタイムで翻訳され、字幕として表示されます。
 
-<img width="1936" height="1132" alt="image" src="https://github.com/user-attachments/assets/8637f367-b262-41c0-bbab-81a9fcd1bd1f" />
+![](https://github.com/user-attachments/assets/8637f367-b262-41c0-bbab-81a9fcd1bd1f)
 
 ## AI通訳機能「インタープリター」の使い方
 
