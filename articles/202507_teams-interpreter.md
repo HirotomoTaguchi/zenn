@@ -31,11 +31,12 @@ Microsoft Teamsに搭載されたAI翻訳機能、テキスト字幕で翻訳を
 
 ライブキャプションは、各参加者が自分のために設定します。まず、会議コントロールの「その他（...）」から「言語と音声」>「ライブキャプションをオンにする」をクリックします。
 
-<img width="1918" height="1137" alt="image" src="https://github.com/user-attachments/assets/25fb7978-dab9-46aa-97d8-96fd1a9d9aa8" />
+<img width="1918" height="1137" alt="image" src="https://github.com/user-attachments/assets/a0fe1785-475a-41ef-bc35-8314780347d1" />
+
 
 続いて、画面下部にキャプションが表示されたら、右側の設定アイコン（...）をクリックします。「字幕の言語」で、自分が読みたい言語を選択します。（例: 日本語）これで、話されている言語がリアルタイムで翻訳され、字幕として表示されます。
 
-<img width="1936" height="1132" alt="image" src="https://github.com/user-attachments/assets/6aefdbeb-cd37-403e-886f-b3dc77cb5371" />
+<img width="1936" height="1132" alt="image" src="https://github.com/user-attachments/assets/8637f367-b262-41c0-bbab-81a9fcd1bd1f" />
 
 ## AI通訳機能「インタープリター」の使い方
 
