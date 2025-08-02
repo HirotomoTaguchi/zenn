@@ -86,11 +86,11 @@ https://www.youtube.com/watch?v=82JH_c7uoEk
 
 ### スライドのリアルタイム翻訳
 
-発表者側
+Teams会議中に画面共有する際、発表者側でPowerPoint Liveを使って画面共有をすると、聞く側（Audience）でスライドをリアルタイムに翻訳することができます。PowerPoint Liveは下記の画像の画面共有の下の方にあります。
 
-![](https://github.com/user-attachments/assets/2e4de867-f1ea-4ab2-8b0b-0d0dac62f679)
+![](https://github.com/user-attachments/assets/e62fe242-f462-4a10-9ece-80cb02bf9930)
 
-聞く側
+その後、聞く側（Audience）で任意の言語にスライドを翻訳することができます。尚、翻訳できるのはテキストボックスの中のテキストだけで、画像の中に記載された文字などはさすがに翻訳できません。
 
 ![](https://github.com/user-attachments/assets/ec2eaedf-fe6e-43e8-8a72-5882502b044c)
 
