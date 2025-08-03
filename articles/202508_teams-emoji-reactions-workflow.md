@@ -2,11 +2,11 @@
 title: "Microsoft Teams の絵文字リアクションでワークフローをキックできるようになったよ！"
 emoji: "💻" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
-topics: [] 
+topics: [Microsoft Teams, Power Automate, Logic Apps] 
 published: false
 ---
 
-Slackユーザーの皆さんなら、きっと経験があるのではないでしょうか。メッセージに絵文字をつけるだけで、自動的に翻訳が始まったり、タスクが作成されたり...。そんな便利な機能が、ついにMicrosoft Teamsでも利用できるようになりました！個人的にSlackのこの機能は本当に推しで、直感的で使いやすく、チームのワークフローを大幅に効率化してくれる素晴らしい仕組みだと思っています。それがTeamsでも使えるようになった^[[XXX](https://XXX)]ということで、今回はその活用方法をご紹介したいと思います。
+Slackユーザーの皆さんなら、きっと経験があるのではないでしょうか。メッセージに絵文字をつけるだけで、自動的に翻訳が始まったり、タスクが作成されたり...。そんな便利な機能が、ついにMicrosoft Teamsでも利用できるようになりました！個人的にSlackのこの機能は本当に推していて、チームのワークフローを大幅に効率化してくれる素晴らしい仕組みだと思っています。それがTeamsでも使えるようになった^[[Microsoft Teams: Emoji Reactions Workflows](https://www.microsoft.com/ja-jp/microsoft-365/roadmap?id=498578)] ^[[From Threads to Workflows: Microsoft Teams Features That Boost Everyone’s Productivity](https://techcommunity.microsoft.com/blog/microsoftteamsblog/from-threads-to-workflows-microsoft-teams-features-that-boost-everyone%e2%80%99s-product/4430879)] ということで歓喜のあまりブログを書いています。
 
 :::message
 本ブログは2025年8月3日時点の情報を元に執筆しています。
@@ -14,7 +14,7 @@ Slackユーザーの皆さんなら、きっと経験があるのではないで
 
 ## Teams で絵文字リアクション・ワークフローを実現する方法
 
-Microsoft TeamsではPower AutomateやLogic Appsを使用することで、絵文字リアクションをトリガーとしたワークフローの構築が可能になりました。これまでTeamsを使っていて「Slackのあの機能が使えたらなあ...」と思っていた方には朗報ですね！Power AutomateやLogic Appsのコネクタを使用することで、Teams上での絵文字リアクションを検知し、それをきっかけに様々な処理を自動実行できます。
+Microsoft TeamsではPower AutomateやLogic Appsを使用する^[[When someone reacted to a message in chat](https://learn.microsoft.com/en-us/connectors/teams/?tabs=text1%2Cdotnet&WT.mc_id=DX-MVP-5005281#when-someone-reacted-to-a-message-in-chat)] ことで、絵文字リアクションをトリガーとしたワークフローの構築が可能になりました。これまでTeamsを使っていて「Slackのあの機能が使えたらなあ...」と思っていた方には朗報ですね！Power AutomateやLogic Appsのコネクタを使用することで、Teams上での絵文字リアクションを検知し、それをきっかけに様々な処理を自動実行できます。
 
 ## 簡単なユースケース：AOAIを使ったメッセージ翻訳
 
@@ -67,7 +67,7 @@ Microsoft TeamsではPower AutomateやLogic Appsを使用することで、絵�
 
 ### 🧠 RAGデータベースの更新
 
-ナレッジ登録と非常に似ていますが、FAQ対応や技術的な質問の回答に🧠絵文字をつけることで、RAG（Retrieval-Augmented Generation）システムのデータベースに自動追加。将来的にAIが同様の質問に対してより精度の高い回答を提供できるようになります。
+ナレッジ登録と非常に似ていますが、FAQ対応や技術的な質問の回答に🧠絵文字をつけることで、RAG（Retrieval-Augmented Generation）のデータベースに自動追加。将来的にAIが同様の質問に対してより精度の高い回答を提供できるようになります。
 
 ## 導入時の考慮ポイント
 
