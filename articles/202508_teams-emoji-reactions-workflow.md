@@ -1,12 +1,12 @@
 ---
-title: "Microsoft Teams の絵文字リアクションでワークフローをキックできるようになったよ！"
+title: "Microsoft Teams の絵文字リアクションでワークフローをトリガーできるようになったよ！"
 emoji: "💻" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft Teams, Power Automate, Logic Apps] 
-published: false
+published: true
 ---
 
-Slackユーザーの皆さんなら、きっと経験があるのではないでしょうか。メッセージに絵文字をつけるだけで、自動的に翻訳が始まったり、タスクが作成されたり...。そんな便利な機能が、ついにMicrosoft Teamsでも利用できるようになりました！個人的にSlackのこの機能は本当に推していて、チームのワークフローを大幅に効率化してくれる素晴らしい仕組みだと思っています。それがTeamsでも使えるようになった^[[Microsoft Teams: Emoji Reactions Workflows](https://www.microsoft.com/ja-jp/microsoft-365/roadmap?id=498578)] ^[[From Threads to Workflows: Microsoft Teams Features That Boost Everyone’s Productivity](https://techcommunity.microsoft.com/blog/microsoftteamsblog/from-threads-to-workflows-microsoft-teams-features-that-boost-everyone%e2%80%99s-product/4430879)] ということで歓喜のあまりブログを書いています。
+Slackユーザーの皆さんなら、きっと経験があるのではないでしょうか。メッセージに絵文字をつけるだけで、自動的に翻訳が始まったり、タスクが作成されたり...。そんな便利な機能が、ついにMicrosoft Teamsでも利用できるようになりました！個人的にSlackのこの機能は本当に推していて、チームのワークフローを大幅に効率化してくれる素晴らしい仕組みだと思っています。それがTeamsでも使えるようになった^[[Microsoft Teams: Emoji Reactions Workflows](https://www.microsoft.com/ja-jp/microsoft-365/roadmap?id=498578)] ^[[From Threads to Workflows: Microsoft Teams Features That Boost Everyone’s Productivity](https://techcommunity.microsoft.com/blog/microsoftteamsblog/from-threads-to-workflows-microsoft-teams-features-that-boost-everyone%e2%80%99s-product/4430879)] ということで歓喜して、ブログを書いています。
 
 :::message
 本ブログは2025年8月3日時点の情報を元に執筆しています。
@@ -78,9 +78,10 @@ Microsoft TeamsではPower AutomateやLogic Appsを使用する^[[When someone r
 
 - **絵文字の統一**: チーム内で使用する絵文字とその意味を事前に定義し、共有しておく
 - **権限管理**: 実行できるチャンネルを制限したり、特定のワークフローは自分のみのリアクションでのみ動作するよう制限をかける
+- **ボットアカウントの用意の要否**: LogicApps等でTeamsに接続する際のアカウントを個人のものにするか、専用アカウントを用意するかを設計しておくことをお勧めします
 - **エラーハンドリング**: 外部APIの呼び出し失敗時の処理を適切に設計する
 - **コスト管理**: API呼び出し回数やストレージ使用量を監視し、予想外のコスト発生を防ぐ
 
 ## 終わりに
 
-Microsoft Teamsでの絵文字リアクション・ワークフローは、日々のコミュニケーションをより効率的で楽しいものに変えてくれる強力な機能です。Teamsを使用している方は、ぜひこの機能を活用してチームの生産性向上を図ってみてください。皆さんのTeamsライフがより便利で効率的になることを願っています！
+Microsoft Teamsでの絵文字リアクション・ワークフローは、日々のコミュニケーションをより効率的で楽しいものに変えてくれる可能性がある強力な機能です。この機能を使いこなせるTeamsを使っている組織がどれだけあるかは未知数ですが、Teamsを使用している方は、ぜひこの機能を活用してチームの生産性向上を図ってみてください。皆さんのTeamsライフがより便利で効率的になることを願っています！
