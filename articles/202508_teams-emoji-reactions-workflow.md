@@ -69,6 +69,9 @@ Microsoft TeamsではPower AutomateやLogic Appsを使用する^[[When someone r
 
 ナレッジ登録と非常に似ていますが、FAQ対応や技術的な質問の回答に🧠絵文字をつけることで、RAG（Retrieval-Augmented Generation）のデータベースに自動追加。将来的にAIが同様の質問に対してより精度の高い回答を提供できるようになります。
 
+![](https://github.com/user-attachments/assets/5625258f-4496-4939-baac-bb9267097648)
+
+
 ## 導入時の考慮ポイント
 
 実際に導入する際の考慮ポイントとしては、以下のような点が考えられます。
