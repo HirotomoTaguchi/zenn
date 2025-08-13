@@ -1,5 +1,5 @@
 ---
-title: "AIエージェントがフィッシングメールのトリアージするMicrosoft Security Copilot フィッシングトリアージ・エージェント"
+title: "AIエージェントがフィッシングのトリアージするSecurity Copilot フィッシングトリアージエージェント"
 emoji: "🛡" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft Defender, Security] 
