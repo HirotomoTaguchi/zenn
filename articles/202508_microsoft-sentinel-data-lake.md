@@ -86,7 +86,7 @@ https://blog.cloudnative.co.jp/24112/
 
 ###  データレイク層でログを長期保管する
 
-Microsoft Sentinelにログを取り込むデータコネクタは、規定では分析層と長期保存用のデータレイク層の両方にデータを送信するように構成されています。Sentinelデータコネクタが有効になると、データは分析層にプッシュされ、データレイク層に自動的にミラーリングされます。分析層と同じ保持期間でデータレイクにデータをミラーリングしても、追加の請求料金は発生しません。^[https://learn.microsoft.com/ja-jp/azure/sentinel/configure-data-connector?tabs=defender-portal]
+Microsoft Sentinelにログを取り込むデータコネクタは、規定では分析層と長期保存用のデータレイク層の両方にデータを送信するように構成されています。Sentinelデータコネクタが有効になると、データは分析層にプッシュされ、データレイク層に自動的にミラーリングされます。分析層と同じ保持期間でデータレイクにデータをミラーリングしても、追加の請求料金は発生しません。^[[configure-data-connector?tabs=defender-portal](https://learn.microsoft.com/ja-jp/azure/sentinel/configure-data-connector?tabs=defender-portal)]
 
 そして、データレイク設定後、以下の画像のように保持期間が延長された場合にのみ、データレイクとしてストレージに追加コストが発生します。設定は [Defender XDRポータル] > [Microsoft Sentinel] > [Configuration] > [Tables] でテーブル単位で実施できます。
 
