@@ -6,7 +6,7 @@ topics: [Microsoft Defender, Security, Microsoft Sentinel]
 published: false
 ---
 
-最近、マイクロソフトから Microsoft Sentinel Data Lake がパブリックプレビューとして発表されました^[https://techcommunity.microsoft.com/blog/microsoft-security-blog/introducing-microsoft-sentinel-data-lake/4434280]。このデータレイクを使うことで、より簡単に、コスパよくデータの長期保存ができるようになります。そこで今回は、データレイク機能について掘り下げていきます。
+最近、マイクロソフトから Microsoft Sentinel Data Lake がパブリックプレビューとして発表されました^[https://techcommunity.microsoft.com/blog/microsoft-security-blog/introducing-microsoft-sentinel-data-lake/4434280] 。このデータレイクを使うことで、より簡単に、コスパよくデータの長期保存ができるようになります。そこで今回は、データレイク機能について掘り下げていきます。
 
 :::message
 本記事は2025年8月13日時点の情報で執筆されています。また、この機能は現在パブリックプレビューです。本記事は、環境でのいかなる設定エラーやデータ損失に対しても責任を負いかねます。まずは小規模なテスト環境での評価から始めることをお勧めします。
