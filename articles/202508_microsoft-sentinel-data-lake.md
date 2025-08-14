@@ -3,7 +3,7 @@ title: "Microsoft Sentinel Data Lakeでコスパ良くセキュリティログ�
 emoji: "🛡" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft Defender, Security, Microsoft Sentinel] 
-published: false
+published: true
 ---
 
 最近、マイクロソフトから Microsoft Sentinel Data Lake がパブリックプレビューとして発表されました^[https://techcommunity.microsoft.com/blog/microsoft-security-blog/introducing-microsoft-sentinel-data-lake/4434280] 。このデータレイクを使うことで、より簡単に、コスパよくデータの長期保存ができるようになります。そこで今回は、データレイク機能について掘り下げていきます。
@@ -60,10 +60,12 @@ Microsoft Sentinelデータレイクのパブリックプレビューにオン�
 - Microsoft Sentinelプライマリワークスペースとその他のワークスペースがテナントのホームリージョンと同じリージョンにあること
 - プライマリおよびその他のワークスペースへの読み取り権限があり、データレイクにアタッチできることが必要です。
 
-SentinelをDefender XDRポータルに接続してデータレイクにオンボードした場合、プライマリワークスペースはテナントのホーム地理的リージョンにある必要があります。つまり、DefenderとSentinelの両方で地理的リージョンが一致している必要があります。パブリックプレビューではすべてのリージョンがサポートされているわけではないことにご注意ください。
+:::message
+パブリックプレビューの制約として、SentinelをDefender XDRポータルに接続してデータレイクにオンボードする場合、Sentinelのプライマリワークスペースはテナント（EntraID）と同じ地理的リージョンにある必要があります。EntraIDというのがポイントで、多くの日本のユーザーはDefenderのログの保管先をUSに指定しているかと思いますが、EntraIDは日本になっているかと思います（ややこしや・・・）。なので、Sentinelのワークスペースを東日本で構成して試してください。また、パブリックプレビューではすべてのリージョンがサポートされているわけではないことにご注意ください。
+:::
 
 
-### オンボーディング（初期設定）
+### オンボーディング（初期設定）^[]
 
 テナントをMicrosoft Sentinelデータレイクにオンボードする手順は簡単です。前提条件として、SIEMワークスペース機能を通じてSentinelをDefenderポータルに接続します。こちらについては、前職時代にブログを書いているのでそちらを参照ください。
 
@@ -81,7 +83,7 @@ https://blog.cloudnative.co.jp/24112/
 
 ###  データレイク層でログを長期保管する
 
-Microsoft Sentinelにログを取り込むデータコネクタは、規定では分析層と長期保存用のデータレイク層の両方にデータを送信するように構成されています。Sentinelデータコネクタが有効になると、データは分析層にプッシュされ、データレイク層に自動的にミラーリングされます。分析層と同じ保持期間でデータレイクにデータをミラーリングしても、追加の請求料金は発生しません。
+Microsoft Sentinelにログを取り込むデータコネクタは、規定では分析層と長期保存用のデータレイク層の両方にデータを送信するように構成されています。Sentinelデータコネクタが有効になると、データは分析層にプッシュされ、データレイク層に自動的にミラーリングされます。分析層と同じ保持期間でデータレイクにデータをミラーリングしても、追加の請求料金は発生しません。^[https://learn.microsoft.com/ja-jp/azure/sentinel/configure-data-connector?tabs=defender-portal]
 
 そして、データレイク設定後、以下の画像のように保持期間が延長された場合にのみ、データレイクとしてストレージに追加コストが発生します。設定は [Defender XDRポータル] > [Microsoft Sentinel] > [Configuration] > [Tables] でテーブル単位で実施できます。
 
