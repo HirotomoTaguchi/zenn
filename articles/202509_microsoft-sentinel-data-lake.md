@@ -1,5 +1,5 @@
 ---
-title: "【注意喚起】Sentinelのデータレイクを使っていると思ったら50万課金されてしまった話"
+title: "Sentinelのデータレイクを使っていると思ったら50万課金されてしまった話"
 emoji: "🛡" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft Defender, Security, Microsoft Sentinel] 
@@ -65,11 +65,16 @@ Microsoft サポートからの説明によると：
 
 **Azure Monitor の復元では：**
 - 独自の料金体系で課金される
-- 1回実行すると最低２TB、12時間分課金される
+- 1回実行すると最低２TB、12時間分課金される（復元では復元データに対してクエリを実行するための追加のコンピューティング リソースが割り当てられるため、最小復元データボリュームが適用されます。）^[[](https://learn.microsoft.com/ja-jp/azure/sentinel/billing?tabs=simplified%2Ccommitment-tiers#preview-specific-considerations-for-data-lake-tier-metering)]
 - 復元されたデータは削除するまで継続的に課金される
 - 復元されたテーブルには `_RST` サフィックスが付く（例：`AADNonInteractiveUserSignInLogs_656_RST`）
 
 つまり、Azure Monitorの復元利用料 $0.10(≒15円/1日/GB) × 2TB × 利用日数 の課金がかかっていたのです。そりゃ、50万は行くわ。。。
+
+よくよく、読むと先ほどのリストア画面のNoteにも同様の表示がされていますね。。。
+
+![](https://github.com/user-attachments/assets/106bd220-3330-4dd3-8c45-27038c524e34)
+
 
 一応、このことは、Microsoft Learnにも書いてありました。^[[コストを計画し、Microsoft Sentinel の価格と課金を理解する > データ レイク レベルの測定におけるプレビュー特有の考慮事項](https://learn.microsoft.com/ja-jp/azure/sentinel/billing?tabs=simplified%2Ccommitment-tiers#preview-specific-considerations-for-data-lake-tier-metering)]
 
@@ -77,7 +82,7 @@ Microsoft サポートからの説明によると：
 
 ## 学んだ教訓と対策
 
-### ①. UIの表示に惑わされない
+### ①. UIの表示に惑わされない・Noteをよく読む
 
 Data Lake のインターフェース内に表示されているからといって、それがすべて Data Lake の機能ではありませんでした。今回のケースでは、Azure Monitor の機能が混在しており、思わぬ課金に繋がってしまいました。今思えば、タブとしてはData Lakeでしたが、Azure MonitorっぽいUIでもあるなと察知するべきではありました。
 
