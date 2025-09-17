@@ -20,7 +20,7 @@ https://zenn.dev/hirotomotaguchi/articles/202508_microsoft-sentinel-data-lake
 
 2025年8月下旬、Azure の課金画面を確認したところ、Sentinelリソースで約50万円という異常な金額の課金が発生していることを発見しました。
 
-![](https://github.com/user-attachments/assets/995fdd87-f68e-4eee-8f48-d531828a852b)
+![](https://github.com/user-attachments/assets/969c0e07-a9c0-43e3-83e8-1c4fc2d69b7b)
 
 私の認識では：
 - 90日間で90MB程度のデータしか取り込んでいない
