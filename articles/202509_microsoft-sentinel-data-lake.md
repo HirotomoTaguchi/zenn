@@ -12,7 +12,7 @@ published: true
 
 加えて、待望のデータレイク機能についてのミスリードにも繋がリマス。SNSには親をマイクロソフト社に殺されたかのように片っ端から非難する人がいるので、そういった方達に変な切り取られ方をしないかは心配であります。
 
-しかし、この記事を書く目的は、~~書かなきゃ気が済まないからです~~ 同じような誤解から高額な課金を受けてしまう方が出ないよう、私の失敗体験を共有することです。ポエミーになってしまいましたが、特にMicrosoft Sentinelのデータレイク機能を検証される方には、ぜひ最後まで読んでいただければと思います。
+しかし、同じような誤解から高額な課金を受けてしまう方が出ないよう、記事を書かせていただきます。ポエミーになってしまいましたが、特にMicrosoft Sentinelのデータレイク機能を検証される方には、ぜひ最後まで読んでいただければと思います。
 
 ## 何が起きたのか
 
@@ -65,18 +65,17 @@ Microsoft サポートからの説明によると：
 
 **Azure Monitor の復元では：**
 - 独自の料金体系で課金される
-- 1回実行すると最低２TB、12時間分課金される（復元では復元データに対してクエリを実行するための追加のコンピューティング リソースが割り当てられるため、最小復元データボリュームが適用されます。）^[[](https://learn.microsoft.com/ja-jp/azure/sentinel/billing?tabs=simplified%2Ccommitment-tiers#preview-specific-considerations-for-data-lake-tier-metering)]
+- 1回実行すると最低２TB、12時間分課金される（復元では復元データに対してクエリを実行するための追加のコンピューティング リソースが割り当てられるため、最小復元データボリュームが適用されます。）^[[Azure Monitor でログを復元する](https://learn.microsoft.com/ja-jp/azure/azure-monitor/logs/restore?tabs=api-1#restore-data)]
 - 復元されたデータは削除するまで継続的に課金される
 - 復元されたテーブルには `_RST` サフィックスが付く（例：`AADNonInteractiveUserSignInLogs_656_RST`）
 
 つまり、Azure Monitorの復元利用料 $0.10(≒15円/1日/GB) × 2TB × 利用日数 の課金がかかっていたのです。そりゃ、50万は行くわ。。。
 
-よくよく、読むと先ほどのリストア画面のNoteにも同様の表示がされていますね。。。
+よくよく、読むと先ほどのリストア画面のNoteにも同様の表示がされていますね。。。これは読み飛ばしていた。完全に悪いのは私です。
 
 ![](https://github.com/user-attachments/assets/106bd220-3330-4dd3-8c45-27038c524e34)
 
-
-一応、このことは、Microsoft Learnにも書いてありました。^[[コストを計画し、Microsoft Sentinel の価格と課金を理解する > データ レイク レベルの測定におけるプレビュー特有の考慮事項](https://learn.microsoft.com/ja-jp/azure/sentinel/billing?tabs=simplified%2Ccommitment-tiers#preview-specific-considerations-for-data-lake-tier-metering)]
+また、このことは、Microsoft Learnにも書いてありました。^[[コストを計画し、Microsoft Sentinel の価格と課金を理解する > データ レイク レベルの測定におけるプレビュー特有の考慮事項](https://learn.microsoft.com/ja-jp/azure/sentinel/billing?tabs=simplified%2Ccommitment-tiers#preview-specific-considerations-for-data-lake-tier-metering)]
 
 > 長期保管の課金は既存の顧客のデータ レイク ストレージ メーターに移行されますが、長期保管されたデータには、最初はMicrosoft Sentinel >データ レイク探索>検索と復元を通じてのみアクセスできます。
 
@@ -84,7 +83,7 @@ Microsoft サポートからの説明によると：
 
 ### ①. UIの表示に惑わされない・Noteをよく読む
 
-Data Lake のインターフェース内に表示されているからといって、それがすべて Data Lake の機能ではありませんでした。今回のケースでは、Azure Monitor の機能が混在しており、思わぬ課金に繋がってしまいました。今思えば、タブとしてはData Lakeでしたが、Azure MonitorっぽいUIでもあるなと察知するべきではありました。
+Data Lake のインターフェース内に表示されているからといって、それがすべて Data Lake の機能ではありませんでした。今回のケースでは、Azure Monitor の機能が混在しており、Noteにはそのことが記載されていたももの、読み飛ばしてしまった結果、思わぬ課金に繋がってしまいました。今思えば、タブとしてはData Lakeでしたが、Azure MonitorっぽいUIでもあるなと察知するべきではありましたし、そもそもNoteをよく読めよと言う話ではあります。
 
 ### ②. 料金体系を正しく理解する
 
