@@ -110,20 +110,6 @@ Microsoft Sentinelにログを取り込むデータコネクタは、規定で�
 データレイク層へのKQL実行は有料なのでその点に留意ください。また2つのテーブルをジョイントして検索などはできないので、その点にもご留意ください。
 :::
 
-### Serch & Restore
-
-上述の通り、データレイク層においてのKQLを使った調査には制約がありますが、制約を取っ払ってガッツリと調査したい場合にはデータを分析層にリストアすることもできます。[Serch & Restore] のタブでテーブルと期間を選択し、データをリストアするとAdvanced Huntingでデータを調査できます。
-
-![](https://github.com/user-attachments/assets/fe590368-0820-4286-bed6-0fa963d749d1)
-
-しかしながら、下記のようにデータの形式はAdvanced Huntingに直接取り込んだ形式とは異なるので、その点には注意が必要です。
-
-![](https://github.com/user-attachments/assets/86233030-5047-4b98-9eb0-83896290f982)
-
-:::message
-まだ調査しきれていませんが、Serch & Restore にはちょっと注意すべき事項がありそうです。またアップデートします。
-:::
-
 ### Jobs
 
 加えて、Jobs を使用して、データレイクから少量のデータを分析層に直接移動させることができます。ジョブは、データレイク層のデータに対してKQLクエリを実行し、結果を分析層に昇格させる機能です。単発または定期実行のスケジュールされたタスクを実行できます。
@@ -149,6 +135,24 @@ Sentinelのワークスペースを選択して、クエリを書きます。
 前述の通り、データを移行する際には別テーブルを作成（選択）するので、Advanced HuntingではCustamm Logsという形式で見ることになります。
 
 ![](https://github.com/user-attachments/assets/db775917-b20a-401d-b63b-aa856f112042)
+
+### Serch & Restore
+
+:::message
+Serch & Restore はデータレイクの機能ではなく、Azure Monitorの機能で課金体系が異なります。僕は理解してなくて、高額な請求を引き起こしてしまいました。。。詳しくは、下記をご覧ください。
+
+https://zenn.dev/hirotomotaguchi/articles/202509_microsoft-sentinel-data-lake
+:::
+
+データレイク層ではなく、長期保管されているデータはSerch & Restoreのタブからからリストアすることもできます。[Serch & Restore] のタブでテーブルと期間を選択し、データをリストアするとAdvanced Huntingでデータを調査できます。
+
+![](https://github.com/user-attachments/assets/fe590368-0820-4286-bed6-0fa963d749d1)
+
+しかしながら、下記のようにデータの形式はAdvanced Huntingに直接取り込んだ形式とは異なるので、その点には注意が必要です。
+
+![](https://github.com/user-attachments/assets/86233030-5047-4b98-9eb0-83896290f982)
+
+
 
 ## まとめ
 
