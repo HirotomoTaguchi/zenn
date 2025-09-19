@@ -1,5 +1,5 @@
 ---
-title: "個人環境で格安のSentinel Data lake 使っていると思ったら、50万課金されてしまった話"
+title: "格安のSentinel Data lake 使っていると思ったら、50万課金されてしまった話"
 emoji: "🛡" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft Defender, Security, Microsoft Sentinel] 
