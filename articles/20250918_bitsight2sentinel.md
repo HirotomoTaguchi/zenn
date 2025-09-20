@@ -3,7 +3,7 @@ title: "Microsoft SentinelとBitSightの連携とハマりポイント"
 emoji: "🤖" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [Sentinel] 
-published: false
+published: true
 published_at: 2025-09-18 22:00
 ---
 
@@ -81,10 +81,10 @@ BitSightからデータを取得するための鍵が必要です。BitSightの�
 3.  STEP 2で作成したアプリケーションの名前で検索し、該当のアプリを選択します。
 4.  概要ページに表示されている「**オブジェクト ID**」をコピーします。
 
-![https://github.com/user-attachments/assets/cad9f40b-2f64-4eb6-add1-96a7fb184143]
+![](https://github.com/user-attachments/assets/cad9f40b-2f64-4eb6-add1-96a7fb184143)
 
 このIDこそが、今回のデプロイで必要だった真のオブジェクトIDです。ARMテンプレートのデプロイ画面に戻り、`Azure_Entra_Object_Id` の値に今コピーしたIDを貼り付けて再度実行したところ、今度は無事にデプロイが成功しました！
 
 ## おわりに
 
-今回は、Microsoft SentinelとBitSightの連携における、ちょっとした落とし穴について共有しました。Azure（EntraID）のID管理の仕組みは奥が深く、特に「アプリの登録」と「エンタープライズアプリケーション」の違いは、こうしたロール割り当ての場面でつまずきやすいポイントだと思います。この記事が、同じエラーで悩む方の時間短縮に繋がれば嬉しいです。
+今回は、Microsoft SentinelとBitSightの連携における、ちょっとした落とし穴について共有しました。Azure（EntraID）の仕組みは奥が深く、特に「アプリの登録」と「エンタープライズアプリケーション」の違いは、こうしたロール割り当ての場面でつまずきやすいポイントだと思います。この記事が、同じエラーで悩む方の時間短縮に繋がれば嬉しいです。
