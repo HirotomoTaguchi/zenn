@@ -1,26 +1,28 @@
 ---
-title: "格安のSentinel Data lake 使っていると思ったら、50万課金されてしまった話"
+title: "格安の Sentinel Data lake 使っていると思ったら、50万課金されてしまった話"
 emoji: "🛡" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft Defender, Security, Microsoft Sentinel] 
 published: true
 ---
 
+## はじめに
+
 この記事は、Microsoft Sentinelのデータレイク機能を検証していたところ、予想外の50万円の課金が発生してしまった体験談です。まず最初にお伝えしたいのは、このトラブルが私のドキュメントの読み飛ばし・理解不足・勘違いに起因するものだということです。
 
 正直なところ、自分の浅はかさを世間に晒すことになるので公開するかを悩みました。一応、マイクロソフト製品を専門とするお仕事をしていたりするので、クラウド1年目のようなミスは恥ずかしい限りです。
 
-加えて、待望のデータレイク機能のミスリードにも繋がリマス。SNSには親をマイクロソフト社に殺されたかのように片っ端から非難する人がいるので、そういった方達に変な切り取られ方をしないかは心配です。
+加えて、待望だった Sentinel Data Lake のミスリードにも繋がリマス。SNSには親をマイクロソフト社に殺されたかのように片っ端から非難する人がいるので、そういった方達に変な切り取られ方をしないかは心配です。
 
-しかし、同じような誤解から高額な課金を受けてしまう方が出ないよう、記事を書かせていただきます。ポエミーになってしまいましたが、特にMicrosoft Sentinelのデータレイク機能を検証される方には、ぜひ最後まで読んでいただければと思います。
+しかし、同じような誤解から高額な課金を受けてしまう方が出ないよう記事を書かせていただきます。ポエミーになってしまいましたが、特にMicrosoft Sentinel Data Lake 機能を検証される方には、ぜひ最後まで読んでいただければと思います。
 
 ## 何が起きたのか
 
-パブリックプレビューとして登場していた、Microsoft Sentinelのデータレイクの機能を検証していました。
+8月上旬ごろ、パブリックプレビューとして登場していた、Microsoft Sentinel Data Lake を検証していました。
 
 https://zenn.dev/hirotomotaguchi/articles/202508_microsoft-sentinel-data-lake
 
-2025年8月下旬、Azure の課金画面を確認したところ、Sentinelリソースで約50万円という異常な金額の課金が発生していることを発見しました。
+2025年8月下旬、ふと Azure の課金画面を確認したところ、Sentinelリソースで約50万円という異常な金額の課金が発生していることを発見しました。
 
 ![](https://github.com/user-attachments/assets/969c0e07-a9c0-43e3-83e8-1c4fc2d69b7b)
 
@@ -44,34 +46,35 @@ https://zenn.dev/hirotomotaguchi/articles/202508_microsoft-sentinel-data-lake
 ここに大きな勘違いがありました。私は以下のように思い込んでいました：
 
 1. **Data Lake の復元機能だと思っていた**
-   - 実際は：Data Lake では復元はサポートされていない
-   - 実際は：Azure Monitor サービスの「検索ジョブ」機能だった
+   - 実際は Data Lake では復元はサポートされていない
+   - 実際は Azure Monitor サービスの「検索ジョブ・復元操作」機能だった
 
 2. **プレビュー期間中だから無料だと思っていた**
-   - 実際は：検索ジョブと復元操作には別途料金が発生する
+   - 実際はAzure Monitor サービスであり、検索ジョブと復元操作には別途料金が発生する
 
 3. **少量のデータだから安いはずだと思っていた**
-   - 実際は：検索ジョブと復元操作は独自の料金体系を持つ
+   - 実際はAzure Monitor サービスの検索ジョブと復元操作は独自の料金体系(後述)を持つ
 
 ## 技術的な詳細
 
 ### Data Lake と Azure Monitor の違い
 
-Microsoft サポートからの説明によると：
+Microsoft サポートからの説明によると Data Lake と Azure Monitor の違いは以下の通りです。
 
 **Microsoft Sentinel Data Lake では：**
-- 復元機能は**サポートされていない**
-- Data Lake 配下に表示される検索ジョブの項目は、実際には Azure Monitor サービスの機能
+- 復元は**サポートされていない**
+- Defender ポータルの Data Lake 配下に表示される検索ジョブの項目は、実際には Azure Monitor サービスの機能
 
 **Azure Monitor の復元では：**
+- 長期保存データの復元ができる
 - 独自の料金体系で課金される
-- 1回実行すると最低２TB、12時間分課金される（復元では復元データに対してクエリを実行するための追加のコンピューティング リソースが割り当てられるため、最小復元データボリュームが適用されます。）^[[Azure Monitor でログを復元する](https://learn.microsoft.com/ja-jp/azure/azure-monitor/logs/restore?tabs=api-1#restore-data)]
+   - 1回実行すると最低２TB、12時間分課金される（復元では復元データに対してクエリを実行するための追加のコンピューティング リソースが割り当てられるため、最小復元データボリュームが適用されます。）^[[Azure Monitor でログを復元する](https://learn.microsoft.com/ja-jp/azure/azure-monitor/logs/restore?tabs=api-1#restore-data)]
 - 復元されたデータは削除するまで継続的に課金される
 - 復元されたテーブルには `_RST` サフィックスが付く（例：`AADNonInteractiveUserSignInLogs_656_RST`）
 
-つまり、Azure Monitorの復元利用料 $0.10(≒15円/1日/GB) × 2TB × 利用日数 の課金がかかっていたのです。そりゃ、50万は行くわ。。。
+つまり、Azure Monitorの復元利用料 **$0.10(≒15円/1日/GB) × 2TB × 利用日数** の課金がかかっていたのです。そりゃ、50万は行くわ。。。
 
-よくよく、読むと先ほどのリストア画面のNoteにも同様の表示がされていますね。。。これは読み飛ばしていた。完全に悪いのは私です。
+よくよく、読むと先ほどのリストア画面のNoteにも同様の表示がされていますね。。。これは読み飛ばしていた。被害者づらしていますが、完全に悪いのは私です。
 
 ![](https://github.com/user-attachments/assets/106bd220-3330-4dd3-8c45-27038c524e34)
 
