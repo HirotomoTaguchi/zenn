@@ -3,7 +3,7 @@ title: "Microsoft SentinelとBitSightの連携とハマりポイント"
 emoji: "🤖" 
 type: "tech" # tech: 技術記事 / idea: アイデア記事
 topics: [Sentinel] 
-published: true
+published: false
 published_at: 2025-09-18 22:00
 ---
 
