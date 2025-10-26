@@ -1,7 +1,7 @@
 ---
 title: "Microsoft Security Copilot Phishing Triage Agent に可能性を感じた話"
 emoji: "🛡" 
-type: "tech" ## tech: 技術記事 / idea: アイデア記事
+type: "idea" ## tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft Defender, Security] 
 published: false
 ---
@@ -14,7 +14,7 @@ https://zenn.dev/microsoft/articles/103ea16dc6e977
 
 ## Phishing Triage Agentとは?
 
-Microsoft Security Copilot Phishing Triage Agentは、ユーザーから報告されたフィッシングメールを自動的にトリアージしてくれる機能です。フィッシングは古典的な攻撃手法ですが、攻撃者にとって有効な攻撃手法であり続けています。Microsoft Digital Defense Report 2024^[[Microsoft Digital Defense Report 2024](https://www.microsoft.com/en-us/security/security-insider/threat-landscape/microsoft-digital-defense-report-2024?msockid=0d4bd66716e762e62137c358170d6324)] によると、2023年にはフィッシング攻撃が58%増加しており、2023年7月から2024年6月の間だけでも Microsoft Defender for Office 365 が 7億7,500万通のマルウェア添付されたフィッシングを検出しています。
+Microsoft Security Copilot Phishing Triage Agent^[[Microsoft Security Copilot Phishing Triage Agent in Microsoft Defender (Preview)](https://learn.microsoft.com/en-us/defender-xdr/phishing-triage-agent)]は、ユーザーから報告されたフィッシングメールを自動的にトリアージしてくれる機能です。フィッシングは古典的な攻撃手法ですが、攻撃者にとって有効な攻撃手法であり続けています。Microsoft Digital Defense Report 2024^[[Microsoft Digital Defense Report 2024](https://www.microsoft.com/en-us/security/security-insider/threat-landscape/microsoft-digital-defense-report-2024?msockid=0d4bd66716e762e62137c358170d6324)] によると、2023年にはフィッシング攻撃が58%増加しており、2023年7月から2024年6月の間だけでも Microsoft Defender for Office 365 が 7億7,500万通のマルウェア添付されたフィッシングを検出しています。
 
 Microsoft Security Copilot Phishing Triage Agentは、それらの対応を助けるという期待を持った機能であります。もちろん、M365にはデフォルトの強いフィルターが備わっており、ユーザーに到達する前に止めてくれるケースが大多数を占めています。一方で、100％で止めることが難しいため、ユーザー教育⇒報告⇒報告されたものの影響確認も引き続き重要です。
 
@@ -36,7 +36,7 @@ Microsoft Security Copilot Phishing Triage Agentは、それらの対応を助�
 
 ![](https://github.com/user-attachments/assets/d6c1c909-9522-4400-b64a-191d541acec7)
 
-## 何が良かったのか?
+## どんな可能性を感じたのか？
 
 ### AIだからこそ見せられるコンテンツ
 
@@ -78,7 +78,7 @@ Security Copilotの強みは、Microsoft 365環境内の豊富なコンテキス
 
 なお、別機能としてPurviewのDLP・インサイダーリスクトリアージエージェント^[[Introducing Microsoft Purview Alert Triage Agents for Data Loss Prevention & Insider Risk Management](https://techcommunity.microsoft.com/blog/microsoftmechanicsblog/introducing-microsoft-purview-alert-triage-agents-for-data-loss-prevention--insi/4424401)]も期待すべき機能だと思っています。こちらはまだ本格的に試せていませんが、データ漏洩の誤検知/真陽性のトリアージエージェントできるという意味で、Phishing Triage Agentと同様の可能性を感じています。特に、DLPアラートは誤検知が多く、アナリストの負担が大きい領域です。ここをAIで効率化できれば、セキュリティチームの生産性は大幅に向上できないかと期待しています。
 
-加えて、DLPはフィッシングと比較してかなり機微な情報を取り扱います。そういう意味でAIでレビューする価値を感じやすいユースケースだと思います。
+加えて、DLPはフィッシングよりもかなり機微な情報を取り扱います。漏洩させたらダメだということは、やすやすとSOCのアナリストに見せるわけにもいきません。そういう意味でAIでレビューする価値を感じやすいユースケースだと思います。
 
 ## まとめ
 
