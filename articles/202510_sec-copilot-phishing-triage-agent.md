@@ -14,7 +14,7 @@ https://zenn.dev/microsoft/articles/103ea16dc6e977
 
 ## たかがフィッシング？されどフィッシング
 
-フィッシングは古典的な攻撃手法ですが、初期アクセスの手口として攻撃者にとって有効な攻撃手法であり続けています。Microsoft Digital Defense Report 2024^[[Microsoft Digital Defense Report 2024](https://www.microsoft.com/en-us/security/security-insider/threat-landscape/microsoft-digital-defense-report-2024?msockid=0d4bd66716e762e62137c358170d6324)] によると、2023年にはフィッシング攻撃が58%増加しており、2023年7月から2024年6月の間だけでも Microsoft Defender for Office 365 が 7億7,500万通のマルウェア添付されたフィッシングを検出しています。
+フィッシングは古典的な攻撃手法ですが、初期アクセスの手口として攻撃者にとって有効な攻撃手法であり続けています。Microsoft Digital Defense Report 2024^[[Microsoft Digital Defense Report 2024](https://www.microsoft.com/en-us/security/security-insider/threat-landscape/microsoft-digital-defense-report-2024?msockid=0d4bd66716e762e62137c358170d6324)] によると、2023年にはフィッシング攻撃が58%増加しており、2023年7月から2024年6月の間だけでも Microsoft Defender for Office 365 が 7億7,500万通のフィッシングメールを検出しています。攻撃者はフィッシングで認証情報などを盗んだりし、攻撃の足掛かりを作っていきます。
 
 ## Phishing Triage Agentとは?
 
