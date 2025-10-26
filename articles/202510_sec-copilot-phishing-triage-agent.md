@@ -10,13 +10,15 @@ published: false
 
 https://zenn.dev/microsoft/articles/103ea16dc6e977
 
-しかし、Microsoft Security Copilot Phishing Triage Agentを試してみて、これは将来実用的になるかもしれないという可能性を感じることができたので、乾燥をシェアしたいと思います。今すぐ万人が入れて嬉しいものではないかもしれませんが、将来の可能性も踏まえてみていただけたら幸いです。
+しかし、Microsoft Security Copilot Phishing Triage Agentを試してみて、フィッシング対応という狭い範囲ではありますが、将来実用的になるかもしれないという可能性を感じることができたので、乾燥をシェアしたいと思います。今すぐ万人が入れて嬉しいものではないかもしれませんが、将来の可能性も踏まえてみていただけたら幸いです。
+
+## たかがフィッシング？されどフィッシング
+
+フィッシングは古典的な攻撃手法ですが、初期アクセスの手口として攻撃者にとって有効な攻撃手法であり続けています。Microsoft Digital Defense Report 2024^[[Microsoft Digital Defense Report 2024](https://www.microsoft.com/en-us/security/security-insider/threat-landscape/microsoft-digital-defense-report-2024?msockid=0d4bd66716e762e62137c358170d6324)] によると、2023年にはフィッシング攻撃が58%増加しており、2023年7月から2024年6月の間だけでも Microsoft Defender for Office 365 が 7億7,500万通のマルウェア添付されたフィッシングを検出しています。
 
 ## Phishing Triage Agentとは?
 
-Microsoft Security Copilot Phishing Triage Agent^[[Microsoft Security Copilot Phishing Triage Agent in Microsoft Defender (Preview)](https://learn.microsoft.com/en-us/defender-xdr/phishing-triage-agent)]は、ユーザーから報告されたフィッシングメールを自動的にトリアージしてくれる機能です。フィッシングは古典的な攻撃手法ですが、攻撃者にとって有効な攻撃手法であり続けています。Microsoft Digital Defense Report 2024^[[Microsoft Digital Defense Report 2024](https://www.microsoft.com/en-us/security/security-insider/threat-landscape/microsoft-digital-defense-report-2024?msockid=0d4bd66716e762e62137c358170d6324)] によると、2023年にはフィッシング攻撃が58%増加しており、2023年7月から2024年6月の間だけでも Microsoft Defender for Office 365 が 7億7,500万通のマルウェア添付されたフィッシングを検出しています。
-
-Microsoft Security Copilot Phishing Triage Agentは、それらの対応を助けるという期待を持った機能であります。もちろん、M365にはデフォルトの強いフィルターが備わっており、ユーザーに到達する前に止めてくれるケースが大多数を占めています。一方で、100％で止めることが難しいため、ユーザー教育⇒報告⇒報告されたものの影響確認も引き続き重要です。
+Microsoft Security Copilot Phishing Triage Agent^[[Microsoft Security Copilot Phishing Triage Agent in Microsoft Defender (Preview)](https://learn.microsoft.com/en-us/defender-xdr/phishing-triage-agent)]は、ユーザーから報告されたフィッシングメールを自動的にトリアージしてくれる機能です。もちろん、M365にはデフォルトの強いフィルターが備わっており、ユーザーに到達する前に止めてくれるケースが大多数を占めています。一方で、100％で止めることが難しいため、ユーザー教育⇒報告⇒報告されたものの影響確認も引き続き重要です。
 
 ![](https://github.com/user-attachments/assets/be73321c-8b64-402d-9adc-a9c6dfb915dd)
 
