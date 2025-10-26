@@ -6,22 +6,26 @@ topics: [Security]
 published: true
 ---
 
-Microsoft 365 の各テナントでは、**DirectSend (ダイレクトセンド)** という機能が有効になっていることがあり、有効であること自体がセキュリティリスクとなる可能性があります。まだ調査中の内容も含まれていますが、メモを残しています。
+Microsoft 365 の各テナントでは、**DirectSend (ダイレクトセンド)** という機能が有効になっていることがありますが、攻撃者による悪用が確認されています。まだ調査中の内容も含まれていますが、メモを残しています。
 
 ## DirectSendとは？
 
 DirectSend は、オンプレミスのデバイス、アプリケーション、またはサードパーティのクラウドサービスから、Exchange Online 上のメールボックスへ（認証なしで）直接メールを送信するための方法です。この方法は、送信者ドメインが自組織のものである点を除けば、インターネットからの匿名の受信メールと似た動作となり、**認証を必要としません**。
 
-### コマンド
+### DirectSendはどのようなユースケースで必要なのか？
 
-PowerShell で以下のスクリプトを実行し、DirectSend がブロックされていることをテストします。（`To`, `From`, `SmtpServer` はご自身の環境に合わせて変更してください）
+個人的にはあまり使ってほしくない機能ですが、プリンターからのメールや会議室の予約システムからのメールなどで使われていたりします。
+
+### 実行コマンド
+
+PowerShell で以下のスクリプトを実行し、DirectSend がをテストします。（`To`, `From`, `SmtpServer` はご自身の環境に合わせて変更してください）
 
 ```powershell
 $EmailMessage = @{
     To         = "XXX@yourdomain.com"
     From       = "YYY@yourdomain.com"
     Subject    = "DirectSend test"
-    Body       = "Direct Send test"
+    Body       = "DirectSend test"
     SmtpServer = "yourdomain-com.mail.protection.outlook.com" # MXレコードを確認
     Port       = "25"
     UseSSL     = $true
@@ -33,7 +37,7 @@ Send-MailMessage @EmailMessage
 上記のコマンドを他組織に対して実施することはサイバー攻撃と同等の行為となりますので、テストする際には必ず許可された環境に対して実施してください。加えて、25番ポートはインターネットサービスプロバイダーやAzureなどのパブリッククラウドにおいて、デフォルトでブロックされていることがございます。
 :::
 
-## DirectSendの管理者がアwの設定
+## DirectSendの管理者が側の設定
 
 ### 前提条件
 
@@ -79,12 +83,11 @@ Set-OrganizationConfig -RejectDirectSend $false
 ```
 
 
-### DirectSendを利用せざるを得ない場合の対応
+## DirectSendを利用せざるを得ない場合の対応
 
-TBA
+TBA（調査中）
 
 
 ## まとめ
 
-
-TBA
+TBA（調査中）
