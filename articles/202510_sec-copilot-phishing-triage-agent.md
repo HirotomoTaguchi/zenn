@@ -2,7 +2,7 @@
 title: "Microsoft Security Copilot Phishing Triage Agent に可能性を感じた話"
 emoji: "🛡" 
 type: "idea" ## tech: 技術記事 / idea: アイデア記事
-topics: [Microsoft Defender, Security] 
+topics: [Microsoft Defender, Security, SIEM&XDR] 
 published: false
 ---
 
