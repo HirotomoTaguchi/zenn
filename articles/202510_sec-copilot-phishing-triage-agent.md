@@ -10,7 +10,7 @@ published: false
 
 https://zenn.dev/microsoft/articles/103ea16dc6e977
 
-しかし、Microsoft Security Copilot Phishing Triage Agentを試してみて、これは実用的かもしれないという将来的な可能性を感じることができたので、乾燥をシェアしたいと思います。
+しかし、Microsoft Security Copilot Phishing Triage Agentを試してみて、これは将来実用的になるかもしれないという可能性を感じることができたので、乾燥をシェアしたいと思います。
 
 ## Phishing Triage Agentとは?
 
@@ -18,7 +18,7 @@ Microsoft Security Copilot Phishing Triage Agentは、ユーザーから報告�
 
 Microsoft Security Copilot Phishing Triage Agentは、それらの対応を助けるという期待を持った機能であります。もちろん、M365にはデフォルトの強いフィルターが備わっており、ユーザーに到達する前に止めてくれるケースが大多数を占めています。一方で、100％で止めることが難しいため、ユーザー教育⇒報告⇒報告されたものの影響確認も引き続き重要です。
 
-![](https://github.com/user-attachments/assets/ec437113-23b5-4ade-ac65-1704cc48c28a)
+![](https://github.com/user-attachments/assets/be73321c-8b64-402d-9adc-a9c6dfb915dd)
 
 
 ### 具体的な調査内容
