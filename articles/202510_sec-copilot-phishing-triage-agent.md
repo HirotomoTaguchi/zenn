@@ -70,13 +70,11 @@ Security Copilotの強みは、Microsoft 365環境内の豊富なコンテキス
 
 この点が最も悩ましい課題です。**ラージエンタープライズ企業**の場合、日々大量のフィッシング報告が寄せられるため、導入効果が出る可能性があります。一方、**中小規模の企業**では、Security Copilotを常時稼働させるコストに対して、処理するフィッシング報告の件数が見合わない可能性があります。月に数件程度の報告であれば、人力で対応した方が安上がりかもしれません。
 
-### フィッシング以外のユースケース
+### フィッシング以外のユースケースもほしいよね
 
-フィッシングトリアージ以外にも、Security Copilotを活用できる場面は多いはずです。しかし、現時点では他の業務で同等の効果を実感できるユースケースを見つけられていません。（僕の検証が甘いだけかもしれませんが）今後、さまざまな業務で試していく必要があります。何か見つけたら教えてください。
+フィッシングトリアージ以外にも、Security Copilotを活用できる場面は多いはずです。しかし、現時点では他の業務で同等の効果を実感できるユースケースを見つけられていません。（僕の検証が甘いだけかもしれませんが）今後、さまざまな業務で試していく必要があります。この記事を見ている皆さまも何か見つけたら教えてください。
 
-## DLP Triage Agentへの期待
-
-なお、別機能としてPurviewのDLP・インサイダーリスクトリアージエージェント^[[Introducing Microsoft Purview Alert Triage Agents for Data Loss Prevention & Insider Risk Management](https://techcommunity.microsoft.com/blog/microsoftmechanicsblog/introducing-microsoft-purview-alert-triage-agents-for-data-loss-prevention--insi/4424401)]も期待すべき機能だと思っています。こちらはまだ本格的に試せていませんが、データ漏洩の誤検知/真陽性のトリアージエージェントできるという意味で、Phishing Triage Agentと同様の可能性を感じています。特に、DLPアラートは誤検知が多く、アナリストの負担が大きい領域です。ここをAIで効率化できれば、セキュリティチームの生産性は大幅に向上できないかと期待しています。
+なお、そういった意味では、別機能のPurviewのDLP・InsiderRiskトリアージエージェント^[[Introducing Microsoft Purview Alert Triage Agents for Data Loss Prevention & Insider Risk Management](https://techcommunity.microsoft.com/blog/microsoftmechanicsblog/introducing-microsoft-purview-alert-triage-agents-for-data-loss-prevention--insi/4424401)]も期待すべき機能だと思っています。こちらはまだ本格的に試せていませんが、データ漏洩の誤検知/真陽性のトリアージエージェントできるという意味で、Phishing Triage Agentと同様の可能性を感じています。特に、DLPアラートは誤検知が多く、アナリストの負担が大きい領域です。ここをAIで効率化できれば、セキュリティチームの生産性は大幅に向上できないかと期待しています。
 
 加えて、DLPはフィッシングよりもかなり機微な情報を取り扱います。漏洩させたらダメだということは、やすやすとSOCのアナリストに見せるわけにもいきません。そういう意味でAIでレビューする価値を感じやすいユースケースだと思います。
 
