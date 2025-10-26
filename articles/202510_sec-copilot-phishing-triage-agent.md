@@ -18,7 +18,7 @@ https://zenn.dev/microsoft/articles/103ea16dc6e977
 
 ## Phishing Triage Agentとは?
 
-Microsoft Security Copilot Phishing Triage Agent^[[Microsoft Security Copilot Phishing Triage Agent in Microsoft Defender (Preview)](https://learn.microsoft.com/en-us/defender-xdr/phishing-triage-agent)]は、ユーザーから報告されたフィッシングメールを自動的にトリアージしてくれる機能です。もちろん、M365にはデフォルトの強いフィルターが備わっており、ユーザーに到達する前に止めてくれるケースが大多数を占めています。一方で、100％で止めることが難しいため、ユーザー教育⇒報告⇒報告されたものの影響確認も引き続き重要です。
+Microsoft Security Copilot Phishing Triage Agent^[[Microsoft Security Copilot Phishing Triage Agent in Microsoft Defender (Preview)](https://learn.microsoft.com/en-us/defender-xdr/phishing-triage-agent)]は、ユーザーから報告されたフィッシングメールを自動的にトリアージしてくれる機能です。もちろん、M365にはデフォルトの強いフィルターが備わっており、ユーザーに到達する前に止めてくれるケースが大多数を占めています。一方で、100％で止めることが難しいため、ユーザー教育⇒報告⇒報告されたものの影響確認も引き続き重要です。Copilot Phishing Triage Agentを導入すると、従来人手で見ていたアラートのトリアージが自動化できます。
 
 ![](https://github.com/user-attachments/assets/be73321c-8b64-402d-9adc-a9c6dfb915dd)
 
@@ -63,7 +63,7 @@ Security Copilotの強みは、Microsoft 365環境内の豊富なコンテキス
 
 ### ワークフローの自動化
 
-現状ではトリアージ結果を確認して終わりですが、実運用では以下のような連携が必要です。
+現状ではトリアージ結果を確認して終わりですが、実運用では以下のような連携が必要です。そういったユーザービリティは向上してほしいなと感じました。
 
 - フィッシングと判定された場合、Logic Appsを起動して関係者に自動通知
 - メールの削除やユーザーへのフォローアップを自動化
