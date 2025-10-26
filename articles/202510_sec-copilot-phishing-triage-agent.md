@@ -6,11 +6,17 @@ topics: [Microsoft Defender, Security]
 published: false
 ---
 
-Microsoft Security Copilotをこれまで検証で使ってきて、「あれば便利」という感想は持っていたものの、正直なところ「これは革命的だ!費用対効果が凄まじい！」と心から思えるユースケースには出会えていませんでした。しかし、Microsoft Security Copilot Phishing Triage Agentを試してみて、これは実用的かもしれないと可能性を感じることができたので、その体験をシェアしたいと思います。
+マイクロソフトに怒られるかもしれませんが、Microsoft Security Copilotをこれまで検証で使ってきて、「あれば便利」という感想は持っていたものの、正直なところ「これは革命的だ!すぐ導入すべきだ！」と心から思えるユースケースには出会えていませんでした。下記のブログのように、Copilot for Security (のようなもの) を自作する方もいらっしゃいますし、僕的にもLogic Appsやらでフローを組んだり、定型化できないものは Microsoft 365 Copilot のチャットに投げたりしていました。
+
+https://zenn.dev/microsoft/articles/103ea16dc6e977
+
+しかし、Microsoft Security Copilot Phishing Triage Agentを試してみて、これは実用的かもしれないという将来的な可能性を感じることができたので、乾燥をシェアしたいと思います。
 
 ## Phishing Triage Agentとは?
 
-Microsoft Security Copilot Phishing Triage Agentは、ユーザーから報告されたフィッシングメールを自動的にトリアージしてくれる機能です。フィッシングは古典的な攻撃手法ですが、攻撃者にとって有効な攻撃手法であり続けています。Microsoft Digital Defense Report 2024^[[Microsoft Digital Defense Report 2024](https://www.microsoft.com/en-us/security/security-insider/threat-landscape/microsoft-digital-defense-report-2024?msockid=0d4bd66716e762e62137c358170d6324)] によると、2023年にはフィッシング攻撃が58%増加しており、2023年7月から2024年6月の間だけでも Microsoft Defender for Office 365 が 7億7,500万通のマルウェア添付されたフィッシングを検出しています。それらの対応を助けるという期待を持った機能であります。
+Microsoft Security Copilot Phishing Triage Agentは、ユーザーから報告されたフィッシングメールを自動的にトリアージしてくれる機能です。フィッシングは古典的な攻撃手法ですが、攻撃者にとって有効な攻撃手法であり続けています。Microsoft Digital Defense Report 2024^[[Microsoft Digital Defense Report 2024](https://www.microsoft.com/en-us/security/security-insider/threat-landscape/microsoft-digital-defense-report-2024?msockid=0d4bd66716e762e62137c358170d6324)] によると、2023年にはフィッシング攻撃が58%増加しており、2023年7月から2024年6月の間だけでも Microsoft Defender for Office 365 が 7億7,500万通のマルウェア添付されたフィッシングを検出しています。
+
+Microsoft Security Copilot Phishing Triage Agentは、それらの対応を助けるという期待を持った機能であります。もちろん、M365にはデフォルトの強いフィルターが備わっており、ユーザーに到達する前に止めてくれるケースが大多数を占めています。一方で、100％で止めることが難しいため、ユーザー教育⇒報告⇒報告されたものの影響確認も引き続き重要です。
 
 ![](https://github.com/user-attachments/assets/ec437113-23b5-4ade-ac65-1704cc48c28a)
 
@@ -70,12 +76,10 @@ Security Copilotの強みは、Microsoft 365環境内の豊富なコンテキス
 
 ## DLP Triage Agentへの期待
 
-なお、DLP(Data Loss Prevention)トリアージエージェントも似たような仕組みで提供されているとドキュメントからは見えています。こちらはまだ本格的に試せていませんが、データ漏洩の誤検知/真陽性の判断を自動化できるという意味で、Phishing Triage Agentと同様の可能性を感じています。特に、DLPアラートは誤検知が多く、アナリストの負担が大きい領域です。ここをAIで効率化できれば、セキュリティチームの生産性は大幅に向上するでしょう。加えて、DLPはフィッシングと比較してかなり機微な情報を取り扱います。そういう意味でAIでレビューすることの価値を感じやすいユースケースだと思います。
+なお、別機能としてDLP(Data Loss Prevention)トリアージエージェントも似たような仕組みで提供されているとドキュメントからは見えています。こちらはまだ本格的に試せていませんが、データ漏洩の誤検知/真陽性の判断を自動化できるという意味で、Phishing Triage Agentと同様の可能性を感じています。特に、DLPアラートは誤検知が多く、アナリストの負担が大きい領域です。ここをAIで効率化できれば、セキュリティチームの生産性は大幅に向上するでしょう。
+
+加えて、DLPはフィッシングと比較してかなり機微な情報を取り扱います。そういう意味でAIでレビューする価値を感じやすいユースケースだと思います。
 
 ## まとめ
 
-Microsoft Security Copilot Phishing Triage Agentは、私がSecurity Copilotで初めて可能性を感じた機能です。完璧ではありませんが、適切に設計・運用すれば、Tier1アナリストの業務負荷を大きく軽減できる可能性があります。
-
-特に大規模組織においては、今すぐにでも導入を検討する価値があると感じました。一方で、中小企業では費用対効果を慎重に見極める必要があるでしょう。
-
-AIセキュリティツールの実用化はまだ始まったばかりです。今後、さまざまなユースケースでの活用が進み、セキュリティ業務の在り方が変わっていくことを期待しています。
+Microsoft Security Copilot Phishing Triage Agentは、私がSecurity Copilotで初めて可能性を感じた機能です。完璧ではありませんが、適切に設計・運用すれば、Tier1アナリストの業務負荷を大きく軽減できる可能性があります。特に大規模組織においては価値があると感じました。一方で、中小企業では費用対効果を慎重に見極める必要があるでしょう。AIセキュリティツールの実用化はまだ始まったばかりです。今後、さまざまなユースケースでの活用が進み、セキュリティ業務の在り方が変わっていくことを期待しています。
