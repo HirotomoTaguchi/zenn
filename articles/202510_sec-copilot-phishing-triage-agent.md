@@ -75,7 +75,7 @@ Security Copilotの強みは、Microsoft 365環境内の豊富なコンテキス
 
 ### 費用対効果の問題
 
-この点が最も悩ましい課題です。**ラージエンタープライズ企業**の場合、日々大量のフィッシング報告が寄せられるため、導入効果が出る可能性があります。彼らには、日々飛んでもない量のフィッシングが届きますし、何よりお金を持ってそうなので攻撃者の主たるターゲットになりえます。Security Copilot は時給$4（約600円）^[Microsoft Security Copilot pricing](https://www.microsoft.com/en-us/security/pricing/microsoft-security-copilot/?msockid=0d4bd66716e762e62137c358170d6324) なので、他のユースケース含めて休みなく働かせられるのであれば、セキュリティ人材の人件費を考えると十分にペイできます。
+この点が最も悩ましい課題です。従業員数万人を抱えるような**ラージエンタープライズ企業**の場合、日々大量のフィッシング報告が寄せられるため、導入効果が出る可能性があります。Security Copilot は時給$4（約600円）^[Microsoft Security Copilot pricing](https://www.microsoft.com/en-us/security/pricing/microsoft-security-copilot/?msockid=0d4bd66716e762e62137c358170d6324) なので、他のユースケース含めて休みなく働かせられるのであれば、セキュリティ人材の人件費を考えると十分にペイできます。
 
 一方、**中小規模の企業**では、Security Copilotを常時稼働させるコストに対して、処理するフィッシング報告の件数が見合わない可能性があります。月に数件程度の報告かつ、他のユースケースでも使わない場合は人力で対応した方が安上がりかもしれません。
 
