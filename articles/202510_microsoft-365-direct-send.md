@@ -14,7 +14,7 @@ DirectSend は、オンプレミスのデバイス、アプリケーション、
 
 ### DirectSendはなぜリスクがあるのか？
 
-この方法は、送信者ドメインが自組織のものである点を除けば、インターネットからの匿名の受信メールと似た動作となり、**認証を必要としません**。加えて、DirectSendでは、SPF/DKIM/DMARCが失敗するにも関わらず、通信を内部通信として取り扱う竹、他のフィルタリングルールをバイパスしてユーザーに届いてしまう可能性が指摘されています。
+この方法は、送信者ドメインが自組織のものである点を除けば、インターネットからの匿名の受信メールと似た動作となり、**認証を必要としません**。加えて、DirectSendでは、SPF/DKIM/DMARCが失敗するにも関わらず、通信を内部通信として取り扱う竹、他のフィルタリングルールをバイパスしてユーザーに届いてしまう可能性が指摘されています。さらに、実行コマンドを後述していますが、メールアドレスとSmtpServerさえわかれば実行できるので、攻撃者が実行する難易度も低いという特徴があります。
 
 :::message
 実際にバイパスされてしまうかについては、環境やメールセキュリティ製品・設定によるのでご自身でご確認ください。
@@ -26,7 +26,7 @@ DirectSend は、オンプレミスのデバイス、アプリケーション、
 
 ### 実行コマンド
 
-PowerShell で以下のスクリプトを実行し、DirectSend がをテストします。（`To`, `From`, `SmtpServer` はご自身の環境に合わせて変更してください）
+PowerShell で以下のスクリプトを実行し、DirectSend をテストできます。`To`, `From`, `SmtpServer` はご自身の環境に合わせて変更して利用します。尚、25番ポートはインターネットサービスプロバイダーやAzureなどのパブリッククラウドにおいて、デフォルトでブロックされていることがあるので、ご自宅で試そうと思ったあなたはかなり厳しいです。
 
 ```powershell
 $EmailMessage = @{
@@ -42,7 +42,7 @@ Send-MailMessage @EmailMessage
 ```
 
 :::message alert
-上記のコマンドを他組織に対して実施することはサイバー攻撃と同等の行為となりますので、テストする際には必ず許可された環境に対して実施してください。加えて、25番ポートはインターネットサービスプロバイダーやAzureなどのパブリッククラウドにおいて、デフォルトでブロックされていることがございます。
+上記のコマンドを他組織に対して実施することはサイバー攻撃と同等の行為となりますので、テストする際には必ず許可された環境に対して実施してください。
 :::
 
 ## DirectSendの管理者が側の設定
@@ -93,8 +93,31 @@ Set-OrganizationConfig -RejectDirectSend $false
 
 ## DirectSendを利用せざるを得ない場合の対応
 
+### DirectSend の利用の実態調査
+
+DirectSendを無効にする前に、どれだけ使われているか見たいというケースがあると思います。どのように見れば一番スムーズに見ればいいのか苦心しており、ネットに転がっているクエリなどを使っても上手く拾ってくれないケースが多いのですが、少なくともAdvanced Huntingにおいて、M365の内部から内部へのメールは '{"DKIM":"none","DMARC":"none"}' となるのに対して、DirectSendは内部から内部でも '{"SPF":"fail","DKIM":"none","DMARC":"none","CompAuth":"fail"}' となることがわかりました。
+
+![](https://github.com/user-attachments/assets/fc61393f-2c0c-4ae1-856d-f8312d477387)
+
+他のも含まれてしまうかもしれませんが、以下のようなAdvanced Huntingで目付はできるかと思いました。
+
+'''
+EmailEvents 
+| where Timestamp > ago(30d) 
+| where SenderFromDomain contains "yourdomain.com"
+| where RecipientDomain contains "yourdomain.com"
+| extend AuthDetails = todynamic(AuthenticationDetails)
+| where AuthDetails.SPF == "fail" 
+    and AuthDetails.DKIM == "none" 
+    and AuthDetails.DMARC == "none" 
+    and AuthDetails.CompAuth == "fail"
+'''
+
+### DirectSend を限定的に許可する
+
 TBA（調査中）
 
+https://techcommunity.microsoft.com/blog/exchange/direct-send-vs-sending-directly-to-an-exchange-online-tenant/4439865
 
 ## まとめ
 
