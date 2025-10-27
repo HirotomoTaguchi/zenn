@@ -3,11 +3,11 @@ title: "Microsoft Security Copilot Phishing Triage Agent に可能性を感じ�
 emoji: "🛡" 
 type: "idea" ## tech: 技術記事 / idea: アイデア記事
 topics: [Microsoft Defender, Security, SIEM&XDR, Security Copilot] 
-published: false
+published: true
 ---
 
 :::message
-このブログは個人の感想です。なんの保証も致しかねます。
+このブログは個人の感想です。なんの保証も致しかねます。2025年10月28日時点の情報で執筆しています。
 :::
 
 マイクロソフトに怒られるかもしれませんが、Microsoft Security Copilotをこれまで検証で使ってきて、「あれば便利」という感想は持っていたものの、正直なところ「すぐ導入すべきだ！」と心から思えるユースケースには出会えていませんでした。下記のブログのように、Copilot for Security (のようなもの) を自作する方もいらっしゃいますし、僕的にもLogic Appsやらでフローを組んだり、定型化できないものは Microsoft 365 Copilot のチャットに聞いたりしていました。
@@ -93,4 +93,4 @@ Security Copilotの強みは、Microsoft 365環境内の豊富なコンテキス
 
 ## まとめ
 
-何様だと言われるかもしれませんが、Microsoft Security Copilot Phishing Triage Agent は、Security Copilot で初めて可能性を感じた機能です。完璧ではありませんが、適切に設計・運用すれば、Tier1アナリストの業務負荷を大きく軽減できる可能性があります。特に大規模組織においては価値があると感じました。AIセキュリティツールの実用化はまだ始まったばかりです。今後、さまざまなユースケースでの活用が進み、セキュリティ業務の在り方が変わっていくことを期待しています。
+何様だと言われるかもしれませんが、Microsoft Security Copilot Phishing Triage Agent は、Security Copilot で初めて可能性を感じた機能です。完璧ではありませんが、適切に設計・運用すれば、Tier1アナリストの業務負荷を大きく軽減できる可能性があります。もちろん数あるセキュリティの業務の中の特定のタスクだとは思いますが、特に大規模組織においては価値があると感じました。AIセキュリティツールの実用化はまだ始まったばかりです。今後、さまざまなユースケースでの活用が進み、セキュリティ業務の在り方が変わっていくことを期待しています。
