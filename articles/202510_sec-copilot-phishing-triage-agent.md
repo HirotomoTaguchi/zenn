@@ -12,7 +12,7 @@ https://zenn.dev/microsoft/articles/103ea16dc6e977
 
 しかし、Microsoft Security Copilot Phishing Triage Agentを試してみて、フィッシング対応という狭い範囲ではありますが、将来実用的になるかもしれないという可能性を感じることができました。車で例えるとレベル2の自動運転が来て、レベル3が待たれるなという感じですかね。
 
-![](https://github.com/user-attachments/assets/1e4c8b35-555b-4344-b80c-4447281e0752)
+![](https://github.com/user-attachments/assets/44ba857a-ddc6-45ab-af02-14d1f2374a36)
 *出所：[自動運転のレベルわけについて - 国土交通省](https://www.mlit.go.jp/common/001226541.pdf)*
 
 「将来はレベル5のセキュリティ運用が来る！」という主張をしたいわけではありませんが、とはいえ乾燥をシェアしたいと思います。
