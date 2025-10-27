@@ -100,7 +100,7 @@ DirectSendを無効にする前に、どれだけ使われているか見たい�
 
 他のも含まれてしまうかもしれませんが、以下のようなAdvanced Huntingで目付はできるかと思いました。
 
-```
+```kql
 EmailEvents 
 | where Timestamp > ago(30d) 
 | where SenderFromDomain contains "yourdomain.com"
