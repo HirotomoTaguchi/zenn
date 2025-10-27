@@ -1,12 +1,12 @@
 ---
-title: "DirectSendに関するメモ(TBA)"
+title: "Micorosoft 365 DirectSendに関するメモ(TBA)"
 emoji: "🛡" 
 type: "tech" ## tech: 技術記事 / idea: アイデア記事
 topics: [Security] 
 published: true
 ---
 
-Microsoft 365 の各テナントでは、**DirectSend (ダイレクトセンド)** という機能が有効になっていることがありますが、攻撃者による悪用が確認されています。まだ調査中の内容も含まれていますが、メモを残しています。
+Microsoft 365 の各テナントでは、DirectSend という機能が有効になっていることがありますが、攻撃者による悪用 ^[[Microsoft 365 'Direct Send' abused to send phishing as internal users](https://www.bleepingcomputer.com/news/security/microsoft-365-direct-send-abused-to-send-phishing-as-internal-users/)]が確認されています。まだ調査中の内容も含まれていますが、メモを残しています。
 
 ## DirectSendとは？
 
@@ -14,7 +14,12 @@ DirectSend は、オンプレミスのデバイス、アプリケーション、
 
 ### DirectSendはなぜリスクがあるのか？
 
-この方法は、送信者ドメインが自組織のものである点を除けば、インターネットからの匿名の受信メールと似た動作となり、**認証を必要としません**。
+この方法は、送信者ドメインが自組織のものである点を除けば、インターネットからの匿名の受信メールと似た動作となり、**認証を必要としません**。加えて、DirectSendでは、SPF/DKIM/DMARCが失敗するにも関わらず、通信を内部通信として取り扱う竹、他のフィルタリングルールをバイパスしてユーザーに届いてしまう可能性が指摘されています。
+
+:::message
+実際にバイパスされてしまうかについては、環境やメールセキュリティ製品・設定によるのでご自身でご確認ください。
+:::
+
 ### DirectSendはどのようなユースケースで必要なのか？
 
 個人的にはあまり使ってほしくない機能ですが、プリンターからのメールや会議室の予約システムからのメールなどで使われていたりします。
