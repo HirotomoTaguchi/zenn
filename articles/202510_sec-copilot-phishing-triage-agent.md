@@ -2,11 +2,15 @@
 title: "Microsoft Security Copilot Phishing Triage Agent に可能性を感じた話"
 emoji: "🛡" 
 type: "idea" ## tech: 技術記事 / idea: アイデア記事
-topics: [Microsoft Defender, Security, SIEM&XDR] 
+topics: [Microsoft Defender, Security, SIEM&XDR, Security Copilot] 
 published: false
 ---
 
-マイクロソフトに怒られるかもしれませんが、Microsoft Security Copilotをこれまで検証で使ってきて、「あれば便利」という感想は持っていたものの、正直なところ「すぐ導入すべきだ！」と心から思えるユースケースには出会えていませんでした。下記のブログのように、Copilot for Security (のようなもの) を自作する方もいらっしゃいますし、僕的にもLogic Appsやらでフローを組んだり、定型化できないものは Microsoft 365 Copilot のチャットに投げたりしていました。
+:::message
+このブログは個人の感想です。なんの保証も致しかねます。
+:::
+
+マイクロソフトに怒られるかもしれませんが、Microsoft Security Copilotをこれまで検証で使ってきて、「あれば便利」という感想は持っていたものの、正直なところ「すぐ導入すべきだ！」と心から思えるユースケースには出会えていませんでした。下記のブログのように、Copilot for Security (のようなもの) を自作する方もいらっしゃいますし、僕的にもLogic Appsやらでフローを組んだり、定型化できないものは Microsoft 365 Copilot のチャットに聞いたりしていました。
 
 https://zenn.dev/microsoft/articles/103ea16dc6e977
 
