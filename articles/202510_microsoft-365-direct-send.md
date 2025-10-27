@@ -6,7 +6,7 @@ topics: [Security]
 published: true
 ---
 
-Microsoft 365 の各テナントでは、DirectSend という機能が有効になっていることがありますが、攻撃者による悪用 ^[[Microsoft 365 'Direct Send' abused to send phishing as internal users](https://www.bleepingcomputer.com/news/security/microsoft-365-direct-send-abused-to-send-phishing-as-internal-users/)]が確認されています。まだ調査中の内容も含まれていますが、メモを残しています。
+Microsoft 365 の各テナントでは、DirectSend という機能が有効になっていることがありますが、攻撃者による悪用も確認されており、メディア等でも対策の必要性が訴えられています ^[[Microsoft 365 'Direct Send' abused to send phishing as internal users](https://www.bleepingcomputer.com/news/security/microsoft-365-direct-send-abused-to-send-phishing-as-internal-users/)] 。まだ調査中の内容も含まれていますが、メモを残しています。
 
 ## DirectSendとは？
 
