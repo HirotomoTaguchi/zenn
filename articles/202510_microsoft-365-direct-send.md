@@ -90,18 +90,17 @@ Set-OrganizationConfig -RejectDirectSend $true
 Set-OrganizationConfig -RejectDirectSend $false
 ```
 
-
 ## DirectSendを利用せざるを得ない場合の対応
 
 ### DirectSend の利用の実態調査
 
-DirectSendを無効にする前に、どれだけ使われているか見たいというケースがあると思います。どのように見れば一番スムーズに見ればいいのか苦心しており、ネットに転がっているクエリなどを使っても上手く拾ってくれないケースが多いのですが、少なくともAdvanced Huntingにおいて、M365の内部から内部へのメールは '{"DKIM":"none","DMARC":"none"}' となるのに対して、DirectSendは内部から内部でも '{"SPF":"fail","DKIM":"none","DMARC":"none","CompAuth":"fail"}' となることがわかりました。
+DirectSendを無効にする前に、どれだけ使われているか見たいというケースがあると思います。どのように見れば一番スムーズに見ればいいのか苦心しており、ネットに転がっているクエリなどを使っても上手く拾ってくれないケースが多いのですが、少なくともAdvanced Huntingにおいて、M365の内部から内部へのメールは `{"DKIM":"none","DMARC":"none"}` となるのに対して、DirectSendは内部から内部でも `{"SPF":"fail","DKIM":"none","DMARC":"none","CompAuth":"fail"}` となることがわかりました。
 
 ![](https://github.com/user-attachments/assets/fc61393f-2c0c-4ae1-856d-f8312d477387)
 
 他のも含まれてしまうかもしれませんが、以下のようなAdvanced Huntingで目付はできるかと思いました。
 
-'''
+```
 EmailEvents 
 | where Timestamp > ago(30d) 
 | where SenderFromDomain contains "yourdomain.com"
@@ -111,7 +110,7 @@ EmailEvents
     and AuthDetails.DKIM == "none" 
     and AuthDetails.DMARC == "none" 
     and AuthDetails.CompAuth == "fail"
-'''
+```
 
 ### DirectSend を限定的に許可する
 
