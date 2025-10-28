@@ -25,7 +25,7 @@ published: true
 コードビューの `feedUrl` を見てみると、こんな記述がありました。
 
 ```json
-"feedUrl": "@{encodeURIComponent(encodeURIComponent('https://www.ransomware.live/rss','\n'))}"
+"feedUrl": "@{encodeURIComponent(encodeURIComponent('https://www[.]xxx[.]xxx/rss','\n'))}"
 ```
 
 えっ、`encodeURIComponent` が **2回**！？ しかも `'\n'` って何！？（引数として意味不明）このせいで URL が `https%253A%252F%252F...` という謎の文字列になり、RSS コネクターが正しく読み込めていなかった模様。
