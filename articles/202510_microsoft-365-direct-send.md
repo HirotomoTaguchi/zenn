@@ -94,9 +94,13 @@ Set-OrganizationConfig -RejectDirectSend $false
 
 ### DirectSend の利用の実態調査
 
-DirectSendを無効にする前に、どれだけ使われているか見たいというケースがあると思います。どのように見れば一番スムーズに見ればいいのか苦心しており、ネットに転がっているクエリなどを使っても上手く拾ってくれないケースが多いのですが、少なくともAdvanced Huntingにおいて、M365の内部から内部へのメールは `{"DKIM":"none","DMARC":"none"}` となるのに対して、DirectSendは内部から内部でも `{"SPF":"fail","DKIM":"none","DMARC":"none","CompAuth":"fail"}` となることがわかりました。
+DirectSendを無効にする前に、どれだけ使われているか見たいというケースがあると思います。どのように見れば一番スムーズに見ればいいのか苦心しており、ネットに転がっているクエリなどを使っても上手く拾ってくれないケースが多いのですが、少なくとも　僕の使っているテスト環境のAdvanced Huntingにおいて、M365の内部から内部へのメールは `{"DKIM":"none","DMARC":"none"}` となるのに対して、DirectSendは内部から内部でも `{"SPF":"fail","DKIM":"none","DMARC":"none","CompAuth":"fail"}` となっていました。
 
 ![](https://github.com/user-attachments/assets/fc61393f-2c0c-4ae1-856d-f8312d477387)
+
+:::message
+他の環境で試したら、 `"SPF":"softfail"` となっているケースもありました。
+:::
 
 他のも含まれてしまうかもしれませんが、以下のようなAdvanced Huntingで目付はできるかと思いました。
 
