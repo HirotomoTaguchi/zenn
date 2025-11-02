@@ -16,6 +16,9 @@ published: true
 - 条件分岐：キーワードでフィルタ
 - アクション②：Teams にメッセージ投稿
 
+![](https://github.com/user-attachments/assets/7aa40c01-bfdb-4c80-9711-b8b11715b4c5)
+
+
 ## 「息してない」Logic Apps
 
 数時間経っても、何も通知が来ない。Logic Apps の実行履歴(Run History)を見ても、トリガーが一度も発火していない...「え？息してない？」そんな気持ちで調べてみました。
