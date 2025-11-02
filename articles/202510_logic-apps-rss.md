@@ -18,17 +18,27 @@ published: true
 
 ## 「息してない」Logic Apps
 
-数時間経っても、何も通知が来ない。Logic Apps の実行履歴を見ても、**トリガーが一度も発火していない**。「え？死んでる？」「息してない？」  そんな気持ちでコードビューを開いてみました。
+数時間経っても、何も通知が来ない。Logic Apps の実行履歴(Run History)を見ても、トリガーが一度も発火していない...「え？息してない？」そんな気持ちで調べてみました。
 
 ## 原因は**二重エンコード**
 
-コードビューの `feedUrl` を見てみると、こんな記述がありました。
+トリガー履歴(Triger History)を確認すると、トリガーが失敗していることが確認されました。
+
+![](https://github.com/user-attachments/assets/6e6d1918-601d-473b-83fd-27c258d66be9)
+
+入力のエラーを見てみると、URL が `https%253A%252F%252F...` という謎の文字列となっています。
+
+![](https://github.com/user-attachments/assets/a9a8926b-ba71-4387-a9b2-272c254c726e)
+
+どうやら入力部分ががおかしいと思い、コードビューの `feedUrl` を見てみると、こんな記述がありました。
 
 ```json
 "feedUrl": "@{encodeURIComponent(encodeURIComponent('https://www[.]xxx[.]xxx/rss','\n'))}"
 ```
 
-えっ、`encodeURIComponent` が **2回**！？ しかも `'\n'` って何！？（引数として意味不明）このせいで URL が `https%253A%252F%252F...` という謎の文字列になり、RSS コネクターが正しく読み込めていなかった模様。
+![](https://github.com/user-attachments/assets/db4678ce-1dcc-49fc-a3d6-e3ed1dd07230)
+
+えっ、`encodeURIComponent` が **2回**！？ しかも `'\n'` って何！？（引数として意味不明）このせいで URL が `https%253A%252F%252F...` という謎の文字列になり、RSS コネクターが正しく読み込めていなかった模様です。僕はロジックアプリデザイナーにURLを打ち込んだだけなのに...
 
 ## 解決方法
 
@@ -46,4 +56,4 @@ published: true
 
 ## おわりに
 
-Logic Apps は便利だけど、**コードビューの自動補完が罠になることもある**ので要注意。 「息してない」Logic Appsを見つけたら、まずは `feedUrl` をチェックしてみてください！
+Logic Apps は便利だけど、ロジックアプリデザイナーで作成した場合の、**コードビューの自動補完が罠になることもある**ので要注意。 「息してない」Logic AppsのRSSを見つけたら、 `feedUrl` をチェックしてみてください！
