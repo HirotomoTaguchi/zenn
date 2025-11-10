@@ -37,7 +37,7 @@ https://zenn.dev/hirotomotaguchi/articles/202508_microsoft-sentinel-data-lake
 
 ### 私が行った操作
 
-私は「最近パブリックプレビューで登場したデータレイクにデータを取り込みそれを分析に利用する検証」を実施していました。具体的にはDefender ポータル > [Microsoft Sentinel] > [Data lake exploration] > [Search & restore] から**復元操作**を行っていました。
+私は「最近パブリックプレビューで登場したデータレイクにデータを取り込みそれを分析に利用する検証」を実施していました。具体的にはDefender ポータル > [Microsoft Sentinel] > [Data lake exploration] > [Search & restore] から復元操作を行っていました。
 
 ![](https://github.com/user-attachments/assets/fe590368-0820-4286-bed6-0fa963d749d1)
 
@@ -45,14 +45,14 @@ https://zenn.dev/hirotomotaguchi/articles/202508_microsoft-sentinel-data-lake
 
 ここに大きな勘違いがありました。私は以下のように思い込んでいました：
 
-1. **Data Lake の復元機能だと思っていた**
+1. Data Lake の復元機能だと思っていた
    - 実際は Data Lake では復元はサポートされていない
    - 実際は Azure Monitor サービスの「検索ジョブ・復元操作」機能だった
 
-2. **プレビュー期間中だから無料だと思っていた**
+2. プレビュー期間中だから無料だと思っていた
    - 実際はAzure Monitor サービスであり、検索ジョブと復元操作には別途料金が発生する
 
-3. **少量のデータだから安いはずだと思っていた**
+3. 少量のデータだから安いはずだと思っていた
    - 実際はAzure Monitor サービスの検索ジョブと復元操作は独自の料金体系(後述)を持つ
 
 ## 技術的な詳細
@@ -61,18 +61,18 @@ https://zenn.dev/hirotomotaguchi/articles/202508_microsoft-sentinel-data-lake
 
 Microsoft サポートからの説明によると Data Lake と Azure Monitor の違いは以下の通りです。
 
-**Microsoft Sentinel Data Lake では：**
-- 復元は**サポートされていない**
+Microsoft Sentinel Data Lake では
+- 復元はサポートされていない
 - Defender ポータルの Data Lake 配下に表示される検索ジョブの項目は、実際には Azure Monitor サービスの機能
 
-**Azure Monitor の復元では：**
+Azure Monitor の復元では
 - 長期保存データの復元ができる
 - 独自の料金体系で課金される
    - 1回実行すると最低２TB、12時間分課金される（復元では復元データに対してクエリを実行するための追加のコンピューティング リソースが割り当てられるため、最小復元データボリュームが適用されます。）^[[Azure Monitor でログを復元する](https://learn.microsoft.com/ja-jp/azure/azure-monitor/logs/restore?tabs=api-1#restore-data)]
 - 復元されたデータは削除するまで継続的に課金される
 - 復元されたテーブルには `_RST` サフィックスが付く（例：`AADNonInteractiveUserSignInLogs_656_RST`）
 
-つまり、Azure Monitorの復元利用料 **$0.10(≒15円/1日/GB) × 2TB × 利用日数** の課金がかかっていたのです。そりゃ、50万は行くわ。。。
+つまり、Azure Monitorの復元利用料 $0.10(≒15円/1日/GB) × 2TB × 利用日数 の課金がかかっていたのです。そりゃ、50万は行くわ。。。
 
 よくよく、読むと先ほどのリストア画面のNoteにも同様の表示がされていますね。。。これは読み飛ばしていた。被害者づらしていますが、完全に悪いのは私です。
 
