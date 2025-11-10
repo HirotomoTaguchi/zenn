@@ -51,13 +51,13 @@ Send-MailMessage @EmailMessage
 
 まず、Exchange Online PowerShell モジュールをインストールし、接続する必要があります。
 
-1.  **モジュールのインストール (未実施の場合):**
+1.  モジュールのインストール (未実施の場合):
 
 ```powershell
 Install-Module -Name ExchangeOnlineManagement -Force
 ```
 
-2.  **Exchange Online への接続:**
+2.  Exchange Online への接続:
 
 ```powershell
 Connect-ExchangeOnline
@@ -71,7 +71,7 @@ Connect-ExchangeOnline
 Get-OrganizationConfig | Select-Object Identity, RejectDirectSend
 ```
 
-**実行結果の例 (無効化されている場合):**
+実行結果の例 (無効化されている場合):
 `RejectDirectSend` が `True` になっていれば、DirectSend はブロックされています。
 
 ### 無効化コマンド
