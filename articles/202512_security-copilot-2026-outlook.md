@@ -22,9 +22,9 @@ published: false
 
 Security Copilotは、Microsoft 365 CopilotなどのビジネスCopilotとは異なり、脅威インテリジェンス、業界のベストプラクティス等を組み込んだセキュリティ運用に特化したAIアシスタントです。Defender for Endpoint や Sentinel などのセキュリティ製品と連携し、セキュリティの業務を支援します。2024年は日本でも一般提供が開始され、いよいよ本格的に使えるようになった年でした。^[[What-is-microsoft-security-copilot](hhttps://learn.microsoft.com/en-us/copilot/security/faq-security-copilot#what-is-microsoft-security-copilot)]
 
-## Security Copilotの現在価値
+## Security Copilot の現在価値
 
-2025年時点で、Security Copilot を使っていて最も価値を感じるのは、経験の浅いメンバーが「Defenderが勝手に対応してくれました」という状況から脱却するのを手助けしてくれる点だと筆者は感じています（個人の感想です）。これまで、Microsoft Defender for Endpoint(MDE) や Microsoft Defender for Identity(MDI) が自動で検知・対処してくれるのはありがたい反面、実際に何が起きたのか理解するには、それなりの知識と経験が必要でした。セキュリティ事故を起こせば膨大な被害が及ぶので「Defenderが勝手に対応してくれました」では無責任すぎます。
+Security Copilot はいろんな機能が出ていますが、執筆時点で Security Copilot を使っていて最も価値を感じるのは、インシデントの解説を通じて、経験の浅いメンバーが「Defenderが勝手に対応してくれました」という状況から脱却するのを手助けしてくれる点だと筆者は感じています（個人の感想です）。これまで、Microsoft Defender for Endpoint(MDE) や Microsoft Defender for Identity(MDI) が自動で検知・対処してくれるのはありがたい反面、実際に何が起きたのか理解するには、それなりの知識と経験が必要でした。セキュリティ事故を起こせば膨大な被害が及ぶので「Defenderが勝手に対応してくれました」では無責任すぎます。
 
 Security Copilot はこうした状況を少しだけ改善する実感を得ています。（世の中的には GPT-5.1 が出ている今、もっと精度良くなれよと思うところはありますが、）インシデントの概要を自然言語で要約し、関連するアラートやエンティティの関係性を整理してくれるため、「何が起きたのか」を理解するまでの時間を短縮する手助けをしてくれます。
 
